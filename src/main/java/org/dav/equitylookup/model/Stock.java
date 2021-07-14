@@ -25,9 +25,19 @@ public class Stock {
     public Stock() {
     }
 
-    public Stock(String ticker, LocalDateTime dateBought, User user) {
+    public Stock(String ticker){
         this.ticker = ticker;
-        this.dateBought = dateBought;
+        this.dateBought = LocalDateTime.now();
+    }
+
+    public Stock(String ticker, User user) {
+        this.ticker = ticker;
+        this.dateBought = LocalDateTime.now();
+        this.user = user;
+    }
+
+    public void setUser(User user){
+        this.dateBought = LocalDateTime.now();
         this.user = user;
     }
 

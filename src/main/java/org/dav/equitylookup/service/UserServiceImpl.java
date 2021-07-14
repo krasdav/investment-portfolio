@@ -1,6 +1,5 @@
 package org.dav.equitylookup.service;
 
-import org.dav.equitylookup.model.Stock;
 import org.dav.equitylookup.model.User;
 import org.dav.equitylookup.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

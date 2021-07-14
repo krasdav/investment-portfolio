@@ -10,8 +10,9 @@
 </head>
 <body>
 <h1>User</h1>
-<form action="#" th:action="@{/users/add}" th:object="${user}" method="post">
-    <p>User nickname: <input type="text" th:field="*{nickname}"/></p>
+<form action="#" th:action="@{/stocks/add}" method="post">
+    <p>Stock to add: <input type="text" th:field="*{stock.ticker}"/></p>
+    <p>User: <input type="text" th:field="*{user.nickname}"/></p>
     <p><input type="submit" value="Submit"/> <input type="reset" value="Reset"/></p>
 </form>
 </body>

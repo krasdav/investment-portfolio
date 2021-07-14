@@ -1,6 +1,5 @@
 package org.dav.equitylookup.service;
 
-import org.dav.equitylookup.model.Stock;
 import org.dav.equitylookup.model.User;
 
 import java.util.List;

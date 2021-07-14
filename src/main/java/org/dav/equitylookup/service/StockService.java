@@ -1,11 +1,9 @@
 package org.dav.equitylookup.service;
 
 import org.dav.equitylookup.model.Stock;
-import org.dav.equitylookup.model.User;
-import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface StockService extends JpaRepository<Stock, Long> {
-    void saveStock(User user);
+public interface StockService{
+    void saveStock(Stock stock);
     Stock getStockById(long id);
     void deleteStockById(long id);
 }
