@@ -27,6 +27,18 @@ public class UserController {
         return "user-list";
     }
 
+    @PostMapping("/users/stocks/list")
+    public String listStocks(@ModelAttribute User user, Model model) {
+        model.addAttribute("stocks", userService.getUserByNickname(user.getNickname()).getStocks());
+        return "user-stock-list";
+    }
+
+    @GetMapping("/users/stocks/list")
+    public String listStocksForm(Model model) {
+        model.addAttribute("user",new User());
+        return "user-stock-query";
+    }
+
     @GetMapping("/users/add")
     public String saveUser(Model model) {
         model.addAttribute("user", new User());
