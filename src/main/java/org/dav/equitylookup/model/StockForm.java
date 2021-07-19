@@ -1,4 +1,4 @@
-package org.dav.equitylookup.view;
+package org.dav.equitylookup.model;
 
 import lombok.Getter;
 import lombok.Setter;

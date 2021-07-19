@@ -2,13 +2,10 @@
 <html xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <a href="/main">
-        <button>Main Page
-        </button>
-    </a>
     <title>Pick a stock</title>
 </head>
 <body>
+    <div th:insert="navbar :: navbar"></div>
     <h1>Form</h1>
     <form action="#" th:action="@{/stock}" th:object="${stockForm}" method="post">
         <p>Stock: <input type="text" th:field="*{ticker}"/></p>

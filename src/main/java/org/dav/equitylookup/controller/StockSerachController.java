@@ -1,7 +1,7 @@
 package org.dav.equitylookup.controller;
 
 import org.dav.equitylookup.service.StockSearchService;
-import org.dav.equitylookup.view.StockForm;
+import org.dav.equitylookup.model.StockForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

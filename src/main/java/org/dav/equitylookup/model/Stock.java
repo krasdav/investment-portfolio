@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -17,6 +18,8 @@ public class Stock {
     private Long id;
     private String ticker;
     private LocalDateTime dateBought;
+    private BigDecimal price;
+    private BigDecimal boughtPrice;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

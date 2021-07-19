@@ -2,15 +2,12 @@
 <html xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <a href="/main">
-        <button>Main Page
-        </button>
-    </a>
     <title>Stock action</title>
 </head>
 <body>
-<h1 th:text="${userNickname} + '      Stock added : ' + ${ticker}"> </h1>
-<a href="/stocks/add">Return</a>
-</form>
+    <div th:insert="navbar :: navbar"></div>
+    <h1 th:text="${userNickname} + '      Stock added : ' + ${ticker}"> </h1>
+    <a href="/stocks/add">Return</a>
+    </form>
 </body>
 </html>

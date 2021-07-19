@@ -2,17 +2,14 @@
 <html xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <a href="/main">
-        <button>Main Page
-        </button>
-    </a>
     <title>Add user</title>
 </head>
 <body>
-<h1>User</h1>
-<form action="#" th:action="@{/users/add}" th:object="${user}" method="post">
-    <p>User nickname: <input type="text" th:field="*{nickname}"/></p>
-    <p><input type="submit" value="Submit"/> <input type="reset" value="Reset"/></p>
-</form>
+    <div th:insert="navbar :: navbar"></div>
+    <h1>User</h1>
+    <form action="#" th:action="@{/users/add}" th:object="${user}" method="post">
+        <p>User nickname: <input type="text" th:field="*{nickname}"/></p>
+        <p><input type="submit" value="Submit"/> <input type="reset" value="Reset"/></p>
+    </form>
 </body>
 </html>
