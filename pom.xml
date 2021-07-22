@@ -55,7 +55,17 @@
 			<artifactId>YahooFinanceAPI</artifactId>
 			<version>3.15.0</version>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+		<dependency>
+			<groupId>org.modelmapper</groupId>
+			<artifactId>modelmapper</artifactId>
+			<version>2.4.2</version>
+		</dependency>
+    </dependencies>
 
 	<build>
 		<plugins>

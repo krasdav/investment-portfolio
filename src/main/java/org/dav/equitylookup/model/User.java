@@ -1,5 +1,6 @@
 package org.dav.equitylookup.model;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,23 +12,24 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name  = "User")
+@EqualsAndHashCode
+@Table(name  = "user")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String nickname;
-    private BigDecimal portfolio;
+    private BigDecimal portfolio = new BigDecimal("0");
 
     @OneToMany(
             mappedBy = "user",
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private List<Stock> stocks;
+    private List<Stock> stocks = new ArrayList<>();
 
-    public User(){};
+    public User(){}
 
     public User(String nickname){
         this.nickname = nickname;
@@ -37,8 +39,16 @@ public class User {
         stocks.add(stock);
     }
 
+    public void addStocks(List<Stock> stocks){
+        this.stocks.addAll(stocks);
+    }
+
     public void removeStock(Stock stock){
         stocks.remove(stock);
+    }
+
+    public void addToPortfolio(BigDecimal stockValue){
+        portfolio = portfolio.add(stockValue);
     }
 
 }

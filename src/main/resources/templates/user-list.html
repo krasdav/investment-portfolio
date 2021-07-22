@@ -7,8 +7,9 @@
 <body>
     <div th:insert="navbar :: navbar"></div>
     <br/>
-    <tr th:each="stock, User: ${stocks}">
-        <td th:text="${stock.ticker}"></td>
+    <tr th:each="user, User: ${users}">
+        <td th:text="${user.nickname}"></td>
+        <br>
     </tr>
 </body>
 </html>

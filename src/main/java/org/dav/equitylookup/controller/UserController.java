@@ -1,11 +1,11 @@
 package org.dav.equitylookup.controller;
 
-import org.dav.equitylookup.model.Stock;
+import lombok.RequiredArgsConstructor;
+import org.dav.equitylookup.dto.UserDTO;
 import org.dav.equitylookup.model.User;
 import org.dav.equitylookup.service.StockSearchService;
-import org.dav.equitylookup.service.StockService;
 import org.dav.equitylookup.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,19 +14,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 
+@RequiredArgsConstructor
 @Controller
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private StockSearchService stockSearchService;
-
-    @Autowired
-    private StockService stockService;
+    private final ModelMapper modelMapper;
 
     @GetMapping("/users/list")
     public String viewUsers(Model model) {
@@ -35,20 +30,18 @@ public class UserController {
     }
 
     @PostMapping("/users/stocks/list")
-    public String listStocks(@ModelAttribute User user, Model model) throws IOException {
-        BigDecimal portfolioValue = new BigDecimal(0);
-        for ( Stock stock : userService.getUserByNickname(user.getNickname()).getStocks()){
-            stock.setPrice(stockSearchService.findPrice(stockSearchService.findStock(stock.getTicker())));
-            portfolioValue = portfolioValue.add(stock.getPrice());
-        }
-        model.addAttribute("stocks", userService.getUserByNickname(user.getNickname()).getStocks());
-        model.addAttribute("portfolioValue",portfolioValue);
+    public String listStocks(@ModelAttribute UserDTO userDto, Model model) throws IOException {
+        User user = modelMapper.map(userDto, User.class);
+        user = userService.getUserByNickname(user.getNickname());
+        userService.updatePortfolioValue(user);
+        model.addAttribute("stocks", user.getStocks());
+        model.addAttribute("portfolioValue", user.getPortfolio());
         return "user-stock-list";
     }
 
     @GetMapping("/users/stocks/list")
     public String listStocksForm(Model model) {
-        model.addAttribute("user", new User());
+        model.addAttribute("user", new UserDTO());
         return "user-stock-query";
     }
 
@@ -64,7 +57,8 @@ public class UserController {
     }
 
     @PostMapping("/users/add")
-    public String saveUser(@ModelAttribute("user") User user, Model model) {
+    public String saveUser(@ModelAttribute("user") UserDTO userDto, Model model) {
+        User user = modelMapper.map(userDto, User.class);
         userService.saveUser(user);
         model.addAttribute("userNickname", user.getNickname());
         model.addAttribute("userId", user.getId());

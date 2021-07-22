@@ -1,20 +1,21 @@
 package org.dav.equitylookup.controller;
 
-import org.dav.equitylookup.service.StockSearchService;
+import lombok.RequiredArgsConstructor;
 import org.dav.equitylookup.model.StockForm;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.dav.equitylookup.service.StockSearchService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+
 import java.io.IOException;
 
+@RequiredArgsConstructor
 @Controller
 public class StockSerachController {
 
-    @Autowired
-    private StockSearchService stockSearchService;
+    private final StockSearchService stockSearchService;
 
     @GetMapping("/stock")
     public String stockForm(Model model) {

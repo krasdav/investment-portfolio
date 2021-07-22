@@ -26,7 +26,7 @@
       <tr th:each="stock, Stock: ${stocks}">
         <td th:text="${stock.ticker}"></td>
         <td th:text="${stock.boughtPrice}"></td>
-        <td th:text="${stock.price}"></td>
+        <td th:text="${stock.currentPrice}"></td>
       </tr>
     </table>
   </div>

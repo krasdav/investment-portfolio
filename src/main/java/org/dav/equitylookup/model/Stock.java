@@ -18,7 +18,7 @@ public class Stock {
     private Long id;
     private String ticker;
     private LocalDateTime dateBought;
-    private BigDecimal price;
+    private BigDecimal currentPrice;
     private BigDecimal boughtPrice;
 
     @ManyToOne
@@ -37,6 +37,11 @@ public class Stock {
         this.ticker = ticker;
         this.dateBought = LocalDateTime.now();
         this.user = user;
+    }
+
+    public Stock(BigDecimal price) {
+        this.currentPrice = price;
+        this.dateBought = LocalDateTime.now();
     }
 
     public void setUser(User user){

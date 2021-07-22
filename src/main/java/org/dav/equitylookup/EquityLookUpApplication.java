@@ -1,12 +1,13 @@
 package org.dav.equitylookup;
 
+import lombok.RequiredArgsConstructor;
 import org.dav.equitylookup.model.Stock;
 import org.dav.equitylookup.model.User;
 import org.dav.equitylookup.service.StockSearchService;
 import org.dav.equitylookup.service.StockService;
 import org.dav.equitylookup.service.UserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -15,22 +16,25 @@ import org.springframework.stereotype.Controller;
 
 import java.util.ArrayList;
 
+@RequiredArgsConstructor
 @SpringBootApplication
 @Controller
 @EnableJpaRepositories("org.dav.equitylookup.repository")
 public class EquityLookUpApplication {
 
-	@Autowired
-	private UserService userService;
+	private final UserService userService;
 
-	@Autowired
-	private StockService stockService;
+	private final StockService stockService;
 
-	@Autowired
-	private StockSearchService stockSearchService;
+	private final StockSearchService stockSearchService;
 
 	public static void main(String[] args) {
 		SpringApplication.run(EquityLookUpApplication.class, args);
+	}
+
+	@Bean
+	public ModelMapper modelMapper() {
+		return new ModelMapper();
 	}
 
 	@Bean
@@ -41,20 +45,19 @@ public class EquityLookUpApplication {
 			userService.saveUser(newUser);
 			Stock newStock = new Stock("GOOG");
 			newUser.addStock(newStock);
-			newStock.setPrice(stockSearchService.findPrice(stockSearchService.findStock(newStock.getTicker())));
 			newStock.setBoughtPrice(stockSearchService.findPrice(stockSearchService.findStock(newStock.getTicker())));
 			newStock.setUser(newUser);
 			stockService.saveStock(newStock);
 
 			newStock = new Stock("AAPL");
-			newStock.setPrice(stockSearchService.findPrice(stockSearchService.findStock(newStock.getTicker())));
 			newStock.setBoughtPrice(stockSearchService.findPrice(stockSearchService.findStock(newStock.getTicker())));
 			newStock.setUser(newUser);
+			stockService.saveStock(newStock);
 
 			newStock = new Stock("INTC");
-			newStock.setPrice(stockSearchService.findPrice(stockSearchService.findStock(newStock.getTicker())));
 			newStock.setBoughtPrice(stockSearchService.findPrice(stockSearchService.findStock(newStock.getTicker())));
 			newStock.setUser(newUser);
+			stockService.saveStock(newStock);
 		};
 	}
 

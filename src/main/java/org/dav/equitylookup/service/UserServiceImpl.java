@@ -1,18 +1,22 @@
 package org.dav.equitylookup.service;
 
+import lombok.RequiredArgsConstructor;
+import org.dav.equitylookup.model.Stock;
 import org.dav.equitylookup.model.User;
 import org.dav.equitylookup.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService{
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final StockService stockService;
 
     @Override
     public List<User> getAllUsers() {
@@ -20,8 +24,8 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void saveUser(User user) {
-        userRepository.save(user);
+    public User saveUser(User user) {
+        return userRepository.save(user);
     }
 
     @Override
@@ -49,5 +53,12 @@ public class UserServiceImpl implements UserService{
             }
         }
         return null;
+    }
+
+    @Override
+    public void updatePortfolioValue(User user) throws IOException {
+        for( Stock stock : getUserById(user.getId()).getStocks() ){
+            user.addToPortfolio(stockService.updateCurrentStockPrice(stock));
+        }
     }
 }
