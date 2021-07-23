@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -50,6 +51,11 @@ public class StockServiceImpl implements StockService{
         BigDecimal currentPrice = stockSearchService.findPrice(stockSearchService.findStock(stock.getTicker()));
         stock.setCurrentPrice(currentPrice);
         return currentPrice;
+    }
+
+    @Override
+    public User findFirstUser() {
+        return stockRepository.findFirstUser();
     }
 
 

@@ -5,7 +5,6 @@ import org.dav.equitylookup.dto.StockDTO;
 import org.dav.equitylookup.dto.UserDTO;
 import org.dav.equitylookup.model.Stock;
 import org.dav.equitylookup.model.User;
-import org.dav.equitylookup.service.StockSearchService;
 import org.dav.equitylookup.service.StockService;
 import org.dav.equitylookup.service.UserService;
 import org.modelmapper.ModelMapper;

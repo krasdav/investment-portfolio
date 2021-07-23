@@ -4,6 +4,7 @@ import org.dav.equitylookup.dto.UserDTO;
 import org.dav.equitylookup.model.Stock;
 import org.dav.equitylookup.model.User;
 import org.dav.equitylookup.service.StockSearchService;
+import org.dav.equitylookup.service.StockService;
 import org.dav.equitylookup.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -17,10 +18,7 @@ import org.springframework.ui.Model;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -37,6 +35,9 @@ class UserControllerTest {
     private StockSearchService stockSearchService;
 
     @Mock
+    private StockService stockService;
+
+    @Mock
     private ModelMapper modelMapper;
 
     private UserController userController;
@@ -48,7 +49,7 @@ class UserControllerTest {
 
     @BeforeEach
     void initUseCase() {
-        userController = new UserController(userService,modelMapper);
+        userController = new UserController(userService,stockService,modelMapper);
         stockINTC = new Stock(new BigDecimal("500"));
         stockGOOG = new Stock(new BigDecimal("400"));
         userOne = new User("David");

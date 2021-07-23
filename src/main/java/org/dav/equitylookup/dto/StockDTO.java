@@ -16,5 +16,4 @@ public class StockDTO {
     private BigDecimal boughtPrice;
     private User user;
 
-
 }

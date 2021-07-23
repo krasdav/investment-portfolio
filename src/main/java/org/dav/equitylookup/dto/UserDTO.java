@@ -22,8 +22,8 @@ public class UserDTO {
     public UserDTO(User user) {
         this.id = user.getId();
         this.nickname = user.getNickname();
-        this.portfolio = user.getPortfolio();
-        this.stocks = new ArrayList<>(user.getStocks());
+        this.portfolio = BigDecimal.valueOf(user.getPortfolio().doubleValue());
+        this.stocks.addAll(user.getStocks());
     }
 
 }

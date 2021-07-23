@@ -3,7 +3,7 @@ package org.dav.equitylookup.controller;
 import lombok.RequiredArgsConstructor;
 import org.dav.equitylookup.dto.UserDTO;
 import org.dav.equitylookup.model.User;
-import org.dav.equitylookup.service.StockSearchService;
+import org.dav.equitylookup.service.StockService;
 import org.dav.equitylookup.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
@@ -21,21 +21,27 @@ public class UserController {
 
     private final UserService userService;
 
+    private final StockService stockService;
+
     private final ModelMapper modelMapper;
 
     @GetMapping("/users/list")
     public String viewUsers(Model model) {
         model.addAttribute("users", userService.getAllUsers());
+        System.out.println(stockService.findFirstUser());
         return "user-list";
     }
 
     @PostMapping("/users/stocks/list")
     public String listStocks(@ModelAttribute UserDTO userDto, Model model) throws IOException {
         User user = modelMapper.map(userDto, User.class);
+
         user = userService.getUserByNickname(user.getNickname());
         userService.updatePortfolioValue(user);
-        model.addAttribute("stocks", user.getStocks());
-        model.addAttribute("portfolioValue", user.getPortfolio());
+
+        userDto = modelMapper.map(user, UserDTO.class);
+        model.addAttribute("stocks", userDto.getStocks());
+        model.addAttribute("portfolioValue", userDto.getPortfolio());
         return "user-stock-list";
     }
 
@@ -67,9 +73,9 @@ public class UserController {
 
     @GetMapping("/users/{nickname}")
     public String getUserByNickname(@PathVariable("nickname") String nickname, Model model) {
-        User user = userService.getUserByNickname(nickname);
-        model.addAttribute("userNickname", user.getNickname());
-        model.addAttribute("userId", user.getId());
+        UserDTO userDto = modelMapper.map(userService.getUserByNickname(nickname), UserDTO.class);
+        model.addAttribute("userNickname", userDto.getNickname());
+        model.addAttribute("userId", userDto.getId());
         return "user-details";
     }
 

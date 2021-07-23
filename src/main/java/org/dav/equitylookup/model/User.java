@@ -35,6 +35,12 @@ public class User {
         this.nickname = nickname;
     }
 
+    public User(Long id, String nickname, BigDecimal portfolio) {
+        this.id = id;
+        this.nickname = nickname;
+        this.portfolio = portfolio;
+    }
+
     public void addStock(Stock stock){
         stocks.add(stock);
     }
