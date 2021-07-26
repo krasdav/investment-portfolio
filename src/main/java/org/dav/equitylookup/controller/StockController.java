@@ -35,9 +35,10 @@ public class StockController {
     public String addStock(@ModelAttribute("user") UserDTO userDto, @ModelAttribute("stock") StockDTO stockDto, Model model) throws IOException {
         User user = modelMapper.map(userDto, User.class);
         Stock stock = modelMapper.map(stockDto,Stock.class);
-        user = userService.getUserByNickname(user.getNickname());
+        user = userService.getUserByNickname(user.getUsername());
         stockService.addStock(stock,user);
-        model.addAttribute("userNickname", user.getNickname());
+
+        model.addAttribute("userNickname", user.getUsername());
         model.addAttribute("ticker", stock.getTicker());
         return "user-stock-result";
     }

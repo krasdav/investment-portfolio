@@ -49,4 +49,14 @@ public class Stock {
         this.user = user;
     }
 
+    @Override
+    public String toString() {
+        return "Stock : {" +
+                "id=" + id +
+                ", ticker='" + ticker + '\'' +
+                ", dateBought=" + dateBought +
+                ", currentPrice=" + currentPrice +
+                ", boughtPrice=" + boughtPrice +
+                '}';
+    }
 }

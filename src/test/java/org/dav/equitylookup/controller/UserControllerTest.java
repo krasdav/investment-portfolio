@@ -15,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -78,7 +79,7 @@ class UserControllerTest {
         when(modelMapper.map(any(),any())).thenReturn(userOne);
         when(stockSearchService.findPrice(any()))
                 .thenReturn(new BigDecimal("500"), new BigDecimal("400"));
-        userController.listStocks(new UserDTO(userOne),model);
+        userController.listStocks(new UserDTO(userOne), null, model);
         assertThat(model.getAttribute("stocks"), is(List.of(stockINTC,stockGOOG)));
         assertThat(model.getAttribute("portfolioValue"), is(new BigDecimal("900")));
 

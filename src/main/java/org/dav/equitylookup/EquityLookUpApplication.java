@@ -40,8 +40,15 @@ public class EquityLookUpApplication {
 	@Bean
 	InitializingBean sendDatabase() {
 		return () -> {
+			User newUser1 = new User("David");
+			newUser1.setStocks(new ArrayList<>());
+			newUser1.setRoles("ADMIN");
+			newUser1.setPassword("pw");
+			userService.saveUser(newUser1);
 			User newUser = new User("Michal");
 			newUser.setStocks(new ArrayList<>());
+			newUser.setRoles("ROLE_USER");
+			newUser.setPassword("pw");
 			userService.saveUser(newUser);
 			Stock newStock = new Stock("GOOG");
 			newUser.addStock(newStock);

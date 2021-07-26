@@ -8,11 +8,13 @@ import org.dav.equitylookup.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.validation.Valid;
 import java.io.IOException;
 
 @RequiredArgsConstructor
@@ -25,24 +27,21 @@ public class UserController {
 
     private final ModelMapper modelMapper;
 
+
+    @GetMapping("/main")
+    public String frontPage() {
+        return "main";
+    }
+
     @GetMapping("/users/list")
     public String viewUsers(Model model) {
         model.addAttribute("users", userService.getAllUsers());
-        System.out.println(stockService.findFirstUser());
         return "user-list";
     }
 
-    @PostMapping("/users/stocks/list")
-    public String listStocks(@ModelAttribute UserDTO userDto, Model model) throws IOException {
-        User user = modelMapper.map(userDto, User.class);
-
-        user = userService.getUserByNickname(user.getNickname());
-        userService.updatePortfolioValue(user);
-
-        userDto = modelMapper.map(user, UserDTO.class);
-        model.addAttribute("stocks", userDto.getStocks());
-        model.addAttribute("portfolioValue", userDto.getPortfolio());
-        return "user-stock-list";
+    @GetMapping("/users")
+    public String welcomePage(Model model) {
+        return "user-welcome";
     }
 
     @GetMapping("/users/stocks/list")
@@ -51,32 +50,66 @@ public class UserController {
         return "user-stock-query";
     }
 
-    @GetMapping("/users/add")
-    public String saveUser(Model model) {
-        model.addAttribute("user", new User());
-        return "user-add";
+    @PostMapping("/users/stocks/list")
+    public String listStocks(@Valid @ModelAttribute UserDTO userDTO, BindingResult bindingResult, Model model) throws IOException {
+        if( bindingResult.hasErrors()){
+            return "user-stock-query";
+        }
+
+        User user = modelMapper.map(userDTO, User.class);
+        user = userService.getUserByNickname(user.getUsername());
+        userService.updatePortfolioValue(user);
+
+        userDTO = modelMapper.map(user, UserDTO.class);
+        model.addAttribute("stocks", userDTO.getStocks());
+        model.addAttribute("portfolioValue", userDTO.getPortfolio());
+        return "user-stock-list";
     }
 
-    @GetMapping("/main")
-    public String frontPage() {
-        return "main";
+    @GetMapping("/users/add")
+    public String saveUser(Model model) {
+        model.addAttribute("user", new UserDTO());
+        return "user-add-form";
     }
 
     @PostMapping("/users/add")
-    public String saveUser(@ModelAttribute("user") UserDTO userDto, Model model) {
-        User user = modelMapper.map(userDto, User.class);
+    public String saveUser(@Valid @ModelAttribute("user") UserDTO userDTO, BindingResult bindingResult, Model model) {
+        if( bindingResult.hasErrors()){
+            return "user-add-form";
+        }else if( userService.getUserByNickname(userDTO.getUsername()) != null){
+            model.addAttribute("registrationError","User in use");
+            return "user-add-form";
+        }
+        User user = modelMapper.map(userDTO, User.class);
         userService.saveUser(user);
-        model.addAttribute("userNickname", user.getNickname());
+        model.addAttribute("userNickname", user.getUsername());
         model.addAttribute("userId", user.getId());
         return "user-result";
     }
 
-    @GetMapping("/users/{nickname}")
-    public String getUserByNickname(@PathVariable("nickname") String nickname, Model model) {
-        UserDTO userDto = modelMapper.map(userService.getUserByNickname(nickname), UserDTO.class);
-        model.addAttribute("userNickname", userDto.getNickname());
-        model.addAttribute("userId", userDto.getId());
-        return "user-details";
+    @GetMapping("/users/find")
+    public String getUserByNickname(Model model) {
+        model.addAttribute("user", new UserDTO());
+        return "user-find-form";
+    }
+
+    @PostMapping("/users/find")
+    public String getUserByNickname(@Valid @ModelAttribute UserDTO userDTO, BindingResult bindingResult, Model model) throws IOException {
+
+        if( bindingResult.hasErrors()){
+            return "user-find-form";
+        }
+
+        User user = modelMapper.map(userDTO, User.class);
+        user = userService.getUserByNickname(user.getUsername());
+        userService.updatePortfolioValue(user);
+
+        userDTO = modelMapper.map(user, UserDTO.class);
+
+        model.addAttribute("userNickname", userService.getUserByNickname(userDTO.getUsername()).getUsername());
+        model.addAttribute("stocks", userService.getUserByNickname(userDTO.getUsername()).getStocks());
+        model.addAttribute("portfolio", userService.getUserByNickname(userDTO.getUsername()).getPortfolio());
+        return "user-find-res";
     }
 
 }

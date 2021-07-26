@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public User getUserByNickname(String nickname) {
         for (User user : userRepository.findAll()){
-            if ( user.getNickname().equals(nickname)){
+            if ( user.getUsername().equals(nickname)){
                 return user;
             }
         }
@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public void updatePortfolioValue(User user) throws IOException {
-        for( Stock stock : getUserById(user.getId()).getStocks() ){
+        for( Stock stock : user.getStocks() ){
             user.addToPortfolio(stockService.updateCurrentStockPrice(stock));
         }
     }

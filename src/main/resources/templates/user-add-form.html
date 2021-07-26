@@ -9,6 +9,10 @@
     <h1>User</h1>
     <form action="#" th:action="@{/users/add}" th:object="${user}" method="post">
         <p>User nickname: <input type="text" th:field="*{nickname}"/></p>
+        <p th:if="${registrationError}">
+            <span th:text="${registrationError}"></span>
+        </p>
+        <p th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}">Nickname invalid</p>
         <p><input type="submit" value="Submit"/> <input type="reset" value="Reset"/></p>
     </form>
 </body>
