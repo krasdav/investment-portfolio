@@ -7,6 +7,7 @@ import org.dav.equitylookup.model.Stock;
 import org.dav.equitylookup.model.User;
 import org.dav.equitylookup.service.StockService;
 import org.dav.equitylookup.service.UserService;
+import org.dom4j.rule.Mode;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -44,17 +45,15 @@ public class UserController {
     }
 
     @GetMapping("/user/stocks/add")
-    public String addStock(Model model) {
+    public String addStock(Model model){
         model.addAttribute("stock", new Stock());
-        model.addAttribute("user", new User());
         return "user/user-stock-add";
     }
 
     @PostMapping("user/stocks/add")
-    public String addStock(@ModelAttribute("user") UserDTO userDto, @ModelAttribute("stock") StockDTO stockDto, Model model) throws IOException {
-        User user = modelMapper.map(userDto, User.class);
+    public String addStock(@ModelAttribute("stock") StockDTO stockDto, Model model, Principal loggedUser) throws IOException {
         Stock stock = modelMapper.map(stockDto, Stock.class);
-        user = userService.getUserByUsername(user.getUsername());
+        User user = userService.getUserByUsername(loggedUser.getName());
         stockService.addStock(stock, user);
 
         model.addAttribute("username", user.getUsername());

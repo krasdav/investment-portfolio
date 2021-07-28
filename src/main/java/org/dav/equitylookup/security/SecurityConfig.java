@@ -34,9 +34,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/users/**").hasRole("ADMIN")
                 .antMatchers("/user/**").hasAnyRole("USER","ADMIN")
                 .antMatchers("/stocks/**").hasAnyRole("USER","ADMIN")
-                .antMatchers("/main").permitAll()
+                .antMatchers("/index").permitAll()
                 .antMatchers("/stock").permitAll()
-                .and().formLogin();
+                .and()
+                .formLogin()
+                    .permitAll()
+                .and()
+                .logout()
+                    .logoutSuccessUrl("/index");
     }
 
     @SuppressWarnings("deprecation")

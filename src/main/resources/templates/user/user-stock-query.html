@@ -6,7 +6,7 @@
 </head>
 <body>
     <div th:insert="navigation/navbar :: navbar"></div>
-    <h1>Form</h1>
+    <h1>Retrieve stocks</h1>
     <form action="#" th:action="@{/user/stocks/list}" th:object="${user}" method="post">
         <p>User: <input type="text" th:field="*{username}"/></p>
         <p><input type="submit" value="Submit"/> <input type="reset" value="Reset"/></p>

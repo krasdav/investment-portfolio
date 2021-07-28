@@ -6,10 +6,9 @@
 </head>
 <body>
     <div th:insert="navigation/navbar :: navbar"></div>
-    <h1>User</h1>
-    <form action="#" th:action="@{/stocks/add}" method="post">
-        <p>Stock to add: <input type="text" th:field="*{stock.ticker}"/></p>
-        <p>User: <input type="text" th:field="*{user.username}"/></p>
+    <h1> Stock to add</h1>
+    <form action="#" th:action="@{/user/stocks/add}" th:object="${stock}" method="post">
+        <p>Ticker: <input type="text" th:field="*{ticker}"/></p>
         <p><input type="submit" value="Submit"/> <input type="reset" value="Reset"/></p>
     </form>
 </body>
