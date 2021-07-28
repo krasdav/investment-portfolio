@@ -81,10 +81,9 @@ class UserControllerTest {
         when(modelMapper.map(any(),any())).thenReturn(userOne);
         when(stockSearchService.findPrice(any()))
                 .thenReturn(new BigDecimal("500"), new BigDecimal("400"));
-        userController.listStocks(new UserDTO(userOne), null, model);
+        adminController.listStocks(new UserDTO(userOne), null, model);
         assertThat(model.getAttribute("stocks"), is(List.of(stockINTC,stockGOOG)));
         assertThat(model.getAttribute("portfolioValue"), is(new BigDecimal("900")));
-
     }
 
 }

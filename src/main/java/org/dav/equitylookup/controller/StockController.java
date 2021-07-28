@@ -1,11 +1,8 @@
 package org.dav.equitylookup.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.dav.equitylookup.dto.StockDTO;
-import org.dav.equitylookup.dto.UserDTO;
-import org.dav.equitylookup.model.Stock;
-import org.dav.equitylookup.model.User;
-import org.dav.equitylookup.service.StockService;
+import org.dav.equitylookup.model.StockForm;
+import org.dav.equitylookup.service.StockSearchService;
 import org.dav.equitylookup.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
@@ -20,27 +17,21 @@ import java.io.IOException;
 @Controller
 public class StockController {
 
-    private final UserService userService;
-    private final StockService stockService;
-    private final ModelMapper modelMapper;
 
-    @GetMapping("/stocks/add")
-    public String addStock(Model model) {
-        model.addAttribute("stock", new Stock());
-        model.addAttribute("user", new User());
-        return "user-stock-add";
+    private final StockSearchService stockSearchService;
+
+    @GetMapping("/stock")
+    public String stockForm(Model model) {
+        model.addAttribute("stockForm",new StockForm());
+        return "stock/stock-query";
     }
 
-    @PostMapping("/stocks/add")
-    public String addStock(@ModelAttribute("user") UserDTO userDto, @ModelAttribute("stock") StockDTO stockDto, Model model) throws IOException {
-        User user = modelMapper.map(userDto, User.class);
-        Stock stock = modelMapper.map(stockDto,Stock.class);
-        user = userService.getUserByUsername(user.getUsername());
-        stockService.addStock(stock,user);
-
-        model.addAttribute("username", user.getUsername());
-        model.addAttribute("ticker", stock.getTicker());
-        return "user-stock-result";
+    @PostMapping("/stock")
+    public String stockPrice(@ModelAttribute StockForm stockForm, Model model) throws IOException {
+        String stockPrice = stockSearchService.findPrice(stockSearchService.findStock(stockForm.getTicker())).toString();
+        model.addAttribute("stock",stockForm.getTicker());
+        model.addAttribute("stockPrice", stockPrice);
+        return "stock/stock-result";
     }
 
 }

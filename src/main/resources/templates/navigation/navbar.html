@@ -1,13 +1,28 @@
-<html>
+
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <body>
   <div th:fragment="navbar">
-    <hr>
-    <p style="font:bold">
+    <div style="padding-top: px; padding-right: 5px; padding-bottom: 5px; padding-left: 5px">
       <a href="/index"><button>Main Prage</button></a>
+    </div>
+    <div style="padding-top: px; padding-right: 5px; padding-bottom: 5px; padding-left: 5px">
       <a href="/stock"><button>Find stock price</button></a>
-      <a href="/login"><button>Sign in</button></a>
-    </p>
-    <hr>
+    </div>
+    <div style="padding-top: px; padding-right: 5px; padding-bottom: 5px; padding-left: 5px" sec:authorize="isAnonymous()">
+      <a href="/user"><button>Sign in</button></a>
+    </div>
+    <div style="padding-top: px; padding-right: 5px; padding-bottom: 5px; padding-left: 5px" sec:authorize="hasAuthority('ROLE_USER')">
+      <a href="/user/stocks/list"><button>List your stocks</button></a>
+    </div>
+    <div style="padding-top: px; padding-right: 5px; padding-bottom: 5px; padding-left: 5px" sec:authorize="hasAuthority('ROLE_USER')">
+      <a href="/user/stocks/add"><button>Add stock</button></a>
+    </div>
+    <div style="padding-top: px; padding-right: 5px; padding-bottom: 5px; padding-left: 5px" sec:authorize="hasAuthority('ROLE_USER')">
+      <a href="/logout"><button>Logout</button></a>
+    </div>
   </div>
 </body>
 
