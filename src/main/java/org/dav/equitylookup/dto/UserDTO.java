@@ -1,6 +1,8 @@
 package org.dav.equitylookup.dto;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.dav.equitylookup.model.Stock;
 import org.dav.equitylookup.model.User;
 
@@ -11,12 +13,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@Getter
+@Setter
 public class UserDTO {
 
     private Long id;
     @NotBlank
     @Size(min = 4, max =20)
-    private String userName;
+    private String username;
     private BigDecimal portfolio = new BigDecimal("0");
     private List<Stock> stocks = new ArrayList<>();
 
@@ -25,12 +29,8 @@ public class UserDTO {
 
     public UserDTO(User user) {
         this.id = user.getId();
-        this.userName = user.getUsername();
+        this.username = user.getUsername();
         this.portfolio = BigDecimal.valueOf(user.getPortfolio().doubleValue());
         this.stocks.addAll(user.getStocks());
-    }
-
-    public String getUsername() {
-        return userName;
     }
 }

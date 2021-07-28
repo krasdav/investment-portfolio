@@ -45,9 +45,9 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public User getUserByNickname(String nickname) {
+    public User getUserByUsername(String userName) {
         for (User user : userRepository.findAll()){
-            if ( user.getUsername().equals(nickname)){
+            if ( user.getUsername().equals(userName)){
                 return user;
             }
         }

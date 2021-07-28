@@ -29,7 +29,7 @@ class TUserControllerTest {
                 .andExpect(model().attribute("users", hasItem(
                         allOf(
                                 hasProperty("id", is(1L)),
-                                hasProperty("nickname", is("Michal"))
+                                hasProperty("userName", is("Michal"))
                         )
                 )))
                 .andDo(print());

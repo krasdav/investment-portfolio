@@ -10,6 +10,6 @@ public interface UserService {
     User saveUser(User user);
     User getUserById(long id);
     void deleteUserById(long id);
-    User getUserByNickname(String nickname);
+    User getUserByUsername(String userName);
     void updatePortfolioValue(User user) throws IOException;
 }

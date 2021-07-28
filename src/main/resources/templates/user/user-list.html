@@ -5,10 +5,10 @@
     <title>User List</title>
 </head>
 <body>
-    <div th:insert="navbar :: navbar"></div>
+    <div th:insert="navigation/navbar :: navbar"></div>
     <br/>
     <tr th:each="user, User: ${users}">
-        <td th:text="${user.nickname}"></td>
+        <td th:text="${user.username}"></td>
         <br>
     </tr>
 </body>

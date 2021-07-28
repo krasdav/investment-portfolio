@@ -41,6 +41,8 @@ class UserControllerTest {
     @Mock
     private ModelMapper modelMapper;
 
+    private AdminController adminController;
+
     private UserController userController;
 
     private User userOne;
@@ -50,7 +52,7 @@ class UserControllerTest {
 
     @BeforeEach
     void initUseCase() {
-        userController = new UserController(userService,stockService,modelMapper);
+        adminController = new AdminController(userService,modelMapper);
         stockINTC = new Stock(new BigDecimal("500"));
         stockGOOG = new Stock(new BigDecimal("400"));
         userOne = new User("David");
@@ -66,7 +68,7 @@ class UserControllerTest {
         Model model = new ExtendedModelMap();
         when(userService.getAllUsers()).thenReturn(userList);
 
-        userController.viewUsers(model);
+        adminController.viewUsers(model);
 
         assertThat(model.getAttribute("users"), is(userList));
     }
@@ -75,7 +77,7 @@ class UserControllerTest {
     @DisplayName("List stocks for user - Verify portfolio calculation and Model attributes")
     void listStocksPortfolio() throws IOException {
         Model model = new ExtendedModelMap();
-        when(userService.getUserByNickname(any())).thenReturn(userOne);
+        when(userService.getUserByUsername(any())).thenReturn(userOne);
         when(modelMapper.map(any(),any())).thenReturn(userOne);
         when(stockSearchService.findPrice(any()))
                 .thenReturn(new BigDecimal("500"), new BigDecimal("400"));

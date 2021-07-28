@@ -42,14 +42,16 @@ public class EquityLookUpApplication {
 		return () -> {
 			User newUser1 = new User("David");
 			newUser1.setStocks(new ArrayList<>());
-			newUser1.setRoles("ADMIN");
+			newUser1.setRole("ADMIN");
 			newUser1.setPassword("pw");
 			userService.saveUser(newUser1);
+
 			User newUser = new User("Michal");
 			newUser.setStocks(new ArrayList<>());
-			newUser.setRoles("ROLE_USER");
+			newUser.setRole("ROLE_USER");
 			newUser.setPassword("pw");
 			userService.saveUser(newUser);
+
 			Stock newStock = new Stock("GOOG");
 			newUser.addStock(newStock);
 			newStock.setBoughtPrice(stockSearchService.findPrice(stockSearchService.findStock(newStock.getTicker())));

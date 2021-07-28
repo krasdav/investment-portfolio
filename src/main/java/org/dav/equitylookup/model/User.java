@@ -23,8 +23,8 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String userName;
-    private String roles = "None";
+    private String username;
+    private String role = "None";
     private String password = "password";
     private BigDecimal portfolio = new BigDecimal("0");
 
@@ -37,13 +37,13 @@ public class User implements UserDetails {
 
     public User(){}
 
-    public User(String userName){
-        this.userName = userName;
+    public User(String username){
+        this.username = username;
     }
 
-    public User(Long id, String userName, BigDecimal portfolio) {
+    public User(Long id, String username, BigDecimal portfolio) {
         this.id = id;
-        this.userName = userName;
+        this.username = username;
         this.portfolio = portfolio;
     }
 
@@ -65,12 +65,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(roles));
-    }
-
-    @Override
-    public String getUsername() {
-        return userName;
+        return List.of(new SimpleGrantedAuthority(role));
     }
 
     @Override

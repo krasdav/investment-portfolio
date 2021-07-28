@@ -20,7 +20,7 @@ public class StockSerachController {
     @GetMapping("/stock")
     public String stockForm(Model model) {
         model.addAttribute("stockForm",new StockForm());
-        return "stock-query";
+        return "stock/stock-query";
     }
 
     @PostMapping("/stock")
@@ -28,7 +28,7 @@ public class StockSerachController {
         String stockPrice = stockSearchService.findPrice(stockSearchService.findStock(stockForm.getTicker())).toString();
         model.addAttribute("stock",stockForm.getTicker());
         model.addAttribute("stockPrice", stockPrice);
-        return "stock-result";
+        return "stock/stock-result";
     }
 
 }
