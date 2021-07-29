@@ -54,28 +54,6 @@ public class AdminController {
         return "user-find-res";
     }
 
-
-    @GetMapping("/user/add")
-    public String saveUser(Model model) {
-        model.addAttribute("user", new UserDTO());
-        return "user/user-add-form";
-    }
-
-    @PostMapping("/user/add")
-    public String saveUser(@Valid @ModelAttribute("user") UserDTO userDTO, BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()) {
-            return "user/user-add-form";
-        } else if (userService.getUserByUsername(userDTO.getUsername()) != null) {
-            model.addAttribute("registrationError", "User in use");
-            return "user/user-add-form";
-        }
-        User user = modelMapper.map(userDTO, User.class);
-        userService.saveUser(user);
-        model.addAttribute("userName", user.getUsername());
-        model.addAttribute("userId", user.getId());
-        return "user/user-result";
-    }
-
     @PostMapping("/user/stocks/list")
     public String listStocks(@Valid @ModelAttribute UserDTO userDTO, BindingResult bindingResult, Model model) throws IOException {
         if (bindingResult.hasErrors()) {

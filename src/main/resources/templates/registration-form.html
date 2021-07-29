@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Add user</title>
+</head>
+<body>
+<div th:insert="navigation/navbar :: navbar"></div>
+<h1>User</h1>
+<form action="#" th:action="@{/registration}" th:object="${user}" method="post">
+  <p>Username: <input type="text" th:field="*{username}"/></p>
+  <p>Password: <input type="text" th:field="*{password}"/></p>
+  <p>Email: <input type="text" th:field="*{email}"/></p>
+  <p th:if="${registrationError}">
+    <span th:text="${registrationError}"></span>
+  </p>
+  <p th:if="${#fields.hasErrors('username')}" th:errors="*{username}">User name invalid</p>
+  <p><input type="submit" value="Submit"/> <input type="reset" value="Reset"/></p>
+</form>
+</body>
+</html>

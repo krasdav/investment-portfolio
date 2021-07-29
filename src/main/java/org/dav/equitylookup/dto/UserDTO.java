@@ -21,6 +21,8 @@ public class UserDTO {
     @NotBlank
     @Size(min = 4, max =20)
     private String username;
+    private String email;
+    private String password;
     private BigDecimal portfolio = new BigDecimal("0");
     private List<Stock> stocks = new ArrayList<>();
 

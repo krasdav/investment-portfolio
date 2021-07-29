@@ -14,6 +14,9 @@
     <div style="padding-top: px; padding-right: 5px; padding-bottom: 5px; padding-left: 5px" sec:authorize="isAnonymous()">
       <a href="/user"><button>Sign in</button></a>
     </div>
+    <div style="padding-top: px; padding-right: 5px; padding-bottom: 5px; padding-left: 5px" sec:authorize="isAnonymous()">
+      <a href="/registration"><button>Register</button></a>
+    </div>
     <div style="padding-top: px; padding-right: 5px; padding-bottom: 5px; padding-left: 5px" sec:authorize="hasAuthority('ROLE_USER')">
       <a href="/user/stocks/list"><button>List your stocks</button></a>
     </div>

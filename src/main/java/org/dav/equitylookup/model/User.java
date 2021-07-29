@@ -24,6 +24,7 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String username;
+    private String email;
     private String role = "None";
     private String password = "password";
     private BigDecimal portfolio = new BigDecimal("0");
