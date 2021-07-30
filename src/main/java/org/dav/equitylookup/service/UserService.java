@@ -12,4 +12,5 @@ public interface UserService {
     void deleteUserById(long id);
     User getUserByUsername(String userName);
     void updatePortfolioValue(User user) throws IOException;
+    User findByEmail(String email);
 }

@@ -8,6 +8,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,8 +38,9 @@ public class IndexController {
     public String saveUser(@Valid @ModelAttribute("user") UserDTO userDTO, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             return "registration-form";
-        } else if (userService.getUserByUsername(userDTO.getUsername()) != null) {
-            model.addAttribute("registrationError", "User in use");
+        } else if (userService.getUserByUsername(userDTO.getUsername()) != null &&
+                userService.findByEmail(userDTO.getEmail()) != null) {
+            bindingResult.rejectValue("username", "user.username", "Username with this email and username already exists");
             return "registration-form";
         }
         User user = modelMapper.map(userDTO, User.class);

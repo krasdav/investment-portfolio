@@ -9,12 +9,11 @@
 <h1>User</h1>
 <form action="#" th:action="@{/registration}" th:object="${user}" method="post">
   <p>Username: <input type="text" th:field="*{username}"/></p>
-  <p>Password: <input type="text" th:field="*{password}"/></p>
+  <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}">User name invalid</div>
+  <p>Password: <input type="password" th:field="*{password}"/></p>
+  <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}">User name invalid</div>
   <p>Email: <input type="text" th:field="*{email}"/></p>
-  <p th:if="${registrationError}">
-    <span th:text="${registrationError}"></span>
-  </p>
-  <p th:if="${#fields.hasErrors('username')}" th:errors="*{username}">User name invalid</p>
+  <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}">User name invalid</div>
   <p><input type="submit" value="Submit"/> <input type="reset" value="Reset"/></p>
 </form>
 </body>
