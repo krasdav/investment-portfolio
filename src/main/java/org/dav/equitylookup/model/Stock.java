@@ -5,7 +5,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -17,36 +18,29 @@ public class Stock {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String ticker;
-    private LocalDateTime dateBought;
     private BigDecimal currentPrice;
-    private BigDecimal boughtPrice;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            },
+            mappedBy = "stocks")
+    private List<User> users = new ArrayList<>();
 
     public Stock() {
     }
 
-    public Stock(String ticker){
+    public Stock(String ticker) {
         this.ticker = ticker;
-        this.dateBought = LocalDateTime.now();
-    }
-
-    public Stock(String ticker, User user) {
-        this.ticker = ticker;
-        this.dateBought = LocalDateTime.now();
-        this.user = user;
     }
 
     public Stock(BigDecimal price) {
         this.currentPrice = price;
-        this.dateBought = LocalDateTime.now();
     }
 
-    public void setUser(User user){
-        this.dateBought = LocalDateTime.now();
-        this.user = user;
+    public void addUser(User user){
+        users.add(user);
     }
 
     @Override
@@ -54,9 +48,7 @@ public class Stock {
         return "Stock : {" +
                 "id=" + id +
                 ", ticker='" + ticker + '\'' +
-                ", dateBought=" + dateBought +
                 ", currentPrice=" + currentPrice +
-                ", boughtPrice=" + boughtPrice +
                 '}';
     }
 }

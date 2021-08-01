@@ -40,33 +40,35 @@ public class EquityLookUpApplication {
 	@Bean
 	InitializingBean sendDatabase() {
 		return () -> {
-			User newUser1 = new User("David");
-			newUser1.setStocks(new ArrayList<>());
-			newUser1.setRole("ADMIN");
-			newUser1.setPassword("pw");
-			userService.saveUser(newUser1);
+			User david = new User("David");
+			david.setStocks(new ArrayList<>());
+			david.setRole("ADMIN");
+			david.setPassword("pw");
+			userService.saveUser(david);
 
-			User newUser = new User("Michal");
-			newUser.setStocks(new ArrayList<>());
-			newUser.setRole("ROLE_USER");
-			newUser.setPassword("pw");
-			userService.saveUser(newUser);
+			User michal = new User("Michal");
+			michal.setStocks(new ArrayList<>());
+			michal.setRole("ROLE_USER");
+			michal.setPassword("pw");
+			userService.saveUser(michal);
 
-			Stock newStock = new Stock("GOOG");
-			newUser.addStock(newStock);
-			newStock.setBoughtPrice(stockSearchService.findPrice(stockSearchService.findStock(newStock.getTicker())));
-			newStock.setUser(newUser);
-			stockService.saveStock(newStock);
+			Stock google = new Stock("GOOG");
+			stockService.saveStock(google);
 
-			newStock = new Stock("AAPL");
-			newStock.setBoughtPrice(stockSearchService.findPrice(stockSearchService.findStock(newStock.getTicker())));
-			newStock.setUser(newUser);
-			stockService.saveStock(newStock);
+			Stock apple = new Stock("AAPL");
+			stockService.saveStock(apple);
 
-			newStock = new Stock("INTC");
-			newStock.setBoughtPrice(stockSearchService.findPrice(stockSearchService.findStock(newStock.getTicker())));
-			newStock.setUser(newUser);
-			stockService.saveStock(newStock);
+			Stock intel = new Stock("INTC");
+			stockService.saveStock(intel);
+
+			userService.addStockToUser(intel,michal);
+			intel.addUser(michal);
+
+			userService.addStockToUser(google,michal);
+			google.addUser(michal);
+
+			userService.saveUser(michal);
+
 		};
 	}
 

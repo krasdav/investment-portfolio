@@ -54,11 +54,29 @@ public class UserController {
     public String addStock(@ModelAttribute("stock") StockDTO stockDto, Model model, Principal loggedUser) throws IOException {
         Stock stock = modelMapper.map(stockDto, Stock.class);
         User user = userService.getUserByUsername(loggedUser.getName());
-        stockService.addStock(stock, user);
+        stockService.addStock(stock);
+        userService.addStockToUser(stock,user);
 
         model.addAttribute("username", user.getUsername());
         model.addAttribute("ticker", stock.getTicker());
         return "user/user-stock-result";
+    }
+
+    @GetMapping("/user/stocks/remove")
+    public String removeStockFromUser(Model model){
+        model.addAttribute("stock", new Stock());
+        return "user/user-stock-remove";
+    }
+
+    @PostMapping("user/stocks/remove")
+    public String removeStockFromUser(@ModelAttribute("stock") StockDTO stockDto, Model model, Principal loggedUser) throws IOException {
+        Stock stock = modelMapper.map(stockDto, Stock.class);
+        User user = userService.getUserByUsername(loggedUser.getName());
+        userService.removeStockFromUser(stock, user);
+
+        model.addAttribute("username", user.getUsername());
+        model.addAttribute("ticker", stock.getTicker());
+        return "user/user-stock-remove-result";
     }
 
 }

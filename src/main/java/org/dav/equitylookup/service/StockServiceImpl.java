@@ -39,10 +39,7 @@ public class StockServiceImpl implements StockService{
         stockRepository.deleteById(id);
     }
 
-    public void addStock(Stock stock, User user) throws IOException {
-        user.addStock(stock);
-        stock.setBoughtPrice(stockSearchService.findPrice(stockSearchService.findStock(stock.getTicker())));
-        stock.setUser(user);
+    public void addStock(Stock stock){
         saveStock(stock);
     }
 
@@ -51,11 +48,4 @@ public class StockServiceImpl implements StockService{
         stock.setCurrentPrice(currentPrice);
         return currentPrice;
     }
-
-    @Override
-    public User findFirstUser() {
-        return stockRepository.findFirstUser();
-    }
-
-
 }

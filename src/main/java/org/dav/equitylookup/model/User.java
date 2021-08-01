@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -29,10 +30,18 @@ public class User implements UserDetails {
     private String password = "password";
     private BigDecimal portfolio = new BigDecimal("0");
 
-    @OneToMany(
-            mappedBy = "user",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
+    @OneToMany
+    private List<UserStockInfo> userStocksInfo = new ArrayList<>();
+
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
+    @JoinTable(
+            name = "stock_owned",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name ="stock_id")
     )
     private List<Stock> stocks = new ArrayList<>();
 
@@ -48,7 +57,8 @@ public class User implements UserDetails {
         this.portfolio = portfolio;
     }
 
-    public void addStock(Stock stock){
+    public void addStock(Stock stock, UserStockInfo userStockInfo){
+        userStocksInfo.add(userStockInfo);
         stocks.add(stock);
     }
 

@@ -9,7 +9,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface StockRepository extends JpaRepository<Stock, Long> {
 
-    @Query("SELECT u FROM User u where u.id = 1")
-    User findFirstUser();
 
 }
