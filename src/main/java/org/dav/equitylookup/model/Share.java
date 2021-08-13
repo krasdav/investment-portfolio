@@ -10,26 +10,27 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-public class UserStockInfo {
+public class Share {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private LocalDateTime timeBought;
     private BigDecimal boughtPrice;
-    @OneToOne
-    private Stock stock;
+    private String ticker;
     @ManyToOne
-    private User user;
+    private Stock stock;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Portfolio portfolio;
 
-
-    public UserStockInfo() {
+    public Share() {
     }
 
-    public UserStockInfo(LocalDateTime timeBought, BigDecimal boughtPrice, Stock stock, User user) {
-        this.timeBought = timeBought;
+    public Share(BigDecimal boughtPrice, Stock stock, User user) {
+        this.ticker = stock.getTicker();
+        this.timeBought = LocalDateTime.now();
         this.boughtPrice = boughtPrice;
         this.stock = stock;
-        this.user = user;
+        this.portfolio = user.getPortfolio();
     }
 }

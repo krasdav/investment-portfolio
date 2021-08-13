@@ -7,7 +7,7 @@
 <body>
     <div th:insert="navigation/navbar :: navbar"></div>
     <h1> Stock to add</h1>
-    <form action="#" th:action="@{/user/stocks/add}" th:object="${stock}" method="post">
+    <form action="#" th:action="@{/user/stocks/add}" th:object="${share}" method="post">
         <p>Ticker: <input type="text" th:field="*{ticker}"/></p>
         <p><input type="submit" value="Submit"/> <input type="reset" value="Reset"/></p>
     </form>

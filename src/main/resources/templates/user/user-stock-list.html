@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>Stock List</title>
-  <style>
+    <meta charset="UTF-8">
+    <title>Stock List</title>
+    <style>
     table, th, td {
       border: 1px solid black;
       border-collapse: collapse;
@@ -11,28 +11,36 @@
     th, td {
       padding: 15px;
     }
-  </style>
+
+    </style>
 </head>
 <body>
-  <div th:insert="navigation/navbar :: navbar"></div>
+<div th:insert="navigation/navbar :: navbar"></div>
 
-  <div>
+<div>
     <table>
-      <tr>
-        <th>Stock</th>
-        <th>Initial Price</th>
-        <th>Actual Price</th>
-      </tr>
-      <tr th:each="stock, Stock: ${stocks}">
-        <td th:text="${stock.ticker}"></td>
-        <td th:text="${stock.boughtPrice}"></td>
-        <td th:text="${stock.currentPrice}"></td>
-      </tr>
+        <tr>
+            <th>Stock</th>
+            <th>Initial Price</th>
+            <th>Actual Price</th>
+            <th>Delete</th>
+        </tr>
+        <tr th:each="share, Shares: ${portfolio.shares}">
+            <td th:text="${share.ticker}"></td>
+            <td th:text="${share.boughtPrice}"></td>
+            <td th:text="${share.stock.currentPrice}"></td>
+            <td>
+                <form action="#" th:action="@{/user/stocks/remove/}" method="post">
+                    <input type="hidden" name="id" th:value="${share.id}"/>
+                    <input type="submit" value="Delete" class="btn btn-danger"/>
+                </form>
+            </td>
+        </tr>
     </table>
-  </div>
+</div>
 
-  <p>
-    <span th:text="'Total : ' + ${portfolioValue}"></span>
-  </p>
+<p>
+    <span th:text="'Total : ' + ${portfolio.portfolioValue}"></span>
+</p>
 </body>
 </html>

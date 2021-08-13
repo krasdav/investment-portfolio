@@ -1,10 +1,8 @@
 package org.dav.equitylookup.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.dav.equitylookup.model.StockForm;
-import org.dav.equitylookup.service.StockSearchService;
-import org.dav.equitylookup.service.UserService;
-import org.modelmapper.ModelMapper;
+import org.dav.equitylookup.model.form.StockForm;
+import org.dav.equitylookup.service.implementation.StockSearchService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

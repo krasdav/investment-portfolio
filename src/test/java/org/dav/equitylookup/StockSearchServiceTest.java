@@ -1,7 +1,7 @@
 package org.dav.equitylookup;
 
 import org.dav.equitylookup.model.StockWrapper;
-import org.dav.equitylookup.service.StockSearchService;
+import org.dav.equitylookup.service.implementation.StockSearchService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

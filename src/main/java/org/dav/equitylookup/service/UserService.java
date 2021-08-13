@@ -3,7 +3,6 @@ package org.dav.equitylookup.service;
 import org.dav.equitylookup.model.Stock;
 import org.dav.equitylookup.model.User;
 
-import java.io.IOException;
 import java.util.List;
 
 public interface UserService {
@@ -12,8 +11,5 @@ public interface UserService {
     User getUserById(long id);
     void deleteUserById(long id);
     User getUserByUsername(String userName);
-    void updatePortfolioValue(User user) throws IOException;
     User findByEmail(String email);
-    void addStockToUser(Stock stock, User user);
-    void removeStockFromUser(Stock stock, User user);
 }

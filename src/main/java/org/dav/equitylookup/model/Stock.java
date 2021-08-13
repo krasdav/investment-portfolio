@@ -5,8 +5,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
@@ -20,14 +18,6 @@ public class Stock {
     private String ticker;
     private BigDecimal currentPrice;
 
-    @ManyToMany(fetch = FetchType.LAZY,
-            cascade = {
-                    CascadeType.PERSIST,
-                    CascadeType.MERGE
-            },
-            mappedBy = "stocks")
-    private List<User> users = new ArrayList<>();
-
     public Stock() {
     }
 
@@ -37,10 +27,6 @@ public class Stock {
 
     public Stock(BigDecimal price) {
         this.currentPrice = price;
-    }
-
-    public void addUser(User user){
-        users.add(user);
     }
 
     @Override

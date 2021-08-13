@@ -1,4 +1,4 @@
-package org.dav.equitylookup.service;
+package org.dav.equitylookup.service.implementation;
 
 import lombok.AllArgsConstructor;
 import org.dav.equitylookup.model.StockWrapper;

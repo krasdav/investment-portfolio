@@ -1,14 +1,13 @@
 package org.dav.equitylookup.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.dav.equitylookup.dto.UserDTO;
+import org.dav.equitylookup.model.dto.UserDTO;
 import org.dav.equitylookup.model.User;
 import org.dav.equitylookup.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -1,9 +1,13 @@
 package org.dav.equitylookup;
 
 import lombok.RequiredArgsConstructor;
+import org.dav.equitylookup.model.Portfolio;
+import org.dav.equitylookup.model.Share;
 import org.dav.equitylookup.model.Stock;
 import org.dav.equitylookup.model.User;
-import org.dav.equitylookup.service.StockSearchService;
+import org.dav.equitylookup.service.PortfolioService;
+import org.dav.equitylookup.service.ShareService;
+import org.dav.equitylookup.service.implementation.StockSearchService;
 import org.dav.equitylookup.service.StockService;
 import org.dav.equitylookup.service.UserService;
 import org.modelmapper.ModelMapper;
@@ -28,6 +32,10 @@ public class EquityLookUpApplication {
 
 	private final StockSearchService stockSearchService;
 
+	private final PortfolioService portfolioService;
+
+	private final ShareService shareService;
+
 	public static void main(String[] args) {
 		SpringApplication.run(EquityLookUpApplication.class, args);
 	}
@@ -40,14 +48,7 @@ public class EquityLookUpApplication {
 	@Bean
 	InitializingBean sendDatabase() {
 		return () -> {
-			User david = new User("David");
-			david.setStocks(new ArrayList<>());
-			david.setRole("ADMIN");
-			david.setPassword("pw");
-			userService.saveUser(david);
-
 			User michal = new User("Michal");
-			michal.setStocks(new ArrayList<>());
 			michal.setRole("ROLE_USER");
 			michal.setPassword("pw");
 			userService.saveUser(michal);
@@ -61,14 +62,25 @@ public class EquityLookUpApplication {
 			Stock intel = new Stock("INTC");
 			stockService.saveStock(intel);
 
-			userService.addStockToUser(intel,michal);
-			intel.addUser(michal);
+			Portfolio portfolio = new Portfolio("Michal's Portfolio", michal);
+			portfolioService.savePortfolio(portfolio);
 
-			userService.addStockToUser(google,michal);
-			google.addUser(michal);
+			michal.setPortfolio(portfolio);
 
-			userService.saveUser(michal);
+			Share shareGoogle = new Share(stockSearchService.findPrice(stockSearchService.findStock(google.getTicker())),google,michal);
+			shareService.saveShare(shareGoogle);
 
+			Share shareIntel = new Share(stockSearchService.findPrice(stockSearchService.findStock(intel.getTicker())),intel,michal);
+			shareService.saveShare(shareIntel);
+
+			portfolio.addShare(shareGoogle);
+			portfolio.addShare(shareIntel);
+
+//			intel.addUser(michal);
+//			userService.addStockToUser(intel,michal);
+//
+//			google.addUser(michal);
+//			userService.addStockToUser(google,michal);
 		};
 	}
 

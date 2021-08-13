@@ -8,9 +8,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -28,22 +25,12 @@ public class User implements UserDetails {
     private String email;
     private String role = "None";
     private String password = "password";
-    private BigDecimal portfolio = new BigDecimal("0");
 
-    @OneToMany
-    private List<UserStockInfo> userStocksInfo = new ArrayList<>();
 
-    @ManyToMany(fetch = FetchType.LAZY,
-            cascade = {
-                    CascadeType.PERSIST,
-                    CascadeType.MERGE
-            })
-    @JoinTable(
-            name = "stock_owned",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name ="stock_id")
-    )
-    private List<Stock> stocks = new ArrayList<>();
+    @OneToOne(
+            mappedBy = "user",
+            cascade = CascadeType.ALL)
+    private Portfolio portfolio;
 
     public User(){}
 
@@ -51,27 +38,11 @@ public class User implements UserDetails {
         this.username = username;
     }
 
-    public User(Long id, String username, BigDecimal portfolio) {
+
+    public User(Long id, String username, Portfolio portfolio) {
         this.id = id;
         this.username = username;
         this.portfolio = portfolio;
-    }
-
-    public void addStock(Stock stock, UserStockInfo userStockInfo){
-        userStocksInfo.add(userStockInfo);
-        stocks.add(stock);
-    }
-
-    public void addStocks(List<Stock> stocks){
-        this.stocks.addAll(stocks);
-    }
-
-    public void removeStock(Stock stock){
-        stocks.remove(stock);
-    }
-
-    public void addToPortfolio(BigDecimal stockValue){
-        portfolio = portfolio.add(stockValue);
     }
 
     @Override
