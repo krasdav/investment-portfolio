@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Add user</title>
+  <link rel="stylesheet" href="../navbar.css">
 </head>
 <body>
 <div th:insert="navigation/navbar :: navbar"></div>
@@ -14,6 +15,8 @@
   <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}">User name invalid</div>
   <p>Email: <input type="text" th:field="*{email}"/></p>
   <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}">User name invalid</div>
+  <p>Portfolio Name: <input type="text" th:field="*{portfolioName}"/></p>
+  <div th:if="${#fields.hasErrors('portfolioName')}" th:errors="*{portfolioName}">User name invalid</div>
   <p><input type="submit" value="Submit"/> <input type="reset" value="Reset"/></p>
 </form>
 </body>

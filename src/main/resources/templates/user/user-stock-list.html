@@ -3,27 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <title>Stock List</title>
-    <style>
-    table, th, td {
-      border: 1px solid black;
-      border-collapse: collapse;
-    }
-    th, td {
-      padding: 15px;
-    }
-
-    </style>
+    <link rel="stylesheet" href="../../navbar.css">
 </head>
 <body>
 <div th:insert="navigation/navbar :: navbar"></div>
-
+<div>
+    <span th:text="${portfolio.name}"></span>
+</div>
 <div>
     <table>
         <tr>
-            <th>Stock</th>
+            <th>Share</th>
             <th>Initial Price</th>
             <th>Actual Price</th>
-            <th>Delete</th>
         </tr>
         <tr th:each="share, Shares: ${portfolio.shares}">
             <td th:text="${share.ticker}"></td>

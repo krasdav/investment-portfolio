@@ -26,62 +26,56 @@ import java.util.ArrayList;
 @EnableJpaRepositories("org.dav.equitylookup.repository")
 public class EquityLookUpApplication {
 
-	private final UserService userService;
+    private final UserService userService;
 
-	private final StockService stockService;
+    private final StockService stockService;
 
-	private final StockSearchService stockSearchService;
+    private final StockSearchService stockSearchService;
 
-	private final PortfolioService portfolioService;
+    private final PortfolioService portfolioService;
 
-	private final ShareService shareService;
+    private final ShareService shareService;
 
-	public static void main(String[] args) {
-		SpringApplication.run(EquityLookUpApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(EquityLookUpApplication.class, args);
+    }
 
-	@Bean
-	public ModelMapper modelMapper() {
-		return new ModelMapper();
-	}
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
+    }
 
-	@Bean
-	InitializingBean sendDatabase() {
-		return () -> {
-			User michal = new User("Michal");
-			michal.setRole("ROLE_USER");
-			michal.setPassword("pw");
-			userService.saveUser(michal);
+    @Bean
+    InitializingBean sendDatabase() {
+        return () -> {
+            User michal = new User("Michal");
+            michal.setRole("ROLE_USER");
+            michal.setPassword("pw");
+            userService.saveUser(michal);
 
-			Stock google = new Stock("GOOG");
-			stockService.saveStock(google);
+            Stock google = new Stock("GOOG");
+            stockService.saveStock(google);
 
-			Stock apple = new Stock("AAPL");
-			stockService.saveStock(apple);
+            Stock apple = new Stock("AAPL");
+            stockService.saveStock(apple);
 
-			Stock intel = new Stock("INTC");
-			stockService.saveStock(intel);
+            Stock intel = new Stock("INTC");
+            stockService.saveStock(intel);
 
-			Portfolio portfolio = new Portfolio("Michal's Portfolio", michal);
-			portfolioService.savePortfolio(portfolio);
+            Portfolio portfolio = new Portfolio("Michal's Portfolio", michal);
+            portfolioService.savePortfolio(portfolio);
 
-			michal.setPortfolio(portfolio);
+            michal.setPortfolio(portfolio);
 
-			Share shareGoogle = new Share(stockSearchService.findPrice(stockSearchService.findStock(google.getTicker())),google,michal);
-			shareService.saveShare(shareGoogle);
+            Share shareGoogle = new Share(stockSearchService.findPrice(stockSearchService.findStock(google.getTicker())), google, michal);
+//            shareService.saveShare(shareGoogle);
 
-			Share shareIntel = new Share(stockSearchService.findPrice(stockSearchService.findStock(intel.getTicker())),intel,michal);
-			shareService.saveShare(shareIntel);
+            Share shareIntel = new Share(stockSearchService.findPrice(stockSearchService.findStock(intel.getTicker())), intel, michal);
+//            shareService.saveShare(shareIntel);
+            portfolioService.addShare(shareGoogle, portfolio.getName());
+            portfolioService.addShare(shareIntel, portfolio.getName());
 
-			portfolio.addShare(shareGoogle);
-			portfolio.addShare(shareIntel);
-
-//			intel.addUser(michal);
-//			userService.addStockToUser(intel,michal);
-//
-//			google.addUser(michal);
-//			userService.addStockToUser(google,michal);
-		};
-	}
+        };
+    }
 
 }

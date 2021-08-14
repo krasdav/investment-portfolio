@@ -17,6 +17,7 @@ public class Portfolio {
     private Long id;
 
     private String name;
+
     private BigDecimal portfolioValue = new BigDecimal("0");
     private LocalDateTime creationTime;
 
@@ -40,15 +41,6 @@ public class Portfolio {
         this.user = user;
     }
 
-    public void addShare(Share share) {
-        shares.add(share);
-        portfolioValue = portfolioValue.add(share.getBoughtPrice());
-    }
-
-    public void removeShare(Share share) {
-        shares.remove(share);
-    }
-
     public List<Share> getShares() {
         return shares;
     }
@@ -57,10 +49,16 @@ public class Portfolio {
         return shares.stream().map(Share::getTicker).collect(Collectors.toList());
     }
 
-    public void updatePortfolioValue() {
-        portfolioValue = new BigDecimal("0");
-        for (Share share : shares) {
-            portfolioValue = portfolioValue.add(share.getStock().getCurrentPrice());
-        }
+    public void setPortfolioValue(BigDecimal portfolioValue){
+        this.portfolioValue = portfolioValue;
     }
+
+    public void addToPortfolioValue(BigDecimal shareValue){
+        portfolioValue = portfolioValue.add(shareValue);
+    }
+
+    public void removeShare(Share share){
+        shares.remove(share);
+    }
+
 }

@@ -1,18 +1,21 @@
 package org.dav.equitylookup.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.dav.equitylookup.exceptions.PortfolioNotFoundException;
 import org.dav.equitylookup.model.Portfolio;
 import org.dav.equitylookup.model.Share;
 import org.dav.equitylookup.model.Stock;
 import org.dav.equitylookup.model.User;
 import org.dav.equitylookup.model.dto.PortfolioDTO;
 import org.dav.equitylookup.model.form.ShareForm;
+import org.dav.equitylookup.service.PortfolioService;
 import org.dav.equitylookup.service.ShareService;
 import org.dav.equitylookup.service.StockService;
 import org.dav.equitylookup.service.UserService;
 import org.dav.equitylookup.service.implementation.StockSearchService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -36,6 +39,8 @@ public class UserController {
 
     private final ShareService shareService;
 
+    private final PortfolioService portfolioService;
+
     @GetMapping("/user")
     public String welcomePage(Model model, Principal user) {
         model.addAttribute("username", user.getName());
@@ -46,7 +51,11 @@ public class UserController {
     public String listStocksForm(Model model, Principal loggedUser) throws IOException {
         User user = userService.getUserByUsername(loggedUser.getName());
         stockService.updateStockPrices(user.getPortfolio().getShares());
-        user.getPortfolio().updatePortfolioValue();
+        try {
+            portfolioService.updatePortfolioValue(user.getPortfolio().getName());
+        } catch (PortfolioNotFoundException e) {
+            e.printStackTrace();
+        }
         PortfolioDTO portfolioDTO = modelMapper.map(user.getPortfolio(), PortfolioDTO.class);
         model.addAttribute("portfolio", portfolioDTO);
         return "user/user-stock-list";
@@ -67,10 +76,11 @@ public class UserController {
             stockService.saveStock(stock);
         }
         Share share = new Share(stockSearchService.findPrice(stockSearchService.findStock(stock.getTicker())),stock, user);
-        shareService.saveShare(share);
-        Portfolio portfolio = user.getPortfolio();
-
-        portfolio.addShare(share);
+        try {
+            portfolioService.addShare(share,user.getPortfolio().getName());
+        } catch (PortfolioNotFoundException e) {
+            e.printStackTrace();
+        }
 
         model.addAttribute("username", user.getUsername());
         model.addAttribute("ticker", share.getTicker());
