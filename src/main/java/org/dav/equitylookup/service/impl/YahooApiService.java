@@ -12,20 +12,19 @@ import java.math.BigDecimal;
 @Service
 public class YahooApiService {
 
-    public Stock findStock(String ticker) {
-        try {
-            return new Stock(ticker,YahooFinance.get(ticker).getQuote().getPrice());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public Stock findStock(String ticker) throws IOException {
+        return new Stock(ticker, YahooFinance.get(ticker).getQuote().getPrice());
     }
 
     public BigDecimal findPrice(Stock stock) throws IOException {
-        return YahooFinance.get(stock.getTicker()).getQuote().getPrice();
+        return getPrice(stock.getTicker());
     }
 
     public BigDecimal findPrice(String ticker) throws IOException {
+        return getPrice(ticker);
+    }
+
+    public BigDecimal getPrice(String ticker) throws IOException {
         return YahooFinance.get(ticker).getQuote().getPrice();
     }
 

@@ -4,14 +4,22 @@
     <meta charset="UTF-8">
     <title>Main Page</title>
     <link rel="stylesheet" href="../navbar.css">
+    <link rel="stylesheet" href="../index_table.css">
+    <link rel="stylesheet" href="../background.css">
 </head>
 <body>
     <div th:insert="navigation/navbar :: navbar"></div>
-    <div>
-        <img src="../static/images/homepage.jpg" th:src="@{images/homepage.jpg}"
-             width="700"
-             height="500"/>
-    </div>
+    <h2>Top Trending Stocks</h2>
+    <table>
+        <tr>
+            <th>Stock</th>
+            <th>Price</th>
+        </tr>
+        <tr th:each="stock, Stocks: ${stocks}">
+            <td th:text="${stock.ticker}"></td>
+            <td th:text="${stock.currentPrice}"></td>
+        </tr>
+    </table>
 </body>
 
 </html>

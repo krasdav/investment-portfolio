@@ -1,6 +1,5 @@
 package org.dav.equitylookup;
 
-import org.dav.equitylookup.model.Stock;
 import org.dav.equitylookup.service.impl.YahooApiService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +13,5 @@ class YahooApiServiceTest {
 
     @Test
     void invoke(){
-        Stock stock = yahooApiService.findStock("GOOG");
     }
 }

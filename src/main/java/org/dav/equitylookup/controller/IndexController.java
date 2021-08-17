@@ -2,11 +2,13 @@ package org.dav.equitylookup.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.dav.equitylookup.model.Portfolio;
+import org.dav.equitylookup.model.dto.StockDTO;
 import org.dav.equitylookup.model.dto.UserDTO;
 import org.dav.equitylookup.model.User;
 import org.dav.equitylookup.model.form.UserRegistrationForm;
 import org.dav.equitylookup.service.PortfolioService;
 import org.dav.equitylookup.service.UserService;
+import org.dav.equitylookup.service.impl.YahooApiService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +18,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Controller
@@ -27,8 +32,20 @@ public class IndexController {
 
     private final PortfolioService portfolioService;
 
+    private final YahooApiService yahooApiService;
+
     @GetMapping("/index")
-    public String frontPage() {
+    public String frontPage(Model model) throws IOException {
+        List<StockDTO> topStocks = new ArrayList<>();
+        topStocks.add(modelMapper.map(yahooApiService.findStock("GOOG"),StockDTO.class));
+        topStocks.add(modelMapper.map(yahooApiService.findStock("INTC"),StockDTO.class));
+        topStocks.add(modelMapper.map(yahooApiService.findStock("AAPL"),StockDTO.class));
+        topStocks.add(modelMapper.map(yahooApiService.findStock("CSCO"),StockDTO.class));
+        topStocks.add(modelMapper.map(yahooApiService.findStock("BABA"),StockDTO.class));
+        topStocks.add(modelMapper.map(yahooApiService.findStock("SPOT"),StockDTO.class));
+        topStocks.add(modelMapper.map(yahooApiService.findStock("DBX"),StockDTO.class));
+        topStocks.add(modelMapper.map(yahooApiService.findStock("ADBE"),StockDTO.class));
+        model.addAttribute("stocks",topStocks);
         return "index";
     }
 
