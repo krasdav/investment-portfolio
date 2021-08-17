@@ -23,7 +23,8 @@
             <td th:text="${share.stock.currentPrice}"></td>
             <td>
                 <form action="#" th:action="@{/user/stocks/remove/}" method="post">
-                    <input type="hidden" name="id" th:value="${share.id}"/>
+                    <input type="hidden" name="shareId" th:value="${share.id}"/>
+                    <input type="hidden" name="portfolioName" th:value="${portfolio.name}"/>
                     <input type="submit" value="Delete" class="btn btn-danger"/>
                 </form>
             </td>

@@ -2,20 +2,18 @@ package org.dav.equitylookup.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.dav.equitylookup.exceptions.PortfolioNotFoundException;
-import org.dav.equitylookup.model.Portfolio;
+import org.dav.equitylookup.exceptions.ShareNotFoundException;
 import org.dav.equitylookup.model.Share;
 import org.dav.equitylookup.model.Stock;
 import org.dav.equitylookup.model.User;
 import org.dav.equitylookup.model.dto.PortfolioDTO;
 import org.dav.equitylookup.model.form.ShareForm;
 import org.dav.equitylookup.service.PortfolioService;
-import org.dav.equitylookup.service.ShareService;
 import org.dav.equitylookup.service.StockService;
 import org.dav.equitylookup.service.UserService;
-import org.dav.equitylookup.service.implementation.StockSearchService;
+import org.dav.equitylookup.service.impl.YahooApiService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -35,9 +33,7 @@ public class UserController {
 
     private final ModelMapper modelMapper;
 
-    private final StockSearchService stockSearchService;
-
-    private final ShareService shareService;
+    private final YahooApiService yahooApiService;
 
     private final PortfolioService portfolioService;
 
@@ -75,7 +71,7 @@ public class UserController {
             stock = new Stock(shareForm.getTicker());
             stockService.saveStock(stock);
         }
-        Share share = new Share(stockSearchService.findPrice(stockSearchService.findStock(stock.getTicker())),stock, user);
+        Share share = new Share(yahooApiService.findPrice(stock),stock, user);
         try {
             portfolioService.addShare(share,user.getPortfolio().getName());
         } catch (PortfolioNotFoundException e) {
@@ -88,8 +84,8 @@ public class UserController {
     }
 
     @PostMapping("/user/stocks/remove/")
-    public String removeStockFromUser(@RequestParam String id, Principal loggedUser){
-        shareService.deleteShareById(Integer.parseInt(id));
+    public String removeStockFromUser(@RequestParam long id,@RequestParam String portfolioName) throws ShareNotFoundException, PortfolioNotFoundException {
+        portfolioService.removeShareById(id,portfolioName);
         return "redirect:/user/stocks/list";
     }
 

@@ -21,6 +21,11 @@ public class Stock {
     public Stock() {
     }
 
+    public Stock(String ticker, BigDecimal currentPrice) {
+        this.ticker = ticker;
+        this.currentPrice = currentPrice;
+    }
+
     public Stock(String ticker) {
         this.ticker = ticker;
     }

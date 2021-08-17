@@ -6,8 +6,7 @@ import org.dav.equitylookup.model.Share;
 import org.dav.equitylookup.model.Stock;
 import org.dav.equitylookup.model.User;
 import org.dav.equitylookup.service.PortfolioService;
-import org.dav.equitylookup.service.ShareService;
-import org.dav.equitylookup.service.implementation.StockSearchService;
+import org.dav.equitylookup.service.impl.YahooApiService;
 import org.dav.equitylookup.service.StockService;
 import org.dav.equitylookup.service.UserService;
 import org.modelmapper.ModelMapper;
@@ -17,8 +16,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Controller;
-
-import java.util.ArrayList;
 
 @RequiredArgsConstructor
 @SpringBootApplication
@@ -30,11 +27,9 @@ public class EquityLookUpApplication {
 
     private final StockService stockService;
 
-    private final StockSearchService stockSearchService;
+    private final YahooApiService yahooApiService;
 
     private final PortfolioService portfolioService;
-
-    private final ShareService shareService;
 
     public static void main(String[] args) {
         SpringApplication.run(EquityLookUpApplication.class, args);
@@ -67,10 +62,10 @@ public class EquityLookUpApplication {
 
             michal.setPortfolio(portfolio);
 
-            Share shareGoogle = new Share(stockSearchService.findPrice(stockSearchService.findStock(google.getTicker())), google, michal);
+            Share shareGoogle = new Share(yahooApiService.findPrice(google), google, michal);
 //            shareService.saveShare(shareGoogle);
 
-            Share shareIntel = new Share(stockSearchService.findPrice(stockSearchService.findStock(intel.getTicker())), intel, michal);
+            Share shareIntel = new Share(yahooApiService.findPrice(intel), intel, michal);
 //            shareService.saveShare(shareIntel);
             portfolioService.addShare(shareGoogle, portfolio.getName());
             portfolioService.addShare(shareIntel, portfolio.getName());

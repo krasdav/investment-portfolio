@@ -1,6 +1,7 @@
-package org.dav.equitylookup.service.implementation;
+package org.dav.equitylookup.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.dav.equitylookup.exceptions.StockNotFoundException;
 import org.dav.equitylookup.model.Share;
 import org.dav.equitylookup.model.Stock;
 import org.dav.equitylookup.repository.StockRepository;
@@ -11,14 +12,13 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 public class StockServiceImpl implements StockService {
 
     private final StockRepository stockRepository;
-    private final StockSearchService stockSearchService;
+    private final YahooApiService yahooApiService;
 
     @Override
     public void saveStock(Stock stock) {
@@ -46,16 +46,23 @@ public class StockServiceImpl implements StockService {
         saveStock(stock);
     }
 
-    public BigDecimal updateCurrentStockPrice(Stock stock) throws IOException {
-        BigDecimal currentPrice = stockSearchService.findPrice(stockSearchService.findStock(stock.getTicker()));
-        stock.setCurrentPrice(currentPrice);
+    public BigDecimal updateCurrentStockPrice(long id) throws IOException, StockNotFoundException {
+        Optional<Stock> stock = stockRepository.findById(id);
+        new BigDecimal("0");
+        BigDecimal currentPrice;
+        if( stock.isPresent()){
+            currentPrice = yahooApiService.findPrice(stock.get());
+            stock.get().setCurrentPrice(currentPrice);
+        }else{
+            throw new StockNotFoundException("Stock was not found");
+        }
         return currentPrice;
     }
 
     public void updateStockPrices(List<Share> shares) throws IOException {
-        List<Stock> stocksToUpdate = shares.stream().map(Share::getStock).collect(Collectors.toList());
-        for ( Stock stock : stocksToUpdate){
-            BigDecimal currentPrice = stockSearchService.findPrice(stockSearchService.findStock(stock.getTicker()));
+        for ( Share share : shares){
+            Stock stock = stockRepository.getById(share.getStock().getId());
+            BigDecimal currentPrice = yahooApiService.findPrice(stock);
             stock.setCurrentPrice(currentPrice);
         }
     }

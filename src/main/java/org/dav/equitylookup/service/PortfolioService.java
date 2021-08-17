@@ -1,6 +1,7 @@
 package org.dav.equitylookup.service;
 
 import org.dav.equitylookup.exceptions.PortfolioNotFoundException;
+import org.dav.equitylookup.exceptions.ShareNotFoundException;
 import org.dav.equitylookup.model.Portfolio;
 import org.dav.equitylookup.model.Share;
 
@@ -20,5 +21,9 @@ public interface PortfolioService {
     public void removeShare(Share share, String portfolioName) throws PortfolioNotFoundException;
 
     public void updatePortfolioValue(String portfolioName) throws PortfolioNotFoundException;
+
+    public Share getShareById(long id, String portfolionName) throws PortfolioNotFoundException, ShareNotFoundException;
+
+    public void removeShareById(long id, String portfolioName) throws PortfolioNotFoundException, ShareNotFoundException;
 
 }

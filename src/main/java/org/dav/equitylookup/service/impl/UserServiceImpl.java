@@ -1,4 +1,4 @@
-package org.dav.equitylookup.service.implementation;
+package org.dav.equitylookup.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.dav.equitylookup.model.User;
@@ -16,7 +16,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final StockService stockService;
-    private final StockSearchService stockSearchService;
+    private final YahooApiService yahooApiService;
 
     @Override
     public List<User> getAllUsers() {
