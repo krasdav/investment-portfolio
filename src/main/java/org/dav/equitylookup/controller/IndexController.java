@@ -3,13 +3,14 @@ package org.dav.equitylookup.controller;
 import lombok.RequiredArgsConstructor;
 import org.dav.equitylookup.model.Portfolio;
 import org.dav.equitylookup.model.dto.StockDTO;
-import org.dav.equitylookup.model.dto.UserDTO;
 import org.dav.equitylookup.model.User;
 import org.dav.equitylookup.model.form.UserRegistrationForm;
 import org.dav.equitylookup.service.PortfolioService;
 import org.dav.equitylookup.service.UserService;
 import org.dav.equitylookup.service.impl.YahooApiService;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -34,8 +35,11 @@ public class IndexController {
 
     private final YahooApiService yahooApiService;
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @GetMapping("/index")
     public String frontPage(Model model) throws IOException {
+        logger.error("Front Page");
         List<StockDTO> topStocks = new ArrayList<>();
         topStocks.add(modelMapper.map(yahooApiService.findStock("GOOG"),StockDTO.class));
         topStocks.add(modelMapper.map(yahooApiService.findStock("INTC"),StockDTO.class));

@@ -1,0 +1,48 @@
+2021-08-17 22:44:56.456  INFO 13280 --- [restartedMain] o.d.e.EquityLookUpApplication            : Starting EquityLookUpApplication using Java 11.0.11 on MSI with PID 13280 (C:\Users\davkr\Dev\equitylookup\target\classes started by davkr in C:\Users\davkr\Dev\equitylookup)
+2021-08-17 22:44:56.458  INFO 13280 --- [restartedMain] o.d.e.EquityLookUpApplication            : No active profile set, falling back to default profiles: default
+2021-08-17 22:44:56.489  INFO 13280 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2021-08-17 22:44:56.489  INFO 13280 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2021-08-17 22:44:56.850  INFO 13280 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2021-08-17 22:44:56.884  INFO 13280 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 28 ms. Found 3 JPA repository interfaces.
+2021-08-17 22:44:57.472  INFO 13280 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2021-08-17 22:44:57.479  INFO 13280 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2021-08-17 22:44:57.480  INFO 13280 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.48]
+2021-08-17 22:44:57.542  INFO 13280 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2021-08-17 22:44:57.542  INFO 13280 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1052 ms
+2021-08-17 22:44:57.560  INFO 13280 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2021-08-17 22:44:57.628  INFO 13280 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2021-08-17 22:44:57.631  INFO 13280 --- [restartedMain] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:testdb'
+2021-08-17 22:44:57.700  INFO 13280 --- [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2021-08-17 22:44:57.725  INFO 13280 --- [restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.4.32.Final
+2021-08-17 22:44:57.787  INFO 13280 --- [restartedMain] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2021-08-17 22:44:57.842  INFO 13280 --- [restartedMain] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.H2Dialect
+2021-08-17 22:44:58.227  INFO 13280 --- [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2021-08-17 22:44:58.232  INFO 13280 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2021-08-17 22:44:58.514  WARN 13280 --- [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2021-08-17 22:44:58.575  INFO 13280 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure Ant [pattern='/h2-console/**'] with []
+2021-08-17 22:44:58.595  INFO 13280 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@7eb5675, org.springframework.security.web.context.SecurityContextPersistenceFilter@48afd9a5, org.springframework.security.web.header.HeaderWriterFilter@136f533f, org.springframework.security.web.csrf.CsrfFilter@6108294d, org.springframework.security.web.authentication.logout.LogoutFilter@2818601f, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@23eb52db, org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter@4ad18f62, org.springframework.security.web.authentication.ui.DefaultLogoutPageGeneratingFilter@50aed51b, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@a25d99e, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@1a08e51f, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@27e0bc6d, org.springframework.security.web.session.SessionManagementFilter@31fd3974, org.springframework.security.web.access.ExceptionTranslationFilter@23589393, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@7648c959]
+2021-08-17 22:44:58.679  INFO 13280 --- [restartedMain] y.quotes.query1v7.QuotesRequest          : Sending request: https://query1.finance.yahoo.com/v7/finance/quote?symbols=GOOG
+2021-08-17 22:44:59.107  INFO 13280 --- [restartedMain] y.quotes.query1v7.QuotesRequest          : Sending request: https://query1.finance.yahoo.com/v7/finance/quote?symbols=INTC
+2021-08-17 22:44:59.352  INFO 13280 --- [restartedMain] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page template: index
+2021-08-17 22:44:59.437  INFO 13280 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2021-08-17 22:44:59.456  INFO 13280 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2021-08-17 22:44:59.465  INFO 13280 --- [restartedMain] o.d.e.EquityLookUpApplication            : Started EquityLookUpApplication in 3.291 seconds (JVM running for 3.646)
+2021-08-17 22:45:12.449  INFO 13280 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2021-08-17 22:45:12.450  INFO 13280 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2021-08-17 22:45:12.451  INFO 13280 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2021-08-17 22:45:12.475  INFO 13280 --- [http-nio-8080-exec-1] y.quotes.query1v7.QuotesRequest          : Sending request: https://query1.finance.yahoo.com/v7/finance/quote?symbols=GOOG
+2021-08-17 22:45:12.622  INFO 13280 --- [http-nio-8080-exec-1] y.quotes.query1v7.QuotesRequest          : Sending request: https://query1.finance.yahoo.com/v7/finance/quote?symbols=INTC
+2021-08-17 22:45:12.686  INFO 13280 --- [http-nio-8080-exec-1] y.quotes.query1v7.QuotesRequest          : Sending request: https://query1.finance.yahoo.com/v7/finance/quote?symbols=AAPL
+2021-08-17 22:45:12.754  INFO 13280 --- [http-nio-8080-exec-1] y.quotes.query1v7.QuotesRequest          : Sending request: https://query1.finance.yahoo.com/v7/finance/quote?symbols=CSCO
+2021-08-17 22:45:12.825  INFO 13280 --- [http-nio-8080-exec-1] y.quotes.query1v7.QuotesRequest          : Sending request: https://query1.finance.yahoo.com/v7/finance/quote?symbols=BABA
+2021-08-17 22:45:12.945  INFO 13280 --- [http-nio-8080-exec-1] y.quotes.query1v7.QuotesRequest          : Sending request: https://query1.finance.yahoo.com/v7/finance/quote?symbols=SPOT
+2021-08-17 22:45:13.010  INFO 13280 --- [http-nio-8080-exec-1] y.quotes.query1v7.QuotesRequest          : Sending request: https://query1.finance.yahoo.com/v7/finance/quote?symbols=DBX
+2021-08-17 22:45:13.084  INFO 13280 --- [http-nio-8080-exec-1] y.quotes.query1v7.QuotesRequest          : Sending request: https://query1.finance.yahoo.com/v7/finance/quote?symbols=ADBE
+2021-08-17 22:45:24.853  INFO 13280 --- [http-nio-8080-exec-9] y.quotes.query1v7.QuotesRequest          : Sending request: https://query1.finance.yahoo.com/v7/finance/quote?symbols=GOOG
+2021-08-17 22:45:24.982  INFO 13280 --- [http-nio-8080-exec-9] y.quotes.query1v7.QuotesRequest          : Sending request: https://query1.finance.yahoo.com/v7/finance/quote?symbols=INTC
+2021-08-17 22:45:25.096  INFO 13280 --- [http-nio-8080-exec-9] y.quotes.query1v7.QuotesRequest          : Sending request: https://query1.finance.yahoo.com/v7/finance/quote?symbols=AAPL
+2021-08-17 22:45:25.168  INFO 13280 --- [http-nio-8080-exec-9] y.quotes.query1v7.QuotesRequest          : Sending request: https://query1.finance.yahoo.com/v7/finance/quote?symbols=CSCO
+2021-08-17 22:45:25.233  INFO 13280 --- [http-nio-8080-exec-9] y.quotes.query1v7.QuotesRequest          : Sending request: https://query1.finance.yahoo.com/v7/finance/quote?symbols=BABA
+2021-08-17 22:45:25.305  INFO 13280 --- [http-nio-8080-exec-9] y.quotes.query1v7.QuotesRequest          : Sending request: https://query1.finance.yahoo.com/v7/finance/quote?symbols=SPOT
+2021-08-17 22:45:25.371  INFO 13280 --- [http-nio-8080-exec-9] y.quotes.query1v7.QuotesRequest          : Sending request: https://query1.finance.yahoo.com/v7/finance/quote?symbols=DBX
+2021-08-17 22:45:25.435  INFO 13280 --- [http-nio-8080-exec-9] y.quotes.query1v7.QuotesRequest          : Sending request: https://query1.finance.yahoo.com/v7/finance/quote?symbols=ADBE
