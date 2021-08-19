@@ -45,16 +45,6 @@ public class PortfolioServiceImpl implements PortfolioService {
         }
     }
 
-    @Transactional
-    public void updatePortfolioValue(String portfolioName) throws PortfolioNotFoundException {
-        BigDecimal portfolioValueUpdated = new BigDecimal("0");
-        Portfolio portfolio = getPortfolioByName(portfolioName);
-        for (Share share : portfolio.getShares()) {
-            portfolioValueUpdated = portfolioValueUpdated.add(share.getStock().getCurrentPrice());
-        }
-        portfolio.setPortfolioValue(portfolioValueUpdated);
-    }
-
     @Override
     public Share getShareById(long id,String portfolionName) throws PortfolioNotFoundException, ShareNotFoundException {
         Optional<Share> share = getPortfolioByName(portfolionName).getShares()
@@ -66,6 +56,12 @@ public class PortfolioServiceImpl implements PortfolioService {
         }else{
             throw new ShareNotFoundException("Share Not Found");
         }
+    }
+
+    @Transactional
+    public void updatePortfolioValue(String portfolioName, BigDecimal portfolioValueUpdated) throws PortfolioNotFoundException {
+        Portfolio portfolio = getPortfolioByName(portfolioName);
+        portfolio.setPortfolioValue(portfolioValueUpdated);
     }
 
     @Transactional

@@ -7,12 +7,16 @@ import org.dav.equitylookup.model.Share;
 import org.dav.equitylookup.model.Stock;
 import org.dav.equitylookup.model.User;
 import org.dav.equitylookup.model.dto.PortfolioDTO;
+import org.dav.equitylookup.model.dto.StockDTO;
 import org.dav.equitylookup.model.form.ShareForm;
 import org.dav.equitylookup.service.PortfolioService;
 import org.dav.equitylookup.service.StockService;
 import org.dav.equitylookup.service.UserService;
 import org.dav.equitylookup.service.impl.YahooApiService;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +26,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Controller
@@ -33,9 +39,9 @@ public class UserController {
 
     private final ModelMapper modelMapper;
 
-    private final YahooApiService yahooApiService;
-
     private final PortfolioService portfolioService;
+
+    private final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
     @GetMapping("/user")
     public String welcomePage(Model model, Principal user) {
@@ -44,16 +50,19 @@ public class UserController {
     }
 
     @GetMapping("/user/stocks/list")
-    public String listStocksForm(Model model, Principal loggedUser) throws IOException {
+    public String listStocksForm(Model model, Principal loggedUser) throws IOException{
         User user = userService.getUserByUsername(loggedUser.getName());
-        stockService.updateStockPrices(user.getPortfolio().getShares());
-        try {
-            portfolioService.updatePortfolioValue(user.getPortfolio().getName());
-        } catch (PortfolioNotFoundException e) {
-            e.printStackTrace();
+        List<Stock> stocksUpdated = new ArrayList<>();
+        try{
+            stocksUpdated = stockService.updateStockPrices(user.getPortfolio());
+        }catch(PortfolioNotFoundException pnfe){
+            LOG.error("Portfolio not found " + pnfe);
+            //return error
         }
+        List<StockDTO> stocksDTOs = modelMapper.map(stocksUpdated,new TypeToken<List<StockDTO>>(){}.getType());
         PortfolioDTO portfolioDTO = modelMapper.map(user.getPortfolio(), PortfolioDTO.class);
         model.addAttribute("portfolio", portfolioDTO);
+        model.addAttribute("stocks",stocksDTOs);
         return "user/user-stock-list";
     }
 
@@ -66,18 +75,12 @@ public class UserController {
     @PostMapping("user/stocks/add")
     public String addStock(@ModelAttribute("share") ShareForm shareForm, Model model, Principal loggedUser) throws IOException {
         User user = userService.getUserByUsername(loggedUser.getName());
-        Stock stock = stockService.getStockByTicker(shareForm.getTicker());
-        if( stock == null ){
-            stock = new Stock(shareForm.getTicker());
-            stockService.saveStock(stock);
-        }
-        Share share = new Share(yahooApiService.findPrice(stock),stock, user);
+        Share share = stockService.obtainShare(shareForm.getTicker(),user);
         try {
             portfolioService.addShare(share,user.getPortfolio().getName());
         } catch (PortfolioNotFoundException e) {
             e.printStackTrace();
         }
-
         model.addAttribute("username", user.getUsername());
         model.addAttribute("ticker", share.getTicker());
         return "user/user-stock-result";

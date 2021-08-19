@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.dav.equitylookup.model.Stock;
 import org.springframework.stereotype.Service;
 import yahoofinance.YahooFinance;
+import yahoofinance.quotes.stock.StockQuote;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -13,7 +14,11 @@ import java.math.BigDecimal;
 public class YahooApiService {
 
     public Stock findStock(String ticker) throws IOException {
-        return new Stock(ticker, YahooFinance.get(ticker).getQuote().getPrice());
+        yahoofinance.Stock stock = YahooFinance.get(ticker);
+        BigDecimal currentPrice = stock.getQuote().getPrice();
+        String company = stock.getName();
+
+        return new Stock(ticker,company,currentPrice );
     }
 
     public BigDecimal findPrice(Stock stock) throws IOException {

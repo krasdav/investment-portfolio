@@ -10,8 +10,9 @@ public class ShareDTO {
 
     private LocalDateTime timeBought;
     private BigDecimal boughtPrice;
+    private BigDecimal currentPrice;
     private String ticker;
-    private Stock stock;
+    private String company;
     private Portfolio portfolio;
 
 }

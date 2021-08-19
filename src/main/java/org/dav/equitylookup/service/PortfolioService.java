@@ -5,6 +5,7 @@ import org.dav.equitylookup.exceptions.ShareNotFoundException;
 import org.dav.equitylookup.model.Portfolio;
 import org.dav.equitylookup.model.Share;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface PortfolioService {
@@ -20,7 +21,7 @@ public interface PortfolioService {
 
     public void removeShare(Share share, String portfolioName) throws PortfolioNotFoundException;
 
-    public void updatePortfolioValue(String portfolioName) throws PortfolioNotFoundException;
+    public void updatePortfolioValue(String portfolioName, BigDecimal portfolioValueUpdated) throws PortfolioNotFoundException;
 
     public Share getShareById(long id, String portfolionName) throws PortfolioNotFoundException, ShareNotFoundException;
 

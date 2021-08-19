@@ -17,9 +17,9 @@ public class Share {
     private Long id;
     private LocalDateTime timeBought;
     private BigDecimal boughtPrice;
+    private BigDecimal currentPrice;
     private String ticker;
-    @ManyToOne
-    private Stock stock;
+    private String company;
     @ManyToOne(fetch = FetchType.LAZY)
     private Portfolio portfolio;
 
@@ -28,9 +28,10 @@ public class Share {
 
     public Share(BigDecimal boughtPrice, Stock stock, User user) {
         this.ticker = stock.getTicker();
+        this.company = stock.getCompany();
         this.timeBought = LocalDateTime.now();
         this.boughtPrice = boughtPrice;
-        this.stock = stock;
+        this.currentPrice = boughtPrice;
         this.portfolio = user.getPortfolio();
     }
 }

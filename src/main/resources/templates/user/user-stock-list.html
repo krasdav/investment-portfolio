@@ -14,14 +14,16 @@
 <div>
     <table>
         <tr>
-            <th>Share</th>
+            <th>Company</th>
+            <th>Ticker</th>
             <th>Initial Price</th>
             <th>Actual Price</th>
         </tr>
         <tr th:each="share, Shares: ${portfolio.shares}">
+            <td th:text="${share.company}"></td>
             <td th:text="${share.ticker}"></td>
             <td th:text="${share.boughtPrice}"></td>
-            <td th:text="${share.stock.currentPrice}"></td>
+            <td th:text="${share.currentPrice}"></td>
             <td>
                 <form action="#" th:action="@{/user/stocks/remove/}" method="post">
                     <input type="hidden" name="shareId" th:value="${share.id}"/>

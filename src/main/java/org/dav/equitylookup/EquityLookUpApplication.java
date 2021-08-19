@@ -48,24 +48,22 @@ public class EquityLookUpApplication {
             michal.setPassword("pw");
             userService.saveUser(michal);
 
-            Stock google = new Stock("GOOG");
-            stockService.saveStock(google);
+            Stock google = yahooApiService.findStock("GOOG");
 
-            Stock apple = new Stock("AAPL");
-            stockService.saveStock(apple);
+            Stock apple = yahooApiService.findStock("APPL");;
 
-            Stock intel = new Stock("INTC");
-            stockService.saveStock(intel);
+            Stock intel = yahooApiService.findStock("INTC");;
+
 
             Portfolio portfolio = new Portfolio("Michal's Portfolio", michal);
             portfolioService.savePortfolio(portfolio);
 
             michal.setPortfolio(portfolio);
 
-            Share shareGoogle = new Share(yahooApiService.findPrice(google), google, michal);
+            Share shareGoogle = stockService.obtainShare(google.getTicker(), michal);
 //            shareService.saveShare(shareGoogle);
 
-            Share shareIntel = new Share(yahooApiService.findPrice(intel), intel, michal);
+            Share shareIntel = stockService.obtainShare(intel.getTicker(), michal);
 //            shareService.saveShare(shareIntel);
             portfolioService.addShare(shareGoogle, portfolio.getName());
             portfolioService.addShare(shareIntel, portfolio.getName());

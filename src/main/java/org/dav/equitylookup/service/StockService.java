@@ -1,20 +1,18 @@
 package org.dav.equitylookup.service;
 
-import org.dav.equitylookup.exceptions.StockNotFoundException;
+import org.dav.equitylookup.exceptions.PortfolioNotFoundException;
+import org.dav.equitylookup.model.Portfolio;
 import org.dav.equitylookup.model.Share;
 import org.dav.equitylookup.model.Stock;
+import org.dav.equitylookup.model.User;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.List;
 
-public interface StockService{
-    void saveStock(Stock stock);
-    Stock getStockById(long id);
-    void deleteStockById(long id);
-    void addStock(Stock stock) throws IOException;
-    public BigDecimal updateCurrentStockPrice(long id) throws IOException, StockNotFoundException;
-    void updateStockPrices(List<Share> shares) throws IOException;
-    boolean stockExists(String ticker);
-    Stock getStockByTicker(String ticker);
+public interface StockService {
+    List<Stock> updateStockPrices(Portfolio portfolio) throws IOException, PortfolioNotFoundException;
+
+    void updateStockPrices(Share... shares) throws IOException;
+
+    Share obtainShare(String ticker, User user) throws IOException;
 }

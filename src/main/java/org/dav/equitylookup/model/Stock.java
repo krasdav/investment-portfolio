@@ -3,43 +3,41 @@ package org.dav.equitylookup.model;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Objects;
 
-@Entity
 @Getter
 @Setter
-@Table(name = "stock")
 public class Stock {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
     private String ticker;
+    private String company;
     private BigDecimal currentPrice;
 
     public Stock() {
     }
 
-    public Stock(String ticker, BigDecimal currentPrice) {
+    public Stock(String ticker, String company) {
         this.ticker = ticker;
+        this.company = company;
+    }
+
+    public Stock(String ticker, String company, BigDecimal currentPrice) {
+        this.ticker = ticker;
+        this.company = company;
         this.currentPrice = currentPrice;
     }
 
-    public Stock(String ticker) {
-        this.ticker = ticker;
-    }
-
-    public Stock(BigDecimal price) {
-        this.currentPrice = price;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Stock stock = (Stock) o;
+        return ticker.equals(stock.ticker) && company.equals(stock.company);
     }
 
     @Override
-    public String toString() {
-        return "Stock : {" +
-                "id=" + id +
-                ", ticker='" + ticker + '\'' +
-                ", currentPrice=" + currentPrice +
-                '}';
+    public int hashCode() {
+        return Objects.hash(ticker, company);
     }
 }
