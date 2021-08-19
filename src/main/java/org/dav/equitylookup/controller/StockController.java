@@ -17,8 +17,6 @@ import java.io.IOException;
 @Controller
 public class StockController {
 
-    private final YahooApiService yahooApiService;
-
     private final StockService stockService;
 
     @GetMapping("/stock")

@@ -2,22 +2,21 @@ package org.dav.equitylookup.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.dav.equitylookup.model.Stock;
+import org.dav.equitylookup.service.StockApiService;
 import org.springframework.stereotype.Service;
 import yahoofinance.YahooFinance;
-import yahoofinance.quotes.stock.StockQuote;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 
 @AllArgsConstructor
 @Service
-public class YahooApiService {
+public class YahooApiService implements StockApiService {
 
     public Stock findStock(String ticker) throws IOException {
         yahoofinance.Stock stock = YahooFinance.get(ticker);
         BigDecimal currentPrice = stock.getQuote().getPrice();
         String company = stock.getName();
-
         return new Stock(ticker,company,currentPrice );
     }
 
@@ -25,7 +24,7 @@ public class YahooApiService {
         return getPrice(stock.getTicker());
     }
 
-    public BigDecimal findPrice(String ticker) throws IOException {
+    public BigDecimal findPrice(String ticker) throws IOException  {
         return getPrice(ticker);
     }
 

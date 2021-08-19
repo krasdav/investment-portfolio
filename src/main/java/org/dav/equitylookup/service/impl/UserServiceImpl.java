@@ -15,8 +15,6 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final StockService stockService;
-    private final YahooApiService yahooApiService;
 
     @Override
     public List<User> getAllUsers() {

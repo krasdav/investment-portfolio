@@ -37,8 +37,6 @@ public class IndexController {
 
     private final PortfolioService portfolioService;
 
-    private final YahooApiService yahooApiService;
-
     private final StockService stockService;
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
