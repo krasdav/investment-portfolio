@@ -64,4 +64,36 @@ public class StockServiceImpl implements StockService {
         return new Share(stock.getCurrentPrice(),stock,user);
     }
 
+    @Override
+    public void cacheStocks(Stock... stocks) {
+        for(Stock stock : stocks){
+            stockCache.add(stock.getTicker(),stock);
+        }
+    }
+
+    @Override
+    public List<Stock> getTopStocks() throws IOException {
+        List<String> topStocksTicker = List.of("INTC","GOOG","AAPL","CSCO");
+        List<Stock> topStocks = new ArrayList<>();
+        for(String ticker : topStocksTicker){
+            Stock stock = stockCache.get(ticker);
+            if(stock == null ){
+                stock = yahooApiService.findStock(ticker);
+                stockCache.add(ticker,stock);
+            }
+            topStocks.add(stock);
+        }
+        return topStocks;
+    }
+
+    @Override
+    public Stock getStock(String ticker) throws IOException {
+        Stock stock = stockCache.get(ticker);
+        if(stock == null ){
+            stock = yahooApiService.findStock(ticker);
+            stockCache.add(ticker,stock);
+        }
+        return stock;
+    }
+
 }

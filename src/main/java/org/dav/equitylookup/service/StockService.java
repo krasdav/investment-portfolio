@@ -15,4 +15,10 @@ public interface StockService {
     void updateStockPrices(Share... shares) throws IOException;
 
     Share obtainShare(String ticker, User user) throws IOException;
+
+    void cacheStocks(Stock... stocks);
+
+    List<Stock> getTopStocks() throws IOException;
+
+    Stock getStock(String ticker) throws IOException ;
 }

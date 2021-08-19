@@ -11,6 +11,6 @@ public class CacheStoreBeans {
 
     @Bean
     public CacheStore<Stock> stockCache(){
-        return new CacheStore<Stock>(30, TimeUnit.SECONDS);
+        return new CacheStore<>(30, TimeUnit.SECONDS);
     }
 }

@@ -14,8 +14,6 @@ public class AdminController {
 
     private final UserService userService;
 
-    private final ModelMapper modelMapper;
-
     @GetMapping("/users/list")
     public String viewUsers(Model model) {
         model.addAttribute("users", userService.getAllUsers());

@@ -1,14 +1,18 @@
 package org.dav.equitylookup.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.dav.equitylookup.datacache.CacheStore;
 import org.dav.equitylookup.model.Portfolio;
+import org.dav.equitylookup.model.Stock;
 import org.dav.equitylookup.model.dto.StockDTO;
 import org.dav.equitylookup.model.User;
 import org.dav.equitylookup.model.form.UserRegistrationForm;
 import org.dav.equitylookup.service.PortfolioService;
+import org.dav.equitylookup.service.StockService;
 import org.dav.equitylookup.service.UserService;
 import org.dav.equitylookup.service.impl.YahooApiService;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -35,20 +39,13 @@ public class IndexController {
 
     private final YahooApiService yahooApiService;
 
+    private final StockService stockService;
+
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @GetMapping("/index")
     public String frontPage(Model model) throws IOException {
-        logger.error("Front Page");
-        List<StockDTO> topStocks = new ArrayList<>();
-        topStocks.add(modelMapper.map(yahooApiService.findStock("GOOG"),StockDTO.class));
-        topStocks.add(modelMapper.map(yahooApiService.findStock("INTC"),StockDTO.class));
-        topStocks.add(modelMapper.map(yahooApiService.findStock("AAPL"),StockDTO.class));
-        topStocks.add(modelMapper.map(yahooApiService.findStock("CSCO"),StockDTO.class));
-        topStocks.add(modelMapper.map(yahooApiService.findStock("BABA"),StockDTO.class));
-        topStocks.add(modelMapper.map(yahooApiService.findStock("SPOT"),StockDTO.class));
-        topStocks.add(modelMapper.map(yahooApiService.findStock("DBX"),StockDTO.class));
-        topStocks.add(modelMapper.map(yahooApiService.findStock("ADBE"),StockDTO.class));
+        List<StockDTO> topStocks = modelMapper.map(stockService.getTopStocks(), new TypeToken<List<StockDTO>>(){}.getType());
         model.addAttribute("stocks",topStocks);
         return "index";
     }

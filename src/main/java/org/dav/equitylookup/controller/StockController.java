@@ -1,7 +1,9 @@
 package org.dav.equitylookup.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.dav.equitylookup.model.Stock;
 import org.dav.equitylookup.model.form.StockForm;
+import org.dav.equitylookup.service.StockService;
 import org.dav.equitylookup.service.impl.YahooApiService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,8 +17,9 @@ import java.io.IOException;
 @Controller
 public class StockController {
 
-
     private final YahooApiService yahooApiService;
+
+    private final StockService stockService;
 
     @GetMapping("/stock")
     public String stockForm(Model model) {
@@ -26,9 +29,9 @@ public class StockController {
 
     @PostMapping("/stock")
     public String stockPrice(@ModelAttribute StockForm stockForm, Model model) throws IOException {
-        String stockPrice = yahooApiService.findPrice(stockForm.getTicker()).toString();
-        model.addAttribute("stock",stockForm.getTicker());
-        model.addAttribute("stockPrice", stockPrice);
+        Stock stock = stockService.getStock(stockForm.getTicker());
+        model.addAttribute("stock",stock.getTicker());
+        model.addAttribute("stockPrice", stock.getCurrentPrice());
         return "stock/stock-result";
     }
 

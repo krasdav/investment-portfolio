@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.TimeUnit;
 
 public class CacheStore<T> {
-    private Cache<String, T> cache;
+    private final Cache<String, T> cache;
     private final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
     public CacheStore(int expiryDuration, TimeUnit timeUnit) {
