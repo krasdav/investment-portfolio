@@ -1,16 +1,13 @@
 package org.dav.equitylookup.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.dav.equitylookup.datacache.CacheStore;
 import org.dav.equitylookup.model.Portfolio;
-import org.dav.equitylookup.model.Stock;
-import org.dav.equitylookup.model.dto.StockDTO;
 import org.dav.equitylookup.model.User;
+import org.dav.equitylookup.model.dto.StockDTO;
 import org.dav.equitylookup.model.form.UserRegistrationForm;
 import org.dav.equitylookup.service.PortfolioService;
 import org.dav.equitylookup.service.StockService;
 import org.dav.equitylookup.service.UserService;
-import org.dav.equitylookup.service.impl.YahooApiService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
@@ -24,7 +21,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor

@@ -12,7 +12,6 @@ import org.dav.equitylookup.model.form.ShareForm;
 import org.dav.equitylookup.service.PortfolioService;
 import org.dav.equitylookup.service.StockService;
 import org.dav.equitylookup.service.UserService;
-import org.dav.equitylookup.service.impl.YahooApiService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
