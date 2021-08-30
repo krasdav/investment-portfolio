@@ -2,11 +2,8 @@ package org.dav.equitylookup.helper;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.DecimalFormat;
 
 public class FinancialAnalysis {
-
-    private static final DecimalFormat df = new DecimalFormat("#.##");
 
     // Suppress default constructor for noninstantiability
     private FinancialAnalysis() {

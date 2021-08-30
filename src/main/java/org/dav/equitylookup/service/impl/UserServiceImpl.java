@@ -3,7 +3,6 @@ package org.dav.equitylookup.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.dav.equitylookup.model.User;
 import org.dav.equitylookup.repository.UserRepository;
-import org.dav.equitylookup.service.StockService;
 import org.dav.equitylookup.service.UserService;
 import org.springframework.stereotype.Service;
 
