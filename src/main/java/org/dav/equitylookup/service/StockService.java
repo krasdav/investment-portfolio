@@ -5,6 +5,7 @@ import org.dav.equitylookup.model.Portfolio;
 import org.dav.equitylookup.model.Share;
 import org.dav.equitylookup.model.Stock;
 import org.dav.equitylookup.model.User;
+import org.dav.equitylookup.model.dto.ShareDTO;
 
 import java.io.IOException;
 import java.util.List;
@@ -13,6 +14,8 @@ public interface StockService {
     List<Stock> updateStockPrices(Portfolio portfolio) throws IOException, PortfolioNotFoundException;
 
     void updateStockPrices(Share... shares) throws IOException;
+
+    void setFinancialDetails(List<ShareDTO> shareDTOS) throws IOException;
 
     Share obtainShare(String ticker, User user) throws IOException;
 

@@ -3,10 +3,12 @@ package org.dav.equitylookup.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.dav.equitylookup.datacache.CacheStore;
 import org.dav.equitylookup.exceptions.PortfolioNotFoundException;
+import org.dav.equitylookup.helper.FinancialAnalysis;
 import org.dav.equitylookup.model.Portfolio;
 import org.dav.equitylookup.model.Share;
 import org.dav.equitylookup.model.Stock;
 import org.dav.equitylookup.model.User;
+import org.dav.equitylookup.model.dto.ShareDTO;
 import org.dav.equitylookup.service.PortfolioService;
 import org.dav.equitylookup.service.StockApiService;
 import org.dav.equitylookup.service.StockService;
@@ -36,7 +38,6 @@ public class StockServiceImpl implements StockService {
                 BigDecimal currentPrice = stockApiService.findPrice(share.getTicker());
                 stock = stockCache.add(share.getTicker(), new Stock(share.getTicker(),share.getCompany(),currentPrice));
             }
-            share.setCurrentPrice(stock.getCurrentPrice());
             portfolioValue = portfolioValue.add(stock.getCurrentPrice());
             stocksUpdated.add(stock);
         }
@@ -49,9 +50,22 @@ public class StockServiceImpl implements StockService {
             Stock stock = stockCache.get(share.getTicker());
             if( stock == null) {
                 BigDecimal currentPrice = stockApiService.findPrice(share.getTicker());
-                stock = stockCache.add(share.getTicker(), new Stock(share.getTicker(),share.getCompany(),currentPrice));
+                stockCache.add(share.getTicker(), new Stock(share.getTicker(),share.getCompany(),currentPrice));
             }
-            share.setCurrentPrice(stock.getCurrentPrice());
+        }
+    }
+
+    @Override
+    public void setFinancialDetails(List<ShareDTO> shareDTOS) throws IOException {
+        for( ShareDTO shareDTO : shareDTOS){
+            BigDecimal currentPrice = stockCache.get(shareDTO.getTicker()).getCurrentPrice();
+            if( currentPrice == null){
+                currentPrice = stockApiService.findPrice(shareDTO.getTicker());
+                stockCache.add(shareDTO.getTicker(), new Stock(shareDTO.getTicker(),shareDTO.getCompany(),currentPrice));
+            }
+            shareDTO.setCurrentPrice(currentPrice);
+            shareDTO.setPercentageChange(FinancialAnalysis.getPercentageChange(shareDTO.getBoughtPrice(),currentPrice));
+            shareDTO.setValueChange(FinancialAnalysis.getValueChange(shareDTO.getBoughtPrice(),currentPrice));
         }
     }
 
@@ -73,6 +87,16 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
+    public Stock getStock(String ticker) throws IOException {
+        Stock stock = stockCache.get(ticker);
+        if(stock == null ){
+            stock = stockApiService.findStock(ticker);
+            stockCache.add(ticker,stock);
+        }
+        return stock;
+    }
+
+    @Override
     public List<Stock> getTopStocks() throws IOException {
         List<String> topStocksTicker = List.of("INTC","GOOG","AAPL","CSCO");
         List<Stock> topStocks = new ArrayList<>();
@@ -85,16 +109,6 @@ public class StockServiceImpl implements StockService {
             topStocks.add(stock);
         }
         return topStocks;
-    }
-
-    @Override
-    public Stock getStock(String ticker) throws IOException {
-        Stock stock = stockCache.get(ticker);
-        if(stock == null ){
-            stock = stockApiService.findStock(ticker);
-            stockCache.add(ticker,stock);
-        }
-        return stock;
     }
 
 }

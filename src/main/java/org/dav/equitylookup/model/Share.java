@@ -20,9 +20,7 @@ public class Share {
     private String company;
     @ManyToOne(fetch = FetchType.LAZY)
     private Portfolio portfolio;
-
     private BigDecimal boughtPrice;
-    private BigDecimal currentPrice;
 
     public Share() {
     }
@@ -32,7 +30,6 @@ public class Share {
         this.company = stock.getCompany();
         this.timeBought = LocalDateTime.now();
         this.boughtPrice = boughtPrice;
-        this.currentPrice = boughtPrice;
         this.portfolio = user.getPortfolio();
     }
 }

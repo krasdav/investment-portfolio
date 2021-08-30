@@ -3,10 +3,12 @@ package org.dav.equitylookup.controller;
 import lombok.RequiredArgsConstructor;
 import org.dav.equitylookup.exceptions.PortfolioNotFoundException;
 import org.dav.equitylookup.exceptions.ShareNotFoundException;
+import org.dav.equitylookup.helper.FinancialAnalysis;
+import org.dav.equitylookup.model.Portfolio;
 import org.dav.equitylookup.model.Share;
-import org.dav.equitylookup.model.Stock;
 import org.dav.equitylookup.model.User;
 import org.dav.equitylookup.model.dto.PortfolioDTO;
+import org.dav.equitylookup.model.dto.ShareDTO;
 import org.dav.equitylookup.model.dto.StockDTO;
 import org.dav.equitylookup.model.form.ShareForm;
 import org.dav.equitylookup.service.PortfolioService;
@@ -25,7 +27,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -42,20 +43,20 @@ public class PortfolioController {
 
     private final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
-
     @GetMapping("/portfolio/show")
     public String listStocksForm(Model model, Principal loggedUser) throws IOException{
         User user = userService.getUserByUsername(loggedUser.getName());
-        List<Stock> stocksUpdated = new ArrayList<>();
+        Portfolio portfolio = user.getPortfolio();
         try{
-            stocksUpdated = stockService.updateStockPrices(user.getPortfolio());
+            stockService.updateStockPrices(portfolio);
         }catch(PortfolioNotFoundException pnfe){
             LOG.error("Portfolio not found " + pnfe);
         }
-        List<StockDTO> stocksDTOs = modelMapper.map(stocksUpdated,new TypeToken<List<StockDTO>>(){}.getType());
+        List<ShareDTO> shareDTOS = modelMapper.map(portfolio.getShares(),new TypeToken<List<ShareDTO>>(){}.getType());
+        stockService.setFinancialDetails(shareDTOS);
         PortfolioDTO portfolioDTO = modelMapper.map(user.getPortfolio(), PortfolioDTO.class);
         model.addAttribute("portfolio", portfolioDTO);
-        model.addAttribute("stocks",stocksDTOs);
+        model.addAttribute("shares", shareDTOS);
         return "portfolio/show";
     }
 

@@ -19,12 +19,16 @@
             <th>Ticker</th>
             <th>Initial Price</th>
             <th>Actual Price</th>
+            <th>Percentage Change</th>
+            <th>Value Change</th>
         </tr>
-        <tr th:each="share, Shares: ${portfolio.shares}">
+        <tr th:each="share, Shares: ${shares}">
             <td th:text="${share.company}"></td>
             <td th:text="${share.ticker}"></td>
             <td th:text="${share.boughtPrice}"></td>
             <td th:text="${share.currentPrice}"></td>
+            <td th:text="${share.percentageChange} + '%'"></td>
+            <td th:text="${share.valueChange}"></td>
             <td>
                 <form action="#" th:action="@{/portfolio/remove/}" method="post">
                     <input type="hidden" name="shareId" th:value="${share.id}"/>
