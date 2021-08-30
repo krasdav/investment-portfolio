@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.security.Principal;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -71,5 +72,11 @@ public class IndexController {
         model.addAttribute("username", user.getUsername());
         model.addAttribute("email", user.getEmail());
         return "registration-success";
+    }
+
+    @GetMapping("/user")
+    public String welcomePage(Model model, Principal user) {
+        model.addAttribute("username", user.getName());
+        return "user-welcome";
     }
 }

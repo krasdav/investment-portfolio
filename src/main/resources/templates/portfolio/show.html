@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <title>Stock List</title>
     <link rel="stylesheet" href="../../navbar.css">
-    <link rel="stylesheet" href="../background.css">
+    <link rel="stylesheet" href="../../background.css">
+    <link rel="stylesheet" href="../../index_table.css">
 </head>
 <body>
 <div th:insert="navigation/navbar :: navbar"></div>
@@ -25,7 +26,7 @@
             <td th:text="${share.boughtPrice}"></td>
             <td th:text="${share.currentPrice}"></td>
             <td>
-                <form action="#" th:action="@{/user/stocks/remove/}" method="post">
+                <form action="#" th:action="@{/portfolio/remove/}" method="post">
                     <input type="hidden" name="shareId" th:value="${share.id}"/>
                     <input type="hidden" name="portfolioName" th:value="${portfolio.name}"/>
                     <input type="submit" value="Delete" class="btn btn-danger"/>

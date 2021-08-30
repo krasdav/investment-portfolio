@@ -11,7 +11,7 @@ Work in Progress
 
 Clone down this repository.
 
-You will need `jdk11` installed globally on your machine.
+You will need `jdk11`
 
 Start the application:
 

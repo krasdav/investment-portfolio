@@ -16,12 +16,13 @@ public class Share {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private LocalDateTime timeBought;
-    private BigDecimal boughtPrice;
-    private BigDecimal currentPrice;
     private String ticker;
     private String company;
     @ManyToOne(fetch = FetchType.LAZY)
     private Portfolio portfolio;
+
+    private BigDecimal boughtPrice;
+    private BigDecimal currentPrice;
 
     public Share() {
     }

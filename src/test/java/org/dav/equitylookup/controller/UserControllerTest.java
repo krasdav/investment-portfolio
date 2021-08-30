@@ -29,9 +29,9 @@ class UserControllerTest {
     @Mock
     private ModelMapper modelMapper;
 
-    private AdminController adminController;
-
     private UserController userController;
+
+    private PortfolioController portfolioController;
 
     private User userOne;
     private User userTwo;

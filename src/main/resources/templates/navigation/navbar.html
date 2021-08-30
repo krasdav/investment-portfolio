@@ -8,8 +8,8 @@
         <li><a href="/stock">Find stock price</a></li>
         <li sec:authorize="isAnonymous()"><a href="/user">Sign in</a></li>
         <li sec:authorize="isAnonymous()"><a href="/registration">Register</a></li>
-        <li sec:authorize="hasAuthority('ROLE_USER')"><a href="/user/stocks/list">Your Portfolio</a></li>
-        <li sec:authorize="hasAuthority('ROLE_USER')"><a href="/user/stocks/add">Add a share</a></li>
+        <li sec:authorize="hasAuthority('ROLE_USER')"><a href="/portfolio/show">Your Portfolio</a></li>
+        <li sec:authorize="hasAuthority('ROLE_USER')"><a href="/portfolio/add">Add a share</a></li>
         <li sec:authorize="hasAuthority('ROLE_USER')"><a href="/logout">Logout</a></li>
     </ul>
 </div>

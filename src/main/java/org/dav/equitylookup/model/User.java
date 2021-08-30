@@ -26,7 +26,6 @@ public class User implements UserDetails {
     private String role = "None";
     private String password = "password";
 
-
     @OneToOne(
             mappedBy = "user",
             cascade = CascadeType.ALL)
