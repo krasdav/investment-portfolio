@@ -1,16 +1,22 @@
 package org.dav.equitylookup.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.dav.equitylookup.datacache.CacheStore;
 import org.dav.equitylookup.exceptions.PortfolioNotFoundException;
 import org.dav.equitylookup.exceptions.ShareNotFoundException;
 import org.dav.equitylookup.model.Portfolio;
 import org.dav.equitylookup.model.Share;
+import org.dav.equitylookup.model.Stock;
+import org.dav.equitylookup.model.dto.PortfolioDTO;
 import org.dav.equitylookup.repository.PortfolioRepository;
 import org.dav.equitylookup.service.PortfolioService;
+import org.dav.equitylookup.service.StockApiService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +25,10 @@ import java.util.Optional;
 public class PortfolioServiceImpl implements PortfolioService {
 
     private final PortfolioRepository portfolioRepository;
+
+    private final CacheStore<Stock> stockCache;
+
+    private final StockApiService stockApiService;
 
     @Override
     public void savePortfolio(Portfolio portfolio) {
@@ -58,17 +68,24 @@ public class PortfolioServiceImpl implements PortfolioService {
         }
     }
 
-    @Transactional
-    public void updatePortfolioValue(String portfolioName, BigDecimal portfolioValueUpdated) throws PortfolioNotFoundException {
-        Portfolio portfolio = getPortfolioByName(portfolioName);
-        portfolio.setPortfolioValue(portfolioValueUpdated);
+    @Override
+    public void addAnalysisDetails(PortfolioDTO portfolioDTO) throws IOException {
+        BigDecimal portfolioValue = new BigDecimal("0");
+        for ( Share share : portfolioDTO.getShares()){
+            BigDecimal currentPrice = stockCache.get(share.getTicker()).getCurrentPrice();
+            if( currentPrice == null){
+                currentPrice = stockApiService.findPrice(share.getTicker());
+                stockCache.add(share.getTicker(), new Stock(share.getTicker(),share.getCompany(),currentPrice));
+            }
+            portfolioValue = portfolioValue.add(currentPrice);
+        }
+        portfolioDTO.setPortfolioValue(portfolioValue.setScale(2, RoundingMode.HALF_EVEN));
     }
 
     @Transactional
     public void addShare(Share share, String portfolioName) throws PortfolioNotFoundException {
         Portfolio portfolio = getPortfolioByName(portfolioName);
         portfolio.getShares().add(share);
-        portfolio.addToPortfolioValue(share.getBoughtPrice());
     }
 
     @Transactional

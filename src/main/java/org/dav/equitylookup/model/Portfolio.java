@@ -3,7 +3,6 @@ package org.dav.equitylookup.model;
 import lombok.Getter;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,10 +14,7 @@ public class Portfolio {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
     private String name;
-
-    private BigDecimal portfolioValue = new BigDecimal("0");
     private LocalDateTime creationTime;
 
     @OneToOne
@@ -47,14 +43,6 @@ public class Portfolio {
 
     public List<String> getStockTickers() {
         return shares.stream().map(Share::getTicker).collect(Collectors.toList());
-    }
-
-    public void setPortfolioValue(BigDecimal portfolioValue){
-        this.portfolioValue = portfolioValue;
-    }
-
-    public void addToPortfolioValue(BigDecimal shareValue){
-        portfolioValue = portfolioValue.add(shareValue);
     }
 
     public void removeShare(Share share){

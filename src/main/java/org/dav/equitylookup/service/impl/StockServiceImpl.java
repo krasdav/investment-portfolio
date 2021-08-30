@@ -30,7 +30,6 @@ public class StockServiceImpl implements StockService {
     private final PortfolioService portfolioService;
 
     public List<Stock> updateStockPrices(Portfolio portfolio) throws IOException, PortfolioNotFoundException {
-        //BigDecimal portfolioValue = new BigDecimal("0");
         List<Stock> stocksUpdated = new ArrayList<>();
         for ( Share share : portfolio.getShares()){
             Stock stock = stockCache.get(share.getTicker());
@@ -38,10 +37,8 @@ public class StockServiceImpl implements StockService {
                 BigDecimal currentPrice = stockApiService.findPrice(share.getTicker());
                 stock = stockCache.add(share.getTicker(), new Stock(share.getTicker(),share.getCompany(),currentPrice));
             }
-        //    portfolioValue = portfolioValue.add(stock.getCurrentPrice());
             stocksUpdated.add(stock);
         }
-        //portfolioService.updatePortfolioValue(portfolio.getName(),portfolioValue);
         return stocksUpdated;
     }
 
@@ -56,7 +53,7 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
-    public void setFinancialDetails(List<ShareDTO> shareDTOS) throws IOException {
+    public void addAnalysisDetails(List<ShareDTO> shareDTOS) throws IOException {
         for( ShareDTO shareDTO : shareDTOS){
             BigDecimal currentPrice = stockCache.get(shareDTO.getTicker()).getCurrentPrice();
             if( currentPrice == null){

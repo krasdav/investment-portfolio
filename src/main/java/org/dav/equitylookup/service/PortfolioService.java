@@ -4,8 +4,9 @@ import org.dav.equitylookup.exceptions.PortfolioNotFoundException;
 import org.dav.equitylookup.exceptions.ShareNotFoundException;
 import org.dav.equitylookup.model.Portfolio;
 import org.dav.equitylookup.model.Share;
+import org.dav.equitylookup.model.dto.PortfolioDTO;
 
-import java.math.BigDecimal;
+import java.io.IOException;
 import java.util.List;
 
 public interface PortfolioService {
@@ -17,14 +18,14 @@ public interface PortfolioService {
 
     Portfolio getPortfolioByName(String name) throws PortfolioNotFoundException;
 
-    public void addShare(Share share, String portfolioName) throws PortfolioNotFoundException;
+    void addShare(Share share, String portfolioName) throws PortfolioNotFoundException;
 
-    public void removeShare(Share share, String portfolioName) throws PortfolioNotFoundException;
+    void removeShare(Share share, String portfolioName) throws PortfolioNotFoundException;
 
-    public void updatePortfolioValue(String portfolioName, BigDecimal portfolioValueUpdated) throws PortfolioNotFoundException;
+    Share getShareById(long id, String portfolionName) throws PortfolioNotFoundException, ShareNotFoundException;
 
-    public Share getShareById(long id, String portfolionName) throws PortfolioNotFoundException, ShareNotFoundException;
+    void removeShareById(long id, String portfolioName) throws PortfolioNotFoundException, ShareNotFoundException;
 
-    public void removeShareById(long id, String portfolioName) throws PortfolioNotFoundException, ShareNotFoundException;
+    void addAnalysisDetails(PortfolioDTO portfolioDTO) throws IOException;
 
 }

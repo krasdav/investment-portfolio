@@ -15,7 +15,7 @@ public interface StockService {
 
     void updateStockPrices(Share... shares) throws IOException;
 
-    void setFinancialDetails(List<ShareDTO> shareDTOS) throws IOException;
+    void addAnalysisDetails(List<ShareDTO> shareDTOS) throws IOException;
 
     Share obtainShare(String ticker, User user) throws IOException;
 

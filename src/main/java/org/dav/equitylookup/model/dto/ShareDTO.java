@@ -2,7 +2,6 @@ package org.dav.equitylookup.model.dto;
 
 import lombok.Data;
 import org.dav.equitylookup.model.Portfolio;
-import org.dav.equitylookup.model.Stock;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

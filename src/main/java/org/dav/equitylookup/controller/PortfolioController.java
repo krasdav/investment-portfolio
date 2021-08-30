@@ -51,8 +51,9 @@ public class PortfolioController {
             LOG.error("Portfolio not found " + pnfe);
         }
         List<ShareDTO> shareDTOS = modelMapper.map(portfolio.getShares(),new TypeToken<List<ShareDTO>>(){}.getType());
-        stockService.setFinancialDetails(shareDTOS);
+        stockService.addAnalysisDetails(shareDTOS);
         PortfolioDTO portfolioDTO = modelMapper.map(user.getPortfolio(), PortfolioDTO.class);
+        portfolioService.addAnalysisDetails(portfolioDTO);
         model.addAttribute("portfolio", portfolioDTO);
         model.addAttribute("shares", shareDTOS);
         return "portfolio/show";
