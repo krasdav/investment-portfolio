@@ -14,7 +14,7 @@ import java.io.IOException;
 
 @RequiredArgsConstructor
 @Controller
-public class StockController {
+public class StockSearchController {
 
     private final StockService stockService;
 

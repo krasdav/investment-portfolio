@@ -15,6 +15,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 
 @RequiredArgsConstructor
@@ -31,6 +32,8 @@ public class EquityLookUpApplication {
 
     private final PortfolioService portfolioService;
 
+    private final PasswordEncoder passwordEncoder;
+
     public static void main(String[] args) {
         SpringApplication.run(EquityLookUpApplication.class, args);
     }
@@ -45,7 +48,7 @@ public class EquityLookUpApplication {
         return () -> {
             User michal = new User("Michal");
             michal.setRole("ROLE_USER");
-            michal.setPassword("pw");
+            michal.setPassword(passwordEncoder.encode("pw"));
             userService.saveUser(michal);
 
             Stock google = yahooApiService.findStock("GOOG");
@@ -61,10 +64,9 @@ public class EquityLookUpApplication {
             michal.setPortfolio(portfolio);
 
             Share shareGoogle = stockService.obtainShare(google.getTicker(), michal);
-//            shareService.saveShare(shareGoogle);
 
             Share shareIntel = stockService.obtainShare(intel.getTicker(), michal);
-//            shareService.saveShare(shareIntel);
+
             portfolioService.addShare(shareGoogle, portfolio.getName());
             portfolioService.addShare(shareIntel, portfolio.getName());
 

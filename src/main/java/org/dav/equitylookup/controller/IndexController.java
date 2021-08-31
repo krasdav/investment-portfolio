@@ -12,6 +12,7 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -35,6 +36,9 @@ public class IndexController {
     private final PortfolioService portfolioService;
 
     private final StockService stockService;
+
+    private final PasswordEncoder passwordEncoder;
+
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -61,7 +65,7 @@ public class IndexController {
             return "registration-form";
         }
         User user = new User(userRegistrationForm.getUsername());
-        user.setPassword(userRegistrationForm.getPassword());
+        user.setPassword(passwordEncoder.encode(userRegistrationForm.getPassword()));
         user.setRole("ROLE_USER");
         user.setEmail(userRegistrationForm.getEmail());
         userService.saveUser(user);
