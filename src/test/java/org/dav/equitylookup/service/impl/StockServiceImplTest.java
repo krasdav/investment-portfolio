@@ -9,8 +9,8 @@ import org.dav.equitylookup.model.User;
 import org.dav.equitylookup.service.PortfolioService;
 import org.dav.equitylookup.service.StockApiService;
 import org.dav.equitylookup.service.StockService;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -32,23 +32,26 @@ class StockServiceImplTest {
     @Mock
     private CacheStore<Stock> stockCache;
 
-    @Mock
-    private PortfolioService portfolioService;
+    private StockService stockService;
+    private User user;
+    private Portfolio portfolio;
 
-    @InjectMocks
-    private StockServiceImpl stockService;
-
-    @Test
-    void updateStockFromPortfolioPrices() throws IOException, PortfolioNotFoundException {
-        User user = new User("user1");
-        Portfolio portfolio = new Portfolio("Test_Portfolio", user);
+    @BeforeEach
+    void setup() {
+        stockService = new StockServiceImpl(stockApiService, stockCache);
+        user = new User("user1");
+        portfolio = new Portfolio("Test_Portfolio", user);
         Share apple = new Share(new BigDecimal("100"), new Stock("AAPL", "Apple"), user);
         Share google = new Share(new BigDecimal("150"), new Stock("GOOG", "Google"), user);
         Share intel = new Share(new BigDecimal("200"), new Stock("INTC", "Intel"), user);
         portfolio.addShare(apple);
         portfolio.addShare(google);
         portfolio.addShare(intel);
+    }
 
+    @Test
+    @DisplayName("")
+    void updateStockByPortfolio() throws IOException{
         when(stockApiService.findPrice((String) any())).thenReturn(new BigDecimal("200"));
         when(stockCache.get(any())).thenReturn(
                 new Stock("AAPL", "Apple", new BigDecimal("100")),
@@ -61,11 +64,22 @@ class StockServiceImplTest {
         Assertions.assertEquals(new BigDecimal(100), stocks.get(0).getCurrentPrice());
         Assertions.assertEquals(new BigDecimal(200), stocks.get(1).getCurrentPrice());
         Assertions.assertEquals(new BigDecimal(200), stocks.get(2).getCurrentPrice());
-
     }
 
     @Test
-    void testUpdateStockPrices() {
+    void testUpdateStockPrices() throws IOException {
+        when(stockApiService.findPrice((String) any())).thenReturn(new BigDecimal("200"));
+        when(stockCache.get(any())).thenReturn(
+                new Stock("AAPL", "Apple", new BigDecimal("100")),
+                null,
+                new Stock("INTC", "Intel", new BigDecimal("200")));
+        when(stockCache.add(any(), any())).thenReturn(new Stock("GOOG", "Google", new BigDecimal("200")));
+
+        List<Stock> stocks = stockService.updateStockPrices(portfolio.getShares());
+        Assertions.assertEquals(3, stocks.size());
+        Assertions.assertEquals(new BigDecimal(100), stocks.get(0).getCurrentPrice());
+        Assertions.assertEquals(new BigDecimal(200), stocks.get(1).getCurrentPrice());
+        Assertions.assertEquals(new BigDecimal(200), stocks.get(2).getCurrentPrice());
     }
 
     @Test

@@ -45,11 +45,7 @@ public class PortfolioController {
     public String listStocksForm(Model model, Principal loggedUser) throws IOException{
         User user = userService.getUserByUsername(loggedUser.getName());
         Portfolio portfolio = user.getPortfolio();
-        try{
-            stockService.updateStockPrices(portfolio);
-        }catch(PortfolioNotFoundException pnfe){
-            LOG.error("Portfolio not found " + pnfe);
-        }
+        stockService.updateStockPrices(portfolio);
         List<ShareDTO> shareDTOS = modelMapper.map(portfolio.getShares(),new TypeToken<List<ShareDTO>>(){}.getType());
         stockService.addAnalysisDetails(shareDTOS);
         PortfolioDTO portfolioDTO = modelMapper.map(user.getPortfolio(), PortfolioDTO.class);

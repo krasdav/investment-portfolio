@@ -2,14 +2,12 @@ package org.dav.equitylookup.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.dav.equitylookup.datacache.CacheStore;
-import org.dav.equitylookup.exceptions.PortfolioNotFoundException;
 import org.dav.equitylookup.helper.FinancialAnalysis;
 import org.dav.equitylookup.model.Portfolio;
 import org.dav.equitylookup.model.Share;
 import org.dav.equitylookup.model.Stock;
 import org.dav.equitylookup.model.User;
 import org.dav.equitylookup.model.dto.ShareDTO;
-import org.dav.equitylookup.service.PortfolioService;
 import org.dav.equitylookup.service.StockApiService;
 import org.dav.equitylookup.service.StockService;
 import org.springframework.stereotype.Service;
@@ -27,11 +25,13 @@ public class StockServiceImpl implements StockService {
 
     private final CacheStore<Stock> stockCache;
 
-    private final PortfolioService portfolioService;
+    public List<Stock> updateStockPrices(Portfolio portfolio) throws IOException {
+        return updateStockPrices(portfolio.getShares());
+    }
 
-    public List<Stock> updateStockPrices(Portfolio portfolio) throws IOException, PortfolioNotFoundException {
+    public List<Stock> updateStockPrices(List<Share> shares) throws IOException {
         List<Stock> stocksUpdated = new ArrayList<>();
-        for ( Share share : portfolio.getShares()){
+        for ( Share share : shares){
             Stock stock = stockCache.get(share.getTicker());
             if( stock == null) {
                 BigDecimal currentPrice = stockApiService.findPrice(share.getTicker());
@@ -40,16 +40,6 @@ public class StockServiceImpl implements StockService {
             stocksUpdated.add(stock);
         }
         return stocksUpdated;
-    }
-
-    public void updateStockPrices(Share... shares) throws IOException {
-        for ( Share share : shares){
-            Stock stock = stockCache.get(share.getTicker());
-            if( stock == null) {
-                BigDecimal currentPrice = stockApiService.findPrice(share.getTicker());
-                stockCache.add(share.getTicker(), new Stock(share.getTicker(),share.getCompany(),currentPrice));
-            }
-        }
     }
 
     @Override

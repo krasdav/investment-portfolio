@@ -11,9 +11,9 @@ import java.io.IOException;
 import java.util.List;
 
 public interface StockService {
-    List<Stock> updateStockPrices(Portfolio portfolio) throws IOException, PortfolioNotFoundException;
+    List<Stock> updateStockPrices(Portfolio portfolio) throws IOException;
 
-    void updateStockPrices(Share... shares) throws IOException;
+    List<Stock> updateStockPrices(List<Share> shares) throws IOException;
 
     void addAnalysisDetails(List<ShareDTO> shareDTOS) throws IOException;
 
