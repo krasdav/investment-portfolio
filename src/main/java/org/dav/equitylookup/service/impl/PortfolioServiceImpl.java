@@ -20,15 +20,15 @@ import java.math.RoundingMode;
 import java.util.List;
 import java.util.Optional;
 
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 public class PortfolioServiceImpl implements PortfolioService {
 
     private final PortfolioRepository portfolioRepository;
 
     private final CacheStore<Stock> stockCache;
 
-    private final StockApiService stockApiService;
+    private final StockApiService cachedStockApiService;
 
     @Override
     public void savePortfolio(Portfolio portfolio) {
@@ -74,7 +74,7 @@ public class PortfolioServiceImpl implements PortfolioService {
         for ( Share share : portfolioDTO.getShares()){
             BigDecimal currentPrice = stockCache.get(share.getTicker()).getCurrentPrice();
             if( currentPrice == null){
-                currentPrice = stockApiService.findPrice(share.getTicker());
+                currentPrice = cachedStockApiService.findPrice(share.getTicker());
                 stockCache.add(share.getTicker(), new Stock(share.getTicker(),share.getCompany(),currentPrice));
             }
             portfolioValue = portfolioValue.add(currentPrice);

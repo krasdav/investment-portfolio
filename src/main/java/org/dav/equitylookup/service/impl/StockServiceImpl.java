@@ -17,11 +17,11 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 public class StockServiceImpl implements StockService {
 
-    private final StockApiService stockApiService;
+    private final StockApiService cachedStockApiService;
 
     private final CacheStore<Stock> stockCache;
 
@@ -32,11 +32,7 @@ public class StockServiceImpl implements StockService {
     public List<Stock> updateStockPrices(List<Share> shares) throws IOException {
         List<Stock> stocksUpdated = new ArrayList<>();
         for ( Share share : shares){
-            Stock stock = stockCache.get(share.getTicker());
-            if( stock == null) {
-                BigDecimal currentPrice = stockApiService.findPrice(share.getTicker());
-                stock = stockCache.add(share.getTicker(), new Stock(share.getTicker(),share.getCompany(),currentPrice));
-            }
+            Stock stock = cachedStockApiService.findStock(share.getTicker());
             stocksUpdated.add(stock);
         }
         return stocksUpdated;
@@ -45,11 +41,7 @@ public class StockServiceImpl implements StockService {
     @Override
     public void addAnalysisDetails(List<ShareDTO> shareDTOS) throws IOException {
         for( ShareDTO shareDTO : shareDTOS){
-            BigDecimal currentPrice = stockCache.get(shareDTO.getTicker()).getCurrentPrice();
-            if( currentPrice == null){
-                currentPrice = stockApiService.findPrice(shareDTO.getTicker());
-                stockCache.add(shareDTO.getTicker(), new Stock(shareDTO.getTicker(),shareDTO.getCompany(),currentPrice));
-            }
+            BigDecimal currentPrice = cachedStockApiService.findPrice(shareDTO.getTicker());
             shareDTO.setCurrentPrice(currentPrice);
             shareDTO.setPercentageChange(FinancialAnalysis.getPercentageChange(shareDTO.getBoughtPrice(),currentPrice));
             shareDTO.setValueChange(FinancialAnalysis.getValueChange(shareDTO.getBoughtPrice(),currentPrice));
@@ -58,11 +50,7 @@ public class StockServiceImpl implements StockService {
 
     @Override
     public Share obtainShare(String ticker, User user) throws IOException {
-        Stock stock = stockCache.get(ticker);
-        if(stock == null){
-            stock = stockApiService.findStock(ticker);
-            stockCache.add(ticker,stock);
-        }
+        Stock stock = cachedStockApiService.findStock(ticker);
         return new Share(stock.getCurrentPrice(),stock,user);
     }
 
@@ -75,12 +63,7 @@ public class StockServiceImpl implements StockService {
 
     @Override
     public Stock getStock(String ticker) throws IOException {
-        Stock stock = stockCache.get(ticker);
-        if(stock == null ){
-            stock = stockApiService.findStock(ticker);
-            stockCache.add(ticker,stock);
-        }
-        return stock;
+        return cachedStockApiService.findStock(ticker);
     }
 
     @Override
@@ -90,7 +73,7 @@ public class StockServiceImpl implements StockService {
         for(String ticker : topStocksTicker){
             Stock stock = stockCache.get(ticker);
             if(stock == null ){
-                stock = stockApiService.findStock(ticker);
+                stock = cachedStockApiService.findStock(ticker);
                 stockCache.add(ticker,stock);
             }
             topStocks.add(stock);

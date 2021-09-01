@@ -1,6 +1,5 @@
 package org.dav.equitylookup.service;
 
-import org.dav.equitylookup.exceptions.PortfolioNotFoundException;
 import org.dav.equitylookup.model.Portfolio;
 import org.dav.equitylookup.model.Share;
 import org.dav.equitylookup.model.Stock;

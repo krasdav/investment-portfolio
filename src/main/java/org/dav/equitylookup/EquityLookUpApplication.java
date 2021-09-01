@@ -14,6 +14,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.SpringVersion;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -46,6 +47,7 @@ public class EquityLookUpApplication {
     @Bean
     InitializingBean sendDatabase() {
         return () -> {
+            System.out.println(SpringVersion.getVersion());
             User michal = new User("Michal");
             michal.setRole("ROLE_USER");
             michal.setPassword(passwordEncoder.encode("pw"));

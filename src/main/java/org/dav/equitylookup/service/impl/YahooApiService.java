@@ -1,6 +1,5 @@
 package org.dav.equitylookup.service.impl;
 
-import lombok.AllArgsConstructor;
 import org.dav.equitylookup.model.Stock;
 import org.dav.equitylookup.service.StockApiService;
 import org.springframework.stereotype.Service;
@@ -9,8 +8,7 @@ import yahoofinance.YahooFinance;
 import java.io.IOException;
 import java.math.BigDecimal;
 
-@AllArgsConstructor
-@Service
+@Service("yahooApiService")
 public class YahooApiService implements StockApiService {
 
     public Stock findStock(String ticker) throws IOException {
