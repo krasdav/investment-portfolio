@@ -4,7 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.dav.equitylookup.model.Portfolio;
 import org.dav.equitylookup.model.User;
 import org.dav.equitylookup.model.dto.StockDTO;
+import org.dav.equitylookup.model.form.CoinForm;
+import org.dav.equitylookup.model.form.StockForm;
 import org.dav.equitylookup.model.form.UserRegistrationForm;
+import org.dav.equitylookup.service.CryptoService;
 import org.dav.equitylookup.service.PortfolioService;
 import org.dav.equitylookup.service.StockService;
 import org.dav.equitylookup.service.UserService;
@@ -19,6 +22,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -39,6 +43,8 @@ public class IndexController {
 
     private final PasswordEncoder passwordEncoder;
 
+    private final CryptoService cryptoService;
+
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -47,7 +53,23 @@ public class IndexController {
         List<StockDTO> topStocks = modelMapper.map(stockService.getTopStocks(), new TypeToken<List<StockDTO>>() {
         }.getType());
         model.addAttribute("stocks", topStocks);
+        model.addAttribute("coin", new CoinForm());
+        model.addAttribute("stock", new StockForm());
         return "index";
+    }
+
+    @PostMapping("/crypto")
+    public String getCryptoPrice(@ModelAttribute("coin") CoinForm coinForm, RedirectAttributes redirectAttrs) {
+        redirectAttrs.addFlashAttribute("coinPrice", cryptoService.getCoinPrice(coinForm.getSymbol() + "USDT"));
+        redirectAttrs.addFlashAttribute("coinSymbol", coinForm.getSymbol());
+        return "redirect:/index";
+    }
+
+    @PostMapping("/stock")
+    public String getStockPrice(@ModelAttribute("stock") StockForm stockForm, RedirectAttributes redirectAttrs) throws IOException {
+        redirectAttrs.addFlashAttribute("stockPrice", stockService.getStock(stockForm.getTicker()).getCurrentPrice());
+        redirectAttrs.addFlashAttribute("stockTicker", stockForm.getTicker());
+        return "redirect:/index";
     }
 
     @GetMapping("/registration")

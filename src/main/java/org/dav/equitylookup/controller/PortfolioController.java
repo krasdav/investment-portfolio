@@ -69,13 +69,6 @@ public class PortfolioController {
         return "portfolio/show";
     }
 
-    @GetMapping("/portfolio/add")
-    public String addStock(Model model) {
-        model.addAttribute("share", new ShareForm());
-        model.addAttribute("coin",new CoinForm());
-        return "portfolio/add";
-    }
-
     @PostMapping("/portfolio/share/add")
     public String addStock(@ModelAttribute("share") ShareForm shareForm, Model model, Principal loggedUser) throws IOException {
         User user = userService.getUserByUsername(loggedUser.getName());

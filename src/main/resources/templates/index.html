@@ -4,22 +4,24 @@
     <meta charset="UTF-8">
     <title>Main Page</title>
     <link rel="stylesheet" href="../navbar.css">
-    <link rel="stylesheet" href="../index_table.css">
+    <link rel="stylesheet" href="../index_form.css">
     <link rel="stylesheet" href="../background.css">
 </head>
 <body>
-    <div th:insert="navigation/navbar :: navbar"></div>
-    <h2>Top Trending Stocks</h2>
-    <table>
-        <tr>
-            <th>Stock</th>
-            <th>Price</th>
-        </tr>
-        <tr th:each="stock, Stocks: ${stocks}">
-            <td th:text="${stock.ticker}"></td>
-            <td th:text="${stock.currentPrice}"></td>
-        </tr>
-    </table>
+<div th:insert="navigation/navbar :: navbar"></div>
+<form action="#" th:action="@{/crypto}" th:object="${coin}" method="post">
+    <p><input type="text" th:field="*{symbol}" placeholder="Cryptocurrency symbol"/><input type="submit" value="Go"/></p>
+    <p th:if="${coinPrice}">
+        <span th:text="${coinSymbol} + ' : ' + ${coinPrice}"></span>
+    </p>
+</form>
+
+<form action="#" th:action="@{/stock}" th:object="${stock}" method="post">
+    <p><input type="text" th:field="*{ticker}" placeholder="Stock ticker"/> <input type="submit" value="Go"/></p>
+    <p th:if="${stockPrice}">
+        <span th:text="${stockTicker} + ' : ' + ${stockPrice}"></span>
+    </p>
+</form>
 </body>
 
 </html>
