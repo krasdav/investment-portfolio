@@ -34,7 +34,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    public void configure(WebSecurity web){
+    public void configure(WebSecurity web) {
         web
                 .ignoring()
                 .antMatchers("/h2-console/**");
@@ -50,10 +50,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/stock").permitAll()
                 .and()
                 .formLogin()
-                    .permitAll()
+                .permitAll()
                 .and()
                 .logout()
-                    .logoutSuccessUrl("/index");
+                .logoutSuccessUrl("/index");
     }
 
     @Bean

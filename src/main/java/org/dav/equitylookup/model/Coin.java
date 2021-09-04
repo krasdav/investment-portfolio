@@ -2,35 +2,32 @@ package org.dav.equitylookup.model;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.dav.equitylookup.model.cache.Stock;
+import org.dav.equitylookup.model.cache.CoinInfo;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @Entity
-public class Share {
+public class Coin {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private LocalDateTime timeBought;
-    private String ticker;
-    private String company;
+    private String symbol;
     @ManyToOne(fetch = FetchType.LAZY)
     private Portfolio portfolio;
-    private BigDecimal boughtPrice;
+    private String boughtPrice;
 
-    public Share() {
+    public Coin() {
     }
 
-    public Share(BigDecimal boughtPrice, Stock stock, User user) {
-        this.ticker = stock.getTicker();
-        this.company = stock.getCompany();
+    public Coin(String boughtPrice, CoinInfo coinInfo, User user) {
         this.timeBought = LocalDateTime.now();
-        this.boughtPrice = boughtPrice;
+        this.symbol = coinInfo.getSymbol();
         this.portfolio = user.getPortfolio();
+        this.boughtPrice = boughtPrice;
     }
 }

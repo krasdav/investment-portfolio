@@ -1,8 +1,8 @@
 package org.dav.equitylookup.controller;
 
-import org.dav.equitylookup.model.Stock;
+import org.dav.equitylookup.model.cache.Stock;
 import org.dav.equitylookup.model.User;
-import org.dav.equitylookup.service.impl.YahooApiService;
+import org.dav.equitylookup.service.impl.stock.YahooApiService;
 import org.dav.equitylookup.service.StockService;
 import org.dav.equitylookup.service.UserService;
 import org.junit.jupiter.api.extension.ExtendWith;

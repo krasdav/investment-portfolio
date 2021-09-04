@@ -1,18 +1,15 @@
 package org.dav.equitylookup.service.impl;
 
 import org.dav.equitylookup.datacache.CacheStore;
-import org.dav.equitylookup.exceptions.PortfolioNotFoundException;
 import org.dav.equitylookup.model.Portfolio;
 import org.dav.equitylookup.model.Share;
-import org.dav.equitylookup.model.Stock;
+import org.dav.equitylookup.model.cache.Stock;
 import org.dav.equitylookup.model.User;
-import org.dav.equitylookup.service.PortfolioService;
 import org.dav.equitylookup.service.StockApiService;
 import org.dav.equitylookup.service.StockService;
-import org.junit.Before;
+import org.dav.equitylookup.service.impl.stock.StockServiceImpl;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Qualifier;

@@ -12,6 +12,21 @@
 <div>
     <span th:text="${portfolio.name}"></span>
 </div>
+<h1> Add </h1>
+<form action="#" th:action="@{/portfolio/share/add}" th:object="${share}" method="post">
+    <p>Ticker: <input type="text" th:field="*{ticker}"/></p>
+    <p><input type="submit" value="Submit"/> <input type="reset" value="Reset"/></p>
+    <p th:if="${shareAdded}">
+        <span th:text="${shareAdded}"></span>
+    </p>
+</form>
+<form action="#" th:action="@{/portfolio/crypto/add}" th:object="${coin}" method="post">
+    <p>Symbol: <input type="text" th:field="*{symbol}"/></p>
+    <p><input type="submit" value="Submit"/> <input type="reset" value="Reset"/></p>
+    <p th:if="${coinAdded}">
+        <span th:text="${coinAdded}"></span>
+    </p>
+</form>
 <div>
     <table>
         <tr>
@@ -30,8 +45,33 @@
             <td th:text="${share.percentageChange} + '%'"></td>
             <td th:text="${share.valueChange}"></td>
             <td>
-                <form action="#" th:action="@{/portfolio/remove/}" method="post">
+                <form action="#" th:action="@{/portfolio/share/remove/}" method="post">
                     <input type="hidden" name="shareId" th:value="${share.id}"/>
+                    <input type="hidden" name="portfolioName" th:value="${portfolio.name}"/>
+                    <input type="submit" value="Delete" class="btn btn-danger"/>
+                </form>
+            </td>
+        </tr>
+    </table>
+</div>
+<div>
+    <table>
+        <tr>
+            <th>Symbol</th>
+            <th>Initial Price</th>
+            <th>Actual Price</th>
+            <th>Percentage Change</th>
+            <th>Value Change</th>
+        </tr>
+        <tr th:each="coin, Coins: ${coins}">
+            <td th:text="${coin.symbol}"></td>
+            <td th:text="${coin.boughtPrice}"></td>
+            <td th:text="${coin.currentPrice}"></td>
+            <td th:text="${coin.percentageChange} + '%'"></td>
+            <td th:text="${coin.valueChange}"></td>
+            <td>
+                <form action="#" th:action="@{/portfolio/crypto/remove/}" method="post">
+                    <input type="hidden" name="coinID" th:value="${coin.id}"/>
                     <input type="hidden" name="portfolioName" th:value="${portfolio.name}"/>
                     <input type="submit" value="Delete" class="btn btn-danger"/>
                 </form>

@@ -1,20 +1,20 @@
 package org.dav.equitylookup;
 
 import lombok.RequiredArgsConstructor;
+import org.dav.equitylookup.config.BeanConfig;
+import org.dav.equitylookup.model.Coin;
 import org.dav.equitylookup.model.Portfolio;
 import org.dav.equitylookup.model.Share;
-import org.dav.equitylookup.model.Stock;
+import org.dav.equitylookup.model.cache.Stock;
 import org.dav.equitylookup.model.User;
+import org.dav.equitylookup.service.CryptoService;
 import org.dav.equitylookup.service.PortfolioService;
 import org.dav.equitylookup.service.StockService;
 import org.dav.equitylookup.service.UserService;
-import org.dav.equitylookup.service.impl.YahooApiService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.SpringVersion;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -29,36 +29,31 @@ public class EquityLookUpApplication {
 
     private final StockService stockService;
 
-    private final YahooApiService yahooApiService;
-
     private final PortfolioService portfolioService;
 
     private final PasswordEncoder passwordEncoder;
+
+    private final CryptoService cryptoService;
+
+    private final BeanConfig beanConfig;
 
     public static void main(String[] args) {
         SpringApplication.run(EquityLookUpApplication.class, args);
     }
 
     @Bean
-    public ModelMapper modelMapper() {
-        return new ModelMapper();
-    }
-
-    @Bean
     InitializingBean sendDatabase() {
         return () -> {
-            System.out.println(SpringVersion.getVersion());
             User michal = new User("Michal");
             michal.setRole("ROLE_USER");
             michal.setPassword(passwordEncoder.encode("pw"));
             userService.saveUser(michal);
 
-            Stock google = yahooApiService.findStock("GOOG");
+            Stock google = stockService.getStock("GOOG");
 
-            Stock apple = yahooApiService.findStock("APPL");;
+            Stock apple = stockService.getStock("APPL");
 
-            Stock intel = yahooApiService.findStock("INTC");;
-
+            Stock intel =stockService.getStock("INTC");
 
             Portfolio portfolio = new Portfolio("Michal's Portfolio", michal);
             portfolioService.savePortfolio(portfolio);
@@ -69,8 +64,11 @@ public class EquityLookUpApplication {
 
             Share shareIntel = stockService.obtainShare(intel.getTicker(), michal);
 
+            Coin coin = cryptoService.obtainCoin("BTCUSDT", michal);
+
             portfolioService.addShare(shareGoogle, portfolio.getName());
             portfolioService.addShare(shareIntel, portfolio.getName());
+            portfolioService.addCoin(coin, portfolio.getName());
 
         };
     }

@@ -1,14 +1,14 @@
 package org.dav.equitylookup.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.dav.equitylookup.datacache.CacheStore;
 import org.dav.equitylookup.exceptions.PortfolioNotFoundException;
 import org.dav.equitylookup.exceptions.ShareNotFoundException;
+import org.dav.equitylookup.model.Coin;
 import org.dav.equitylookup.model.Portfolio;
 import org.dav.equitylookup.model.Share;
-import org.dav.equitylookup.model.Stock;
 import org.dav.equitylookup.model.dto.PortfolioDTO;
 import org.dav.equitylookup.repository.PortfolioRepository;
+import org.dav.equitylookup.service.CryptoApiService;
 import org.dav.equitylookup.service.PortfolioService;
 import org.dav.equitylookup.service.StockApiService;
 import org.springframework.stereotype.Service;
@@ -22,13 +22,13 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class PortfolioServiceImpl implements PortfolioService {
+public class PortfolioServiceImpl implements PortfolioService{
 
     private final PortfolioRepository portfolioRepository;
 
-    private final CacheStore<Stock> stockCache;
-
     private final StockApiService cachedStockApiService;
+
+    private final CryptoApiService cachedCryptoApiService;
 
     @Override
     public void savePortfolio(Portfolio portfolio) {
@@ -56,36 +56,57 @@ public class PortfolioServiceImpl implements PortfolioService {
     }
 
     @Override
-    public Share getShareById(long id,String portfolionName) throws PortfolioNotFoundException, ShareNotFoundException {
+    public Share getShareById(long id, String portfolionName) throws PortfolioNotFoundException, ShareNotFoundException {
         Optional<Share> share = getPortfolioByName(portfolionName).getShares()
                 .stream()
-                .filter( s -> s.getId() == id)
+                .filter(s -> s.getId() == id)
                 .findFirst();
-        if( share.isPresent()){
+        if (share.isPresent()) {
             return share.get();
-        }else{
+        } else {
             throw new ShareNotFoundException("Share Not Found");
+        }
+    }
+
+    @Override
+    public Coin getCoinById(long id, String portfolionName) throws PortfolioNotFoundException, ShareNotFoundException {
+        Optional<Coin> coin = getPortfolioByName(portfolionName).getCoins()
+                .stream()
+                .filter(s -> s.getId() == id)
+                .findFirst();
+        if (coin.isPresent()) {
+            return coin.get();
+        } else {
+            throw new ShareNotFoundException("Coin Not Found");
         }
     }
 
     @Override
     public void addAnalysisDetails(PortfolioDTO portfolioDTO) throws IOException {
         BigDecimal portfolioValue = new BigDecimal("0");
-        for ( Share share : portfolioDTO.getShares()){
-            BigDecimal currentPrice = stockCache.get(share.getTicker()).getCurrentPrice();
-            if( currentPrice == null){
-                currentPrice = cachedStockApiService.findPrice(share.getTicker());
-                stockCache.add(share.getTicker(), new Stock(share.getTicker(),share.getCompany(),currentPrice));
-            }
+        for (Share share : portfolioDTO.getShares()) {
+            BigDecimal currentPrice = cachedStockApiService.findPrice(share.getTicker());
             portfolioValue = portfolioValue.add(currentPrice);
         }
+
+        for (Coin coin : portfolioDTO.getCoins()) {
+            String currentPrice = cachedCryptoApiService.getCoinInfo(coin.getSymbol()).getCurrentPrice();
+            portfolioValue = portfolioValue.add(new BigDecimal(currentPrice));
+        }
+
         portfolioDTO.setPortfolioValue(portfolioValue.setScale(2, RoundingMode.HALF_EVEN));
+    }
+
+    @Transactional
+    public void addCoin(Coin coin, String portfolioName) throws PortfolioNotFoundException {
+        Portfolio portfolio = getPortfolioByName(portfolioName);
+        portfolio.addCoin(coin);
     }
 
     @Transactional
     public void addShare(Share share, String portfolioName) throws PortfolioNotFoundException {
         Portfolio portfolio = getPortfolioByName(portfolioName);
-        portfolio.getShares().add(share);
+        portfolio.addShare(share);
     }
 
     @Transactional
@@ -95,7 +116,18 @@ public class PortfolioServiceImpl implements PortfolioService {
 
     @Transactional
     public void removeShareById(long id, String portfolioName) throws PortfolioNotFoundException, ShareNotFoundException {
-        Share shareToRemove = getShareById(id,portfolioName);
-        removeShare(shareToRemove,portfolioName);
+        Share shareToRemove = getShareById(id, portfolioName);
+        removeShare(shareToRemove, portfolioName);
+    }
+
+    @Transactional
+    public void removeCoin(Coin coin, String portfolioName) throws PortfolioNotFoundException {
+        getPortfolioByName(portfolioName).removeCoin(coin);
+    }
+
+    @Transactional
+    public void removeCoinById(long id, String portfolioName) throws PortfolioNotFoundException, ShareNotFoundException {
+        Coin coinToRemove = getCoinById(id, portfolioName);
+        removeCoin(coinToRemove, portfolioName);
     }
 }

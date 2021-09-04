@@ -1,7 +1,7 @@
-package org.dav.equitylookup.service.impl;
+package org.dav.equitylookup.service.impl.stock;
 
 import org.dav.equitylookup.datacache.CacheStore;
-import org.dav.equitylookup.model.Stock;
+import org.dav.equitylookup.model.cache.Stock;
 import org.dav.equitylookup.service.StockApiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -17,7 +17,7 @@ public class CachedStockApiService implements StockApiService {
     private final CacheStore<Stock> stockCache;
 
     @Autowired
-    public CachedStockApiService(@Qualifier("yahooApiService")StockApiService stockApiService, CacheStore<Stock> stockCache) {
+    public CachedStockApiService(@Qualifier("yahooApiService") StockApiService stockApiService, CacheStore<Stock> stockCache) {
         this.stockApiService = stockApiService;
         this.stockCache = stockCache;
     }
@@ -25,7 +25,7 @@ public class CachedStockApiService implements StockApiService {
     @Override
     public Stock findStock(String ticker) throws IOException {
         Stock stock = stockCache.get(ticker);
-        if(stock == null){
+        if (stock == null) {
             stock = stockApiService.findStock(ticker);
             stockCache.add(ticker, stock);
         }

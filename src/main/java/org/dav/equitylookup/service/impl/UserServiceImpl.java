@@ -29,9 +29,9 @@ public class UserServiceImpl implements UserService {
     public User getUserById(long id) {
         Optional<User> optional = userRepository.findById(id);
         User user = null;
-        if ( optional.isPresent()){
+        if (optional.isPresent()) {
             user = optional.get();
-        }else{
+        } else {
             throw new RuntimeException("User not found");
         }
         return user;
@@ -44,8 +44,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserByUsername(String userName) {
-        for (User user : userRepository.findAll()){
-            if ( user.getUsername().equals(userName)){
+        for (User user : userRepository.findAll()) {
+            if (user.getUsername().equals(userName)) {
                 return user;
             }
         }

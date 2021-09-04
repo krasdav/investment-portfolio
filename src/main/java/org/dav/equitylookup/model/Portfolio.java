@@ -28,6 +28,13 @@ public class Portfolio {
     )
     private List<Share> shares = new ArrayList<>();
 
+    @OneToMany(
+            mappedBy = "portfolio",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<Coin> coins = new ArrayList<>();
+
     public Portfolio() {
     }
 
@@ -45,12 +52,24 @@ public class Portfolio {
         return shares.stream().map(Share::getTicker).collect(Collectors.toList());
     }
 
-    public void removeShare(Share share){
+    public void removeShare(Share share) {
         shares.remove(share);
     }
 
-    public void addShare(Share share){
+    public void addShare(Share share) {
         shares.add(share);
+    }
+
+    public List<Coin> getCoins() {
+        return coins;
+    }
+
+    public void removeCoin(Coin coin) {
+        coins.remove(coin);
+    }
+
+    public void addCoin(Coin coin) {
+        coins.add(coin);
     }
 
 }

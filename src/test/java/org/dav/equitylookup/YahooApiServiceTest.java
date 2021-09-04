@@ -1,6 +1,6 @@
 package org.dav.equitylookup;
 
-import org.dav.equitylookup.service.impl.YahooApiService;
+import org.dav.equitylookup.service.impl.stock.YahooApiService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

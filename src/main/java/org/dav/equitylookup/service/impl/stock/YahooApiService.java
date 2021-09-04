@@ -1,6 +1,6 @@
-package org.dav.equitylookup.service.impl;
+package org.dav.equitylookup.service.impl.stock;
 
-import org.dav.equitylookup.model.Stock;
+import org.dav.equitylookup.model.cache.Stock;
 import org.dav.equitylookup.service.StockApiService;
 import org.springframework.stereotype.Service;
 import yahoofinance.YahooFinance;
@@ -15,14 +15,14 @@ public class YahooApiService implements StockApiService {
         yahoofinance.Stock stock = YahooFinance.get(ticker);
         BigDecimal currentPrice = stock.getQuote().getPrice();
         String company = stock.getName();
-        return new Stock(ticker,company,currentPrice );
+        return new Stock(ticker, company, currentPrice);
     }
 
     public BigDecimal findPrice(Stock stock) throws IOException {
         return getPrice(stock.getTicker());
     }
 
-    public BigDecimal findPrice(String ticker) throws IOException  {
+    public BigDecimal findPrice(String ticker) throws IOException {
         return getPrice(ticker);
     }
 
