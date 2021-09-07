@@ -5,7 +5,7 @@ import java.math.RoundingMode;
 
 public class FinancialAnalysis {
 
-    // Suppress default constructor for noninstantiability
+    // Suppress default construct or for noninstantiability
     private FinancialAnalysis() {
         throw new AssertionError();
     }

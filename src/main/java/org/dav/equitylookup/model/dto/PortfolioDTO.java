@@ -18,15 +18,4 @@ public class PortfolioDTO {
     private User user;
     private List<Share> shares;
     private List<CryptoShare> cryptocurrencies;
-
-    public PortfolioDTO() {
-    }
-
-    public PortfolioDTO(String name, BigDecimal portfolioValue, LocalDateTime creationTime, User user, List<Share> shares) {
-        this.name = name;
-        this.portfolioValue = portfolioValue;
-        this.creationTime = creationTime;
-        this.user = user;
-        this.shares = shares;
-    }
 }

@@ -84,7 +84,7 @@ public class PortfolioController {
     }
 
     @PostMapping("/portfolio/crypto/add")
-    public String addCrypto(@ModelAttribute("coin") CoinForm coinForm, Model model, Principal loggedUser) throws IOException {
+    public String addCrypto(@ModelAttribute("coin") CoinForm coinForm, Model model, Principal loggedUser) {
         User user = userService.getUserByUsername(loggedUser.getName());
         String portfolio = user.getPortfolio().getName();
         CryptoShare cryptoShare = cryptoService.obtainCryptoShare(coinForm.getAmount(), coinForm.getSymbol(), user);
