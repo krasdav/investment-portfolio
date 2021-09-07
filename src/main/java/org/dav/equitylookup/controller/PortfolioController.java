@@ -3,11 +3,11 @@ package org.dav.equitylookup.controller;
 import lombok.RequiredArgsConstructor;
 import org.dav.equitylookup.exceptions.PortfolioNotFoundException;
 import org.dav.equitylookup.exceptions.ShareNotFoundException;
-import org.dav.equitylookup.model.Coin;
+import org.dav.equitylookup.model.CryptoShare;
 import org.dav.equitylookup.model.Portfolio;
 import org.dav.equitylookup.model.Share;
 import org.dav.equitylookup.model.User;
-import org.dav.equitylookup.model.dto.CoinDTO;
+import org.dav.equitylookup.model.dto.CryptoShareDTO;
 import org.dav.equitylookup.model.dto.PortfolioDTO;
 import org.dav.equitylookup.model.dto.ShareDTO;
 import org.dav.equitylookup.model.form.CoinForm;
@@ -59,13 +59,13 @@ public class PortfolioController {
         PortfolioDTO portfolioDTO = modelMapper.map(user.getPortfolio(), PortfolioDTO.class);
         portfolioService.addAnalysisDetails(portfolioDTO);
 
-        List<CoinDTO> coinDTOS = cryptoService.getCoinDTO(portfolio);
+        List<CryptoShareDTO> cryptoShareDTOS = cryptoService.getCoinDTO(portfolio);
 
         model.addAttribute("portfolio", portfolioDTO);
         model.addAttribute("shares", shareDTOS);
-        model.addAttribute("coins", coinDTOS);
+        model.addAttribute("coins", cryptoShareDTOS);
         model.addAttribute("share", new ShareForm());
-        model.addAttribute("coin",new CoinForm());
+        model.addAttribute("cryptoShare", new CoinForm());
         return "portfolio/show";
     }
 
@@ -87,13 +87,13 @@ public class PortfolioController {
     public String addCrypto(@ModelAttribute("coin") CoinForm coinForm, Model model, Principal loggedUser) throws IOException {
         User user = userService.getUserByUsername(loggedUser.getName());
         String portfolio = user.getPortfolio().getName();
-        Coin coin = cryptoService.obtainCoin(coinForm.getSymbol(), user);
+        CryptoShare cryptoShare = cryptoService.obtainCryptoShare(coinForm.getAmount(), coinForm.getSymbol(), user);
         try {
-            portfolioService.addCoin(coin,portfolio);
+            portfolioService.addCryptoShare(cryptoShare, portfolio);
         } catch (PortfolioNotFoundException e) {
             e.printStackTrace();
         }
-        model.addAttribute("coinAdded", "Coin added: " + coin.getSymbol());
+        model.addAttribute("coinAdded", "Coin added: " + cryptoShare.getSymbol());
         return "redirect:/portfolio/show";
     }
 
@@ -105,7 +105,7 @@ public class PortfolioController {
 
     @PostMapping("/portfolio/crypto/remove/")
     public String removeCryptoFromUser(@RequestParam long cryptoId, @RequestParam String portfolioName) throws ShareNotFoundException, PortfolioNotFoundException {
-        portfolioService.removeCoinById(cryptoId, portfolioName);
+        portfolioService.removeCryptoShareById(cryptoId, portfolioName);
         return "redirect:/portfolio/show";
     }
 

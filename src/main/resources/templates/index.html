@@ -11,7 +11,7 @@
 <div th:insert="navigation/navbar :: navbar"></div>
 <form action="#" th:action="@{/crypto}" th:object="${coin}" method="post">
     <p><input type="text" th:field="*{symbol}" placeholder="Cryptocurrency symbol"/><input type="submit" value="Go"/></p>
-    <p th:if="${coinPrice}">
+    <p th:if="${coinPrice}"> 
         <span th:text="${coinSymbol} + ' : ' + ${coinPrice}"></span>
     </p>
 </form>

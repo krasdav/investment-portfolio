@@ -9,22 +9,18 @@
 </head>
 <body>
 <div th:insert="navigation/navbar :: navbar"></div>
-<div>
+<p>
     <span th:text="${portfolio.name}"></span>
-</div>
-<h1> Add </h1>
+</p>
+<p>
+    <span th:text="'Total value of portfolio : ' + ${portfolio.portfolioValue}"></span>
+</p>
+<h1> Stocks </h1>
 <form action="#" th:action="@{/portfolio/share/add}" th:object="${share}" method="post">
     <p>Ticker: <input type="text" th:field="*{ticker}"/></p>
     <p><input type="submit" value="Submit"/> <input type="reset" value="Reset"/></p>
     <p th:if="${shareAdded}">
         <span th:text="${shareAdded}"></span>
-    </p>
-</form>
-<form action="#" th:action="@{/portfolio/crypto/add}" th:object="${coin}" method="post">
-    <p>Symbol: <input type="text" th:field="*{symbol}"/></p>
-    <p><input type="submit" value="Submit"/> <input type="reset" value="Reset"/></p>
-    <p th:if="${coinAdded}">
-        <span th:text="${coinAdded}"></span>
     </p>
 </form>
 <div>
@@ -54,24 +50,36 @@
         </tr>
     </table>
 </div>
+
+<h1> Crypto Currencies </h1>
+<form action="#" th:action="@{/portfolio/crypto/add}" th:object="${cryptoShare}" method="post">
+    <p>Symbol: <input type="text" th:field="*{symbol}"/></p>
+    <p>Amount: <input type="text" th:field="*{amount}"/></p>
+    <p><input type="submit" value="Submit"/> <input type="reset" value="Reset"/></p>
+    <p th:if="${coinAdded}">
+        <span th:text="${coinAdded}"></span>
+    </p>
+</form>
 <div>
     <table>
         <tr>
             <th>Symbol</th>
+            <th>Amount</th>
             <th>Initial Price</th>
             <th>Actual Price</th>
             <th>Percentage Change</th>
             <th>Value Change</th>
         </tr>
-        <tr th:each="coin, Coins: ${coins}">
-            <td th:text="${coin.symbol}"></td>
-            <td th:text="${coin.boughtPrice}"></td>
-            <td th:text="${coin.currentPrice}"></td>
-            <td th:text="${coin.percentageChange} + '%'"></td>
-            <td th:text="${coin.valueChange}"></td>
+        <tr th:each="cryptoShare, Coins: ${coins}">
+            <td th:text="${cryptoShare.symbol}"></td>
+            <td th:text="${cryptoShare.amount}"></td>
+            <td th:text="${cryptoShare.boughtPrice}"></td>
+            <td th:text="${cryptoShare.currentPrice}"></td>
+            <td th:text="${cryptoShare.percentageChange} + '%'"></td>
+            <td th:text="${cryptoShare.valueChange}"></td>
             <td>
                 <form action="#" th:action="@{/portfolio/crypto/remove/}" method="post">
-                    <input type="hidden" name="coinID" th:value="${coin.id}"/>
+                    <input type="hidden" name="cryptoId" th:value="${cryptoShare.id}"/>
                     <input type="hidden" name="portfolioName" th:value="${portfolio.name}"/>
                     <input type="submit" value="Delete" class="btn btn-danger"/>
                 </form>
@@ -79,9 +87,5 @@
         </tr>
     </table>
 </div>
-
-<p>
-    <span th:text="'Total : ' + ${portfolio.portfolioValue}"></span>
-</p>
 </body>
 </html>

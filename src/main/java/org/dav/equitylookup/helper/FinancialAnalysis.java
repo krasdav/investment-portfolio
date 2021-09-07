@@ -20,12 +20,12 @@ public class FinancialAnalysis {
         return b.subtract(a).setScale(2, RoundingMode.HALF_EVEN);
     }
 
-    public static String getPercentageChange(String a, String b){
-        return String.valueOf(getPercentageChange(new BigDecimal(a),new BigDecimal(b)));
+    public static String getPercentageChange(String a, String b) {
+        return String.valueOf(getPercentageChange(new BigDecimal(a), new BigDecimal(b)));
     }
 
     public static String getValueChange(String a, String b) {
-        return String.valueOf(getValueChange(new BigDecimal(a),new BigDecimal(b)));
+        return String.valueOf(getValueChange(new BigDecimal(a), new BigDecimal(b)));
     }
 
 }

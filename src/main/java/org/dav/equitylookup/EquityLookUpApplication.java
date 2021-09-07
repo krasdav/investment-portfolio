@@ -2,11 +2,11 @@ package org.dav.equitylookup;
 
 import lombok.RequiredArgsConstructor;
 import org.dav.equitylookup.config.BeanConfig;
-import org.dav.equitylookup.model.Coin;
+import org.dav.equitylookup.model.CryptoShare;
 import org.dav.equitylookup.model.Portfolio;
 import org.dav.equitylookup.model.Share;
-import org.dav.equitylookup.model.cache.Stock;
 import org.dav.equitylookup.model.User;
+import org.dav.equitylookup.model.cache.Stock;
 import org.dav.equitylookup.service.CryptoService;
 import org.dav.equitylookup.service.PortfolioService;
 import org.dav.equitylookup.service.StockService;
@@ -53,7 +53,7 @@ public class EquityLookUpApplication {
 
             Stock apple = stockService.getStock("APPL");
 
-            Stock intel =stockService.getStock("INTC");
+            Stock intel = stockService.getStock("INTC");
 
             Portfolio portfolio = new Portfolio("Michal's Portfolio", michal);
             portfolioService.savePortfolio(portfolio);
@@ -64,11 +64,14 @@ public class EquityLookUpApplication {
 
             Share shareIntel = stockService.obtainShare(intel.getTicker(), michal);
 
-            Coin coin = cryptoService.obtainCoin("BTCUSDT", michal);
+            CryptoShare cryptoShareBTC = cryptoService.obtainCryptoShare(1,"BTCUSDT", michal);
+            CryptoShare cryptoShareETH = cryptoService.obtainCryptoShare(2.32,"ETHUSDT", michal);
+
 
             portfolioService.addShare(shareGoogle, portfolio.getName());
             portfolioService.addShare(shareIntel, portfolio.getName());
-            portfolioService.addCoin(coin, portfolio.getName());
+            portfolioService.addCryptoShare(cryptoShareBTC, portfolio.getName());
+            portfolioService.addCryptoShare(cryptoShareETH, portfolio.getName());
 
         };
     }

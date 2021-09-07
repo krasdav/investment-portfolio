@@ -1,7 +1,7 @@
 package org.dav.equitylookup.model.dto;
 
 import lombok.Data;
-import org.dav.equitylookup.model.Coin;
+import org.dav.equitylookup.model.CryptoShare;
 import org.dav.equitylookup.model.Share;
 import org.dav.equitylookup.model.User;
 
@@ -17,7 +17,7 @@ public class PortfolioDTO {
     private LocalDateTime creationTime;
     private User user;
     private List<Share> shares;
-    private List<Coin> coins;
+    private List<CryptoShare> cryptocurrencies;
 
     public PortfolioDTO() {
     }

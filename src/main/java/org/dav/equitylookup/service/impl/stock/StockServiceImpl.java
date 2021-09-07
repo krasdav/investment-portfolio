@@ -5,8 +5,8 @@ import org.dav.equitylookup.datacache.CacheStore;
 import org.dav.equitylookup.helper.FinancialAnalysis;
 import org.dav.equitylookup.model.Portfolio;
 import org.dav.equitylookup.model.Share;
-import org.dav.equitylookup.model.cache.Stock;
 import org.dav.equitylookup.model.User;
+import org.dav.equitylookup.model.cache.Stock;
 import org.dav.equitylookup.model.dto.ShareDTO;
 import org.dav.equitylookup.service.StockApiService;
 import org.dav.equitylookup.service.StockService;
@@ -19,7 +19,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class StockServiceImpl implements StockService{
+public class StockServiceImpl implements StockService {
 
     private final StockApiService cachedStockApiService;
 

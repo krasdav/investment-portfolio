@@ -50,9 +50,6 @@ public class IndexController {
 
     @GetMapping("/index")
     public String frontPage(Model model) throws IOException {
-        List<StockDTO> topStocks = modelMapper.map(stockService.getTopStocks(), new TypeToken<List<StockDTO>>() {
-        }.getType());
-        model.addAttribute("stocks", topStocks);
         model.addAttribute("coin", new CoinForm());
         model.addAttribute("stock", new StockForm());
         return "index";

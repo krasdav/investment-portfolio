@@ -2,11 +2,11 @@ package org.dav.equitylookup.service.impl.crypto;
 
 import lombok.RequiredArgsConstructor;
 import org.dav.equitylookup.helper.FinancialAnalysis;
-import org.dav.equitylookup.model.Coin;
+import org.dav.equitylookup.model.CryptoShare;
 import org.dav.equitylookup.model.Portfolio;
 import org.dav.equitylookup.model.User;
-import org.dav.equitylookup.model.cache.CoinInfo;
-import org.dav.equitylookup.model.dto.CoinDTO;
+import org.dav.equitylookup.model.cache.Crypto;
+import org.dav.equitylookup.model.dto.CryptoShareDTO;
 import org.dav.equitylookup.service.CryptoApiService;
 import org.dav.equitylookup.service.CryptoService;
 import org.modelmapper.ModelMapper;
@@ -17,14 +17,14 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class CryptoServiceImpl implements CryptoService{
+public class CryptoServiceImpl implements CryptoService {
 
     private final CryptoApiService cachedCryptoApiService;
     private final ModelMapper modelMapper;
 
     @Override
-    public CoinInfo getCoinInfo(String symbol) {
-        return cachedCryptoApiService.getCoinInfo(symbol);
+    public Crypto getCoinInfo(String symbol) {
+        return cachedCryptoApiService.getCrypto(symbol);
     }
 
     @Override
@@ -33,25 +33,26 @@ public class CryptoServiceImpl implements CryptoService{
     }
 
     @Override
-    public Coin obtainCoin(String symbol, User user) {
-        CoinInfo coinInfo = cachedCryptoApiService.getCoinInfo(symbol);
-        return new Coin(coinInfo.getCurrentPrice(), coinInfo, user);
+    public CryptoShare obtainCryptoShare(double fraction, String symbol, User user) {
+        Crypto crypto = cachedCryptoApiService.getCrypto(symbol);
+        return new CryptoShare(fraction, crypto, user);
     }
 
     @Override
-    public List<CoinDTO> getCoinDTO(Portfolio portfolio) {
-        List<CoinDTO> coinDTOS = modelMapper.map(portfolio.getCoins(), new TypeToken<List<CoinDTO>>() {
+    public List<CryptoShareDTO> getCoinDTO(Portfolio portfolio) {
+        List<CryptoShareDTO> cryptoShareDTOS = modelMapper.map(portfolio.getCryptocurrencies(), new TypeToken<List<CryptoShareDTO>>() {
         }.getType());
-        addAnalysisDetails(coinDTOS);
-        return coinDTOS;
+        addAnalysisDetails(cryptoShareDTOS);
+        return cryptoShareDTOS;
     }
 
-    public void addAnalysisDetails(List<CoinDTO> object) {
-        for (CoinDTO coinDTO : object) {
-            String currentPrice = cachedCryptoApiService.getCoinInfo(coinDTO.getSymbol()).getCurrentPrice();
-            coinDTO.setCurrentPrice(currentPrice);
-            coinDTO.setValueChange(FinancialAnalysis.getValueChange(coinDTO.getBoughtPrice(), currentPrice));
-            coinDTO.setPercentageChange(FinancialAnalysis.getPercentageChange(coinDTO.getBoughtPrice(), currentPrice));
+    public void addAnalysisDetails(List<CryptoShareDTO> object) {
+        for (CryptoShareDTO cryptoShareDTO : object) {
+            String currentCryptoPrice = cachedCryptoApiService.getCrypto(cryptoShareDTO.getSymbol()).getCurrentPrice();
+            String currentPriceWithAmount = String.valueOf(Double.parseDouble(currentCryptoPrice) * cryptoShareDTO.getAmount());
+            cryptoShareDTO.setCurrentPrice(currentPriceWithAmount);
+            cryptoShareDTO.setValueChange(FinancialAnalysis.getValueChange(cryptoShareDTO.getBoughtPrice(), currentPriceWithAmount));
+            cryptoShareDTO.setPercentageChange(FinancialAnalysis.getPercentageChange(cryptoShareDTO.getBoughtPrice(), currentPriceWithAmount));
         }
     }
 }

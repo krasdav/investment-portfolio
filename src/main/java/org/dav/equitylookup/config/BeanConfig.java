@@ -1,7 +1,7 @@
 package org.dav.equitylookup.config;
 
 import org.dav.equitylookup.datacache.CacheStore;
-import org.dav.equitylookup.model.cache.CoinInfo;
+import org.dav.equitylookup.model.cache.Crypto;
 import org.dav.equitylookup.model.cache.Stock;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
@@ -23,7 +23,7 @@ public class BeanConfig {
     }
 
     @Bean
-    public CacheStore<CoinInfo> coinCache() {
+    public CacheStore<Crypto> coinCache() {
         return new CacheStore<>(30, TimeUnit.SECONDS);
     }
 }

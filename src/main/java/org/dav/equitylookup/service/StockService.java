@@ -2,8 +2,8 @@ package org.dav.equitylookup.service;
 
 import org.dav.equitylookup.model.Portfolio;
 import org.dav.equitylookup.model.Share;
-import org.dav.equitylookup.model.cache.Stock;
 import org.dav.equitylookup.model.User;
+import org.dav.equitylookup.model.cache.Stock;
 import org.dav.equitylookup.model.dto.ShareDTO;
 
 import java.io.IOException;

@@ -9,6 +9,8 @@ import javax.validation.constraints.NotEmpty;
 @Setter
 public class CoinForm {
 
-    @NotEmpty(message = "Symbol cant be empty")
+    @NotEmpty(message = "Symbol cannot be empty")
     private String symbol;
+    @NotEmpty(message = "Amount cannot be empty")
+    private double amount;
 }

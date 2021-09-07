@@ -2,7 +2,7 @@ package org.dav.equitylookup.model;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.dav.equitylookup.model.cache.CoinInfo;
+import org.dav.equitylookup.model.cache.Crypto;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-public class Coin {
+public class CryptoShare {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -20,14 +20,16 @@ public class Coin {
     @ManyToOne(fetch = FetchType.LAZY)
     private Portfolio portfolio;
     private String boughtPrice;
+    private double amount;
 
-    public Coin() {
+    public CryptoShare() {
     }
 
-    public Coin(String boughtPrice, CoinInfo coinInfo, User user) {
+    public CryptoShare(double amount, Crypto crypto, User user) {
         this.timeBought = LocalDateTime.now();
-        this.symbol = coinInfo.getSymbol();
+        this.symbol = crypto.getSymbol();
         this.portfolio = user.getPortfolio();
-        this.boughtPrice = boughtPrice;
+        this.boughtPrice = String.valueOf(Double.parseDouble(crypto.getCurrentPrice()) * amount);
+        this.amount = amount;
     }
 }

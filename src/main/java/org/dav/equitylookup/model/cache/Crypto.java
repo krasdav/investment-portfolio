@@ -5,12 +5,12 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CoinInfo {
+public class Crypto {
 
     private String symbol;
     private String currentPrice;
 
-    public CoinInfo(String symbol, String currentPrice) {
+    public Crypto(String symbol, String currentPrice) {
         this.symbol = symbol;
         this.currentPrice = currentPrice;
     }

@@ -1,7 +1,7 @@
 package org.dav.equitylookup.service;
 
-import org.dav.equitylookup.model.cache.CoinInfo;
+import org.dav.equitylookup.model.cache.Crypto;
 
 public interface CryptoApiService {
-    CoinInfo getCoinInfo(String symbol);
+    Crypto getCrypto(String symbol);
 }

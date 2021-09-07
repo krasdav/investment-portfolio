@@ -33,7 +33,7 @@ public class Portfolio {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private List<Coin> coins = new ArrayList<>();
+    private List<CryptoShare> cryptoShares = new ArrayList<>();
 
     public Portfolio() {
     }
@@ -60,16 +60,16 @@ public class Portfolio {
         shares.add(share);
     }
 
-    public List<Coin> getCoins() {
-        return coins;
+    public List<CryptoShare> getCryptocurrencies() {
+        return cryptoShares;
     }
 
-    public void removeCoin(Coin coin) {
-        coins.remove(coin);
+    public void removeCoin(CryptoShare cryptoShare) {
+        cryptoShares.remove(cryptoShare);
     }
 
-    public void addCoin(Coin coin) {
-        coins.add(coin);
+    public void addCoin(CryptoShare cryptoShare) {
+        cryptoShares.add(cryptoShare);
     }
 
 }

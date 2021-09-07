@@ -3,7 +3,7 @@ package org.dav.equitylookup.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.dav.equitylookup.exceptions.PortfolioNotFoundException;
 import org.dav.equitylookup.exceptions.ShareNotFoundException;
-import org.dav.equitylookup.model.Coin;
+import org.dav.equitylookup.model.CryptoShare;
 import org.dav.equitylookup.model.Portfolio;
 import org.dav.equitylookup.model.Share;
 import org.dav.equitylookup.model.dto.PortfolioDTO;
@@ -22,7 +22,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class PortfolioServiceImpl implements PortfolioService{
+public class PortfolioServiceImpl implements PortfolioService {
 
     private final PortfolioRepository portfolioRepository;
 
@@ -69,8 +69,8 @@ public class PortfolioServiceImpl implements PortfolioService{
     }
 
     @Override
-    public Coin getCoinById(long id, String portfolionName) throws PortfolioNotFoundException, ShareNotFoundException {
-        Optional<Coin> coin = getPortfolioByName(portfolionName).getCoins()
+    public CryptoShare getCryptoShareById(long id, String portfolionName) throws PortfolioNotFoundException, ShareNotFoundException {
+        Optional<CryptoShare> coin = getPortfolioByName(portfolionName).getCryptocurrencies()
                 .stream()
                 .filter(s -> s.getId() == id)
                 .findFirst();
@@ -89,18 +89,12 @@ public class PortfolioServiceImpl implements PortfolioService{
             portfolioValue = portfolioValue.add(currentPrice);
         }
 
-        for (Coin coin : portfolioDTO.getCoins()) {
-            String currentPrice = cachedCryptoApiService.getCoinInfo(coin.getSymbol()).getCurrentPrice();
+        for (CryptoShare cryptoShare : portfolioDTO.getCryptocurrencies()) {
+            String currentPrice = cachedCryptoApiService.getCrypto(cryptoShare.getSymbol()).getCurrentPrice();
             portfolioValue = portfolioValue.add(new BigDecimal(currentPrice));
         }
 
         portfolioDTO.setPortfolioValue(portfolioValue.setScale(2, RoundingMode.HALF_EVEN));
-    }
-
-    @Transactional
-    public void addCoin(Coin coin, String portfolioName) throws PortfolioNotFoundException {
-        Portfolio portfolio = getPortfolioByName(portfolioName);
-        portfolio.addCoin(coin);
     }
 
     @Transactional
@@ -121,13 +115,19 @@ public class PortfolioServiceImpl implements PortfolioService{
     }
 
     @Transactional
-    public void removeCoin(Coin coin, String portfolioName) throws PortfolioNotFoundException {
-        getPortfolioByName(portfolioName).removeCoin(coin);
+    public void addCryptoShare(CryptoShare cryptoShare, String portfolioName) throws PortfolioNotFoundException {
+        Portfolio portfolio = getPortfolioByName(portfolioName);
+        portfolio.addCoin(cryptoShare);
     }
 
     @Transactional
-    public void removeCoinById(long id, String portfolioName) throws PortfolioNotFoundException, ShareNotFoundException {
-        Coin coinToRemove = getCoinById(id, portfolioName);
-        removeCoin(coinToRemove, portfolioName);
+    public void removeCryptoShare(CryptoShare cryptoShare, String portfolioName) throws PortfolioNotFoundException {
+        getPortfolioByName(portfolioName).removeCoin(cryptoShare);
+    }
+
+    @Transactional
+    public void removeCryptoShareById(long id, String portfolioName) throws PortfolioNotFoundException, ShareNotFoundException {
+        CryptoShare cryptoShareToRemove = getCryptoShareById(id, portfolioName);
+        removeCryptoShare(cryptoShareToRemove, portfolioName);
     }
 }
