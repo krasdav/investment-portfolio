@@ -1,4 +1,4 @@
-## Portfolio Manager
+## Investment Portfolio app
 
 An application used to keep track of personal investments in stocks and crypto.
 
