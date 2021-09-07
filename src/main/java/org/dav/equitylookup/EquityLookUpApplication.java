@@ -64,8 +64,8 @@ public class EquityLookUpApplication {
 
             Share shareIntel = stockService.obtainShare(intel.getTicker(), michal);
 
-            CryptoShare cryptoShareBTC = cryptoService.obtainCryptoShare(1,"BTCUSDT", michal);
-            CryptoShare cryptoShareETH = cryptoService.obtainCryptoShare(2.32,"ETHUSDT", michal);
+            CryptoShare cryptoShareBTC = cryptoService.obtainCryptoShare(1,"BTC", michal);
+            CryptoShare cryptoShareETH = cryptoService.obtainCryptoShare(2.32,"ETH", michal);
 
 
             portfolioService.addShare(shareGoogle, portfolio.getName());

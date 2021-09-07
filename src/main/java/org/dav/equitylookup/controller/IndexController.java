@@ -57,7 +57,7 @@ public class IndexController {
 
     @PostMapping("/crypto")
     public String getCryptoPrice(@ModelAttribute("coin") CoinForm coinForm, RedirectAttributes redirectAttrs) {
-        redirectAttrs.addFlashAttribute("coinPrice", cryptoService.getCoinPrice(coinForm.getSymbol() + "USDT"));
+        redirectAttrs.addFlashAttribute("coinPrice", cryptoService.getCoinPrice(coinForm.getSymbol()));
         redirectAttrs.addFlashAttribute("coinSymbol", coinForm.getSymbol());
         return "redirect:/index";
     }

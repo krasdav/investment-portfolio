@@ -14,13 +14,12 @@ public class BinanceApiService implements CryptoApiService {
 
     public BinanceApiService() {
         BinanceApiClientFactory factory = BinanceApiClientFactory.newInstance();
-        ;
         this.client = factory.newRestClient();
     }
 
     @Override
     public Crypto getCrypto(String symbol) {
-        TickerPrice coin = client.getPrice(symbol);
-        return new Crypto(coin.getSymbol(), coin.getPrice());
+        TickerPrice coin = client.getPrice(symbol + "USDT");
+        return new Crypto(symbol, coin.getPrice());
     }
 }
