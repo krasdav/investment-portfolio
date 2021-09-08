@@ -61,6 +61,8 @@ public class PortfolioController {
 
         List<CryptoShareDTO> cryptoShareDTOS = cryptoService.getCoinDTO(portfolio);
 
+        Double.parseDouble(cryptoShareDTOS.get(0).getPercentageChange());
+
         model.addAttribute("portfolio", portfolioDTO);
         model.addAttribute("shares", shareDTOS);
         model.addAttribute("coins", cryptoShareDTOS);

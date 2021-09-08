@@ -5,10 +5,10 @@
 <div th:fragment="navbar">
     <ul>
         <li><a href="/index">Main Prage</a></li>
-        <li sec:authorize="isAnonymous()"><a href="/user">Sign in</a></li>
-        <li sec:authorize="isAnonymous()"><a href="/registration">Register</a></li>
-        <li sec:authorize="hasAuthority('ROLE_USER')"><a href="/portfolio/show">Your Portfolio</a></li>
-        <li sec:authorize="hasAuthority('ROLE_USER')"><a href="/logout">Logout</a></li>
+        <li sec:authorize="hasAuthority('ROLE_USER')"><a href="/portfolio/show">Portfolio</a></li>
+        <li style="float:right"sec:authorize="isAnonymous()"><a href="/user">Sign in</a></li>
+        <li style="float:right"sec:authorize="isAnonymous()"><a href="/registration">Sign up</a></li>
+        <li style="float:right" sec:authorize="hasAuthority('ROLE_USER')"><a href="/logout">Logout</a></li>
     </ul>
 </div>
 </body>
