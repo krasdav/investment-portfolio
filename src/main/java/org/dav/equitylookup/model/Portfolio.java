@@ -56,7 +56,7 @@ public class Portfolio {
         shares.remove(share);
     }
 
-    public void addShare(Share share) {
+    public void addShare(Share share)    {
         shares.add(share);
     }
 
