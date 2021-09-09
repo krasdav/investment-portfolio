@@ -51,17 +51,14 @@ public class PortfolioController {
     public String listStocksForm(Model model, Principal loggedUser) throws IOException {
         User user = userService.getUserByUsername(loggedUser.getName());
         Portfolio portfolio = user.getPortfolio();
-
         stockService.updateStockPrices(portfolio);
-        List<ShareDTO> shareDTOS = modelMapper.map(portfolio.getShares(), new TypeToken<List<ShareDTO>>() {
-        }.getType());
-        stockService.addAnalysisDetails(shareDTOS);
+
+        List<ShareDTO> shareDTOS = stockService.obtainAnalyzedDTO(portfolio);
+
         PortfolioDTO portfolioDTO = modelMapper.map(user.getPortfolio(), PortfolioDTO.class);
         portfolioService.addAnalysisDetails(portfolioDTO);
 
-        List<CryptoShareDTO> cryptoShareDTOS = cryptoService.getCoinDTO(portfolio);
-
-        Double.parseDouble(cryptoShareDTOS.get(0).getPercentageChange());
+        List<CryptoShareDTO> cryptoShareDTOS = cryptoService.groupAndAnalyze(portfolio);
 
         model.addAttribute("portfolio", portfolioDTO);
         model.addAttribute("shares", shareDTOS);

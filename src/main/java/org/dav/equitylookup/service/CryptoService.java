@@ -16,6 +16,8 @@ public interface CryptoService {
 
     CryptoShare obtainCryptoShare(double fraction, String symbol, User user);
 
-    List<CryptoShareDTO> getCoinDTO(Portfolio portfolio);
+    List<CryptoShareDTO> groupAndAnalyze(Portfolio portfolio);
+
+    void analyze(List<CryptoShareDTO> shares);
 
 }

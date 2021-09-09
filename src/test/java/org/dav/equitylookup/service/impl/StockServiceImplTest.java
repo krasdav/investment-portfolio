@@ -12,6 +12,7 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.io.IOException;
@@ -31,12 +32,15 @@ class StockServiceImplTest {
     @Mock
     private CacheStore<Stock> stockCache;
 
+    @Mock
+    private ModelMapper modelMapper;
+
     private StockService stockService;
     private Portfolio portfolio;
 
     @BeforeEach
     void setup() {
-        stockService = new StockServiceImpl(stockApiService, stockCache);
+        stockService = new StockServiceImpl(stockApiService, stockCache,modelMapper);
         User user = new User("user1");
         portfolio = new Portfolio("Test_Portfolio", user);
         Share apple = new Share(new BigDecimal("100"), new Stock("AAPL", "Apple"), user);

@@ -1,6 +1,7 @@
 package org.dav.equitylookup.service.impl.crypto;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.codec.digest.Crypt;
 import org.dav.equitylookup.helper.FinancialAnalysis;
 import org.dav.equitylookup.model.CryptoShare;
 import org.dav.equitylookup.model.Portfolio;
@@ -13,7 +14,9 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -39,20 +42,34 @@ public class CryptoServiceImpl implements CryptoService {
     }
 
     @Override
-    public List<CryptoShareDTO> getCoinDTO(Portfolio portfolio) {
+    public List<CryptoShareDTO> groupAndAnalyze(Portfolio portfolio) {
         List<CryptoShareDTO> cryptoShareDTOS = modelMapper.map(portfolio.getCryptocurrencies(), new TypeToken<List<CryptoShareDTO>>() {
         }.getType());
-        addAnalysisDetails(cryptoShareDTOS);
+        List<CryptoShareDTO> objectsToRemove = new ArrayList<>();
+
+        for (int i = 0; i < cryptoShareDTOS.size(); i++) {
+            for (int j = i + 1; j < cryptoShareDTOS.size(); j++) {
+                if( cryptoShareDTOS.get(i).getSymbol().equals(cryptoShareDTOS.get(j).getSymbol())){
+                    cryptoShareDTOS.get(i).addBoughtPrice(cryptoShareDTOS.get(j).getBoughtPrice());
+                    cryptoShareDTOS.get(i).addAmount(cryptoShareDTOS.get(j).getAmount());
+                    objectsToRemove.add(cryptoShareDTOS.get(j));
+                }
+            }
+        }
+        cryptoShareDTOS.removeAll(objectsToRemove);
+        analyze(cryptoShareDTOS);
         return cryptoShareDTOS;
     }
 
-    public void addAnalysisDetails(List<CryptoShareDTO> object) {
-        for (CryptoShareDTO cryptoShareDTO : object) {
+    @Override
+    public void analyze(List<CryptoShareDTO> shares) {
+        for (CryptoShareDTO cryptoShareDTO : shares) {
             String currentCryptoPrice = cachedCryptoApiService.getCrypto(cryptoShareDTO.getSymbol()).getCurrentPrice();
-            String currentPriceWithAmount = String.valueOf(Double.parseDouble(currentCryptoPrice) * cryptoShareDTO.getAmount());
-            cryptoShareDTO.setCurrentPrice(currentPriceWithAmount);
-            cryptoShareDTO.setValueChange(FinancialAnalysis.getValueChange(cryptoShareDTO.getBoughtPrice(), currentPriceWithAmount));
-            cryptoShareDTO.setPercentageChange(FinancialAnalysis.getPercentageChange(cryptoShareDTO.getBoughtPrice(), currentPriceWithAmount));
+            String holdings = String.valueOf(Double.parseDouble(currentCryptoPrice) * cryptoShareDTO.getAmount());
+            cryptoShareDTO.setCurrentPrice(currentCryptoPrice);
+            cryptoShareDTO.setHoldings(holdings);
+            cryptoShareDTO.setValueChange(FinancialAnalysis.getValueChange(cryptoShareDTO.getBoughtPrice(), holdings));
+            cryptoShareDTO.setPercentageChange(FinancialAnalysis.getPercentageChange(cryptoShareDTO.getBoughtPrice(), holdings));
         }
     }
 }

@@ -28,16 +28,18 @@
         <tr>
             <th>Company</th>
             <th>Ticker</th>
-            <th>Initial Price</th>
-            <th>Actual Price</th>
+            <th>Price</th>
+            <th>Amount</th>
+            <th>Holdings</th>
             <th>Percentage Change</th>
             <th>Value Change</th>
         </tr>
         <tr th:each="share, Shares: ${shares}">
             <td th:text="${share.company}"></td>
             <td th:text="${share.ticker}"></td>
-            <td th:text="${share.boughtPrice} + ' $'"></td>
-            <td th:text="${share.currentPrice}+ ' $'"></td>
+            <td th:text="${#numbers.formatCurrency(share.currentPrice)}"></td>
+            <td th:text="${share.count}"></td>
+            <td th:text="${#numbers.formatCurrency(share.holdings)}"></td>
             <td th:style="|${share.percentageChange < 0 ? 'color: red;' : 'color: green;'}|" th:text="${share.percentageChange} + '%'"></td>
             <td th:style="|${share.valueChange < 0 ? 'color: red;' : 'color: green;'}|" th:text="${share.valueChange}"></td>
             <td>
@@ -64,17 +66,17 @@
     <table>
         <tr>
             <th>Symbol</th>
+            <th>Price</th>
             <th>Amount</th>
-            <th>Initial Price</th>
-            <th>Actual Price</th>
+            <th>Holdings</th>
             <th>Percentage Change</th>
             <th>Value Change</th>
         </tr>
         <tr th:each="cryptoShare, Coins: ${coins}">
             <td th:text="${cryptoShare.symbol}"></td>
+            <td th:text="${#numbers.formatCurrency(cryptoShare.currentPrice)}"></td>
             <td th:text="${cryptoShare.amount}"></td>
-            <td th:text="${cryptoShare.boughtPrice}+ ' $'"></td>
-            <td th:text="${cryptoShare.currentPrice}+ ' $'"></td>
+            <td th:text="${#numbers.formatCurrency(cryptoShare.holdings)}"></td>
             <td th:style="|${T(java.lang.Double).parseDouble(cryptoShare.percentageChange) < 0 ? 'color: red;' : 'color: green;'}|" th:text="${cryptoShare.percentageChange} + '%'"></td>
             <td th:style="|${T(java.lang.Double).parseDouble(cryptoShare.valueChange) < 0 ? 'color: red;' : 'color: green;'}|" th:text="${cryptoShare.valueChange}"></td>
             <td>

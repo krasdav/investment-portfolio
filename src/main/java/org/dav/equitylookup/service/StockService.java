@@ -14,8 +14,6 @@ public interface StockService {
 
     List<Stock> updateStockPrices(List<Share> shares) throws IOException;
 
-    void addAnalysisDetails(List<ShareDTO> shareDTOS) throws IOException;
-
     Share obtainShare(String ticker, User user) throws IOException;
 
     void cacheStocks(Stock... stocks);
@@ -23,4 +21,8 @@ public interface StockService {
     List<Stock> getTopStocks() throws IOException;
 
     Stock getStock(String ticker) throws IOException;
+
+    List<ShareDTO> obtainAnalyzedDTO(Portfolio portfolio) throws IOException;
+
+    void analyze(List<ShareDTO> shareDTOS) throws IOException;
 }
