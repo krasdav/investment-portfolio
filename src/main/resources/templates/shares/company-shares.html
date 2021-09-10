@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Company Shares</title>
+</head>
+<body>
+<h1 th:text="${company}"></h1>
+<h2 th:text="'Price: ' + ${#numbers.formatCurrency(currentPrice)}"></h2>
+<div>
+  <table>
+    <tr>
+      <th>Date</th>
+      <th>Paid</th>
+    </tr>
+    <tr th:each="share, Shares: ${shares}">
+      <td th:text="${#temporals.format(share.timeBought,'dd-MM-yyyy')}"></td>
+      <td th:text="${share.boughtPrice}"></td>
+    </tr>
+  </table>
+</div>
+<a href="/portfolio/show">Return</a>
+</body>
+</html>

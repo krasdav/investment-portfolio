@@ -43,10 +43,9 @@
             <td th:style="|${share.percentageChange < 0 ? 'color: red;' : 'color: green;'}|" th:text="${share.percentageChange} + '%'"></td>
             <td th:style="|${share.valueChange < 0 ? 'color: red;' : 'color: green;'}|" th:text="${share.valueChange}"></td>
             <td>
-                <form action="#" th:action="@{/portfolio/share/remove/}" method="post">
-                    <input type="hidden" name="shareId" th:value="${share.id}"/>
-                    <input type="hidden" name="portfolioName" th:value="${portfolio.name}"/>
-                    <input type="submit" value="Delete" class="btn btn-danger"/>
+                <form action="#" th:action="@{/portfolio/stockshare/details/}" method="post">
+                    <input type="hidden" name="ticker" th:value="${share.ticker}"/>
+                    <input type="submit" value="Details" class="btn btn-info"/>
                 </form>
             </td>
         </tr>
@@ -80,10 +79,9 @@
             <td th:style="|${T(java.lang.Double).parseDouble(cryptoShare.percentageChange) < 0 ? 'color: red;' : 'color: green;'}|" th:text="${cryptoShare.percentageChange} + '%'"></td>
             <td th:style="|${T(java.lang.Double).parseDouble(cryptoShare.valueChange) < 0 ? 'color: red;' : 'color: green;'}|" th:text="${cryptoShare.valueChange}"></td>
             <td>
-                <form action="#" th:action="@{/portfolio/crypto/remove/}" method="post">
-                    <input type="hidden" name="cryptoId" th:value="${cryptoShare.id}"/>
-                    <input type="hidden" name="portfolioName" th:value="${portfolio.name}"/>
-                    <input type="submit" value="Delete" class="btn btn-danger"/>
+                <form action="#" th:action="@{/portfolio/cryptoshare/details/}" method="post">
+                    <input type="hidden" name="symbol" th:value="${cryptoShare.symbol}"/>
+                    <input type="submit" value="Details" class="btn btn-info"/>
                 </form>
             </td>
         </tr>

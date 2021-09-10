@@ -60,6 +60,14 @@ public class Portfolio {
         shares.add(share);
     }
 
+    public List<Share> getStockSharesByCompany(String ticker){
+        return shares.stream().filter( s -> s.getTicker().equals(ticker)).collect(Collectors.toList());
+    }
+
+    public List<CryptoShare> getCryptoSharesBySymbol(String symbol){
+        return cryptoShares.stream().filter( c -> c.getSymbol().equals(symbol)).collect(Collectors.toList());
+    }
+
     public List<CryptoShare> getCryptocurrencies() {
         return cryptoShares;
     }

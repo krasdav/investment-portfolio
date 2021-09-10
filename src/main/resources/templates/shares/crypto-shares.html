@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Company Shares</title>
+</head>
+<body>
+<h1 th:text="${symbol}"></h1>
+<h2 th:text="'Price: ' + ${#numbers.formatCurrency(currentPrice)}"></h2>
+<div>
+  <table>
+    <tr>
+      <th>Date</th>
+      <th>Paid</th>
+      <th>Amount</th>
+    </tr>
+    <tr th:each="crypto, Cryptos: ${crypto}">
+      <td th:text="${#temporals.format(crypto.timeBought,'dd-MM-yyyy')}"></td>
+      <td th:text="${crypto.boughtPrice}"></td>
+      <td th:text="${crypto.amount}"></td>
+    </tr>
+  </table>
+</div>
+<a href="/portfolio/show">Return</a>
+</body>
+</html>

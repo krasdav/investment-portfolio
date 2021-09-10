@@ -96,6 +96,28 @@ public class PortfolioController {
         return "redirect:/portfolio/show";
     }
 
+    @PostMapping("/portfolio/stockshare/details")
+    public String showAllCompanyShares(@RequestParam String ticker,Model model, Principal loggedUser) throws IOException {
+        Portfolio portfolio = userService.getUserByUsername(loggedUser.getName()).getPortfolio();
+        List<Share> companyShares = portfolio.getStockSharesByCompany(ticker);
+        model.addAttribute("shares", modelMapper.map(companyShares, new TypeToken<List<ShareDTO>>() {
+        }.getType()));
+        model.addAttribute("company", companyShares.get(0).getCompany());
+        model.addAttribute("currentPrice", stockService.getStock(ticker).getCurrentPrice());
+        return "shares/company-shares";
+    }
+
+    @PostMapping("/portfolio/cryptoshare/details")
+    public String showAllCryptoShares(@RequestParam String symbol,Model model, Principal loggedUser) throws IOException {
+        Portfolio portfolio = userService.getUserByUsername(loggedUser.getName()).getPortfolio();
+        List<CryptoShare> cryptoShares = portfolio.getCryptoSharesBySymbol(symbol);
+        model.addAttribute("crypto", modelMapper.map(cryptoShares, new TypeToken<List<CryptoShareDTO>>() {
+        }.getType()));
+        model.addAttribute("company", cryptoShares.get(0).getSymbol());
+        model.addAttribute("currentPrice", cryptoService.getCoinPrice(symbol));
+        return "shares/crypto-shares";
+    }
+
     @PostMapping("/portfolio/share/remove/")
     public String removeStockFromUser(@RequestParam long shareId, @RequestParam String portfolioName) throws ShareNotFoundException, PortfolioNotFoundException {
         portfolioService.removeShareById(shareId, portfolioName);
