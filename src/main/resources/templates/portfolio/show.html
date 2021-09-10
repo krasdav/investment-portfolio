@@ -9,15 +9,15 @@
 </head>
 <body>
 <div th:insert="navigation/navbar :: navbar"></div>
-<p>
-    <span th:text="${portfolio.name}"></span>
-</p>
-<p>
-    <span th:text="'Total value of portfolio : ' + ${portfolio.portfolioValue}"></span>
-</p>
-<h1> Stocks </h1>
+<h1  style="text-align:center" th:text="${portfolio.name}"></h1>
+<h2  style="text-align:center" th:text="'Portfolio value : ' + ${#numbers.formatCurrency(portfolio.portfolioValue)}"></h2>
+<h3> Stocks </h3>
 <form action="#" th:action="@{/portfolio/stockshare/add}" th:object="${stockShare}" method="post">
-    <p>Ticker: <input type="text" th:field="*{ticker}"/> <input type="submit" value="Submit"/></p>
+    <p>
+        Ticker:<input type="text" th:field="*{ticker}"/>
+        Amount:<input type="number" th:field="*{amount}"/>
+        <input type="submit" value="Submit"/>
+    </p>
 </form>
 <div>
     <table>
@@ -48,11 +48,11 @@
     </table>
 </div>
 
-<h1> Crypto Currencies </h1>
+<h3> Crypto Currencies </h3>
 <form action="#" th:action="@{/portfolio/cryptoshare/add}" th:object="${cryptoShare}" method="post">
     <p>
         Symbol: <input type="text" th:field="*{symbol}"/>
-        Amount: <input type="text" th:field="*{amount}"/>
+        Amount: <input type="number" th:field="*{amount}"/>
         <input type="submit" value="Submit"/>
     </p>
 </form>

@@ -66,13 +66,14 @@ public class PortfolioController {
     public String addStock(@ModelAttribute("stockShare") ShareForm shareForm, Model model, Principal loggedUser) throws IOException {
         User user = userService.getUserByUsername(loggedUser.getName());
         String portfolio = user.getPortfolio().getName();
-        StockShare stockShare = stockService.obtainShare(shareForm.getTicker(), user);
-        try {
-            portfolioService.addShare(stockShare, portfolio);
-        } catch (PortfolioNotFoundException e) {
-            e.printStackTrace();
+        for( int i = 0 ; i< shareForm.getAmount();i++){
+            StockShare stockShare = stockService.obtainShare(shareForm.getTicker(), user);
+            try {
+                portfolioService.addShare(stockShare, portfolio);
+            } catch (PortfolioNotFoundException e) {
+                e.printStackTrace();
+            }
         }
-        model.addAttribute("success", true);
         return "redirect:/portfolio/show";
     }
 
@@ -86,7 +87,6 @@ public class PortfolioController {
         } catch (PortfolioNotFoundException e) {
             e.printStackTrace();
         }
-        model.addAttribute("coinAdded", "Coin added: " + cryptoShare.getSymbol());
         return "redirect:/portfolio/show";
     }
 

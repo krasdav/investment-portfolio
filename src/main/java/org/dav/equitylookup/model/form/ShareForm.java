@@ -11,5 +11,6 @@ public class ShareForm {
 
     @NotEmpty(message = "Ticker cant be empty")
     private String ticker;
-
+    @NotEmpty(message = "Amount cannot be empty")
+    private int amount;
 }
