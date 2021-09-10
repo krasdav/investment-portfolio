@@ -31,21 +31,6 @@ public class StockServiceImpl implements StockService {
     private final ModelMapper modelMapper;
 
     @Override
-    public List<Stock> updateStockPrices(Portfolio portfolio) throws IOException {
-        return updateStockPrices(portfolio.getStockShares());
-    }
-
-    @Override
-    public List<Stock> updateStockPrices(List<StockShare> stockShares) throws IOException {
-        List<Stock> stocksUpdated = new ArrayList<>();
-        for (StockShare stockShare : stockShares) {
-            Stock stock = cachedStockApiService.findStock(stockShare.getTicker());
-            stocksUpdated.add(stock);
-        }
-        return stocksUpdated;
-    }
-
-    @Override
     public StockShare obtainShare(String ticker, User user) throws IOException {
         Stock stock = cachedStockApiService.findStock(ticker);
         return new StockShare(stock.getCurrentPrice(), stock, user);

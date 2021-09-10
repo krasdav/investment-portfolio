@@ -11,9 +11,11 @@ import org.dav.equitylookup.repository.PortfolioRepository;
 import org.dav.equitylookup.service.CryptoApiService;
 import org.dav.equitylookup.service.PortfolioService;
 import org.dav.equitylookup.service.StockApiService;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.sound.sampled.Port;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -29,6 +31,8 @@ public class PortfolioServiceImpl implements PortfolioService {
     private final StockApiService cachedStockApiService;
 
     private final CryptoApiService cachedCryptoApiService;
+
+    private final ModelMapper modelMapper;
 
     @Override
     public void savePortfolio(Portfolio portfolio) {
@@ -82,7 +86,8 @@ public class PortfolioServiceImpl implements PortfolioService {
     }
 
     @Override
-    public void addAnalysisDetails(PortfolioDTO portfolioDTO) throws IOException {
+    public PortfolioDTO obtainAnalyzedDTO(Portfolio portfolio) throws IOException {
+        PortfolioDTO portfolioDTO = modelMapper.map(portfolio, PortfolioDTO.class);
         BigDecimal portfolioValue = new BigDecimal("0");
         for (StockShare stockShare : portfolioDTO.getStockShares()) {
             BigDecimal currentPrice = cachedStockApiService.findPrice(stockShare.getTicker());
@@ -95,6 +100,7 @@ public class PortfolioServiceImpl implements PortfolioService {
         }
 
         portfolioDTO.setPortfolioValue(portfolioValue.setScale(2, RoundingMode.HALF_EVEN));
+        return portfolioDTO;
     }
 
     @Transactional

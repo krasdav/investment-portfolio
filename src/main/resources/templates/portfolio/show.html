@@ -17,11 +17,7 @@
 </p>
 <h1> Stocks </h1>
 <form action="#" th:action="@{/portfolio/stockshare/add}" th:object="${stockShare}" method="post">
-    <p>Ticker: <input type="text" th:field="*{ticker}"/></p>
-    <p><input type="submit" value="Submit"/> <input type="reset" value="Reset"/></p>
-    <p th:if="${shareAdded}">
-        <span th:text="${shareAdded}"></span>
-    </p>
+    <p>Ticker: <input type="text" th:field="*{ticker}"/> <input type="submit" value="Submit"/></p>
 </form>
 <div>
     <table>
@@ -54,11 +50,10 @@
 
 <h1> Crypto Currencies </h1>
 <form action="#" th:action="@{/portfolio/cryptoshare/add}" th:object="${cryptoShare}" method="post">
-    <p>Symbol: <input type="text" th:field="*{symbol}"/></p>
-    <p>Amount: <input type="text" th:field="*{amount}"/></p>
-    <p><input type="submit" value="Submit"/> <input type="reset" value="Reset"/></p>
-    <p th:if="${coinAdded}">
-        <span th:text="${coinAdded}"></span>
+    <p>
+        Symbol: <input type="text" th:field="*{symbol}"/>
+        Amount: <input type="text" th:field="*{amount}"/>
+        <input type="submit" value="Submit"/>
     </p>
 </form>
 <div>

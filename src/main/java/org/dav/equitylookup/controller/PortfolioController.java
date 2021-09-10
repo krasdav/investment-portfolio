@@ -49,18 +49,14 @@ public class PortfolioController {
     public String listStocksForm(Model model, Principal loggedUser) throws IOException {
         User user = userService.getUserByUsername(loggedUser.getName());
         Portfolio portfolio = user.getPortfolio();
-        stockService.updateStockPrices(portfolio);
 
         List<GroupedStockSharesDTO> groupedStockSharesDTOS = stockService.obtainGroupedAnalyzedDTO(portfolio);
-
-        PortfolioDTO portfolioDTO = modelMapper.map(user.getPortfolio(), PortfolioDTO.class);
-        portfolioService.addAnalysisDetails(portfolioDTO);
-
-        List<GroupedCryptoSharesDTO> cryptoShareDTOS = cryptoService.obtainGroupedAnalyzedDTO(portfolio);
+        List<GroupedCryptoSharesDTO> groupedCryptoShareDTOS = cryptoService.obtainGroupedAnalyzedDTO(portfolio);
+        PortfolioDTO portfolioDTO = portfolioService.obtainAnalyzedDTO(portfolio);
 
         model.addAttribute("portfolio", portfolioDTO);
         model.addAttribute("stockShares", groupedStockSharesDTOS);
-        model.addAttribute("cryptoShares", cryptoShareDTOS);
+        model.addAttribute("cryptoShares", groupedCryptoShareDTOS);
         model.addAttribute("stockShare", new ShareForm());
         model.addAttribute("cryptoShare", new CoinForm());
         return "portfolio/show";
@@ -76,7 +72,7 @@ public class PortfolioController {
         } catch (PortfolioNotFoundException e) {
             e.printStackTrace();
         }
-        model.addAttribute("shareAdded", "Share added: " + stockShare.getTicker());
+        model.addAttribute("success", true);
         return "redirect:/portfolio/show";
     }
 

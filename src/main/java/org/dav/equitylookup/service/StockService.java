@@ -11,9 +11,6 @@ import java.io.IOException;
 import java.util.List;
 
 public interface StockService {
-    List<Stock> updateStockPrices(Portfolio portfolio) throws IOException;
-
-    List<Stock> updateStockPrices(List<StockShare> stockShares) throws IOException;
 
     StockShare obtainShare(String ticker, User user) throws IOException;
 
