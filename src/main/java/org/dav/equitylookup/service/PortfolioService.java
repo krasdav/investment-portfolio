@@ -4,7 +4,7 @@ import org.dav.equitylookup.exceptions.PortfolioNotFoundException;
 import org.dav.equitylookup.exceptions.ShareNotFoundException;
 import org.dav.equitylookup.model.CryptoShare;
 import org.dav.equitylookup.model.Portfolio;
-import org.dav.equitylookup.model.Share;
+import org.dav.equitylookup.model.StockShare;
 import org.dav.equitylookup.model.dto.PortfolioDTO;
 
 import java.io.IOException;
@@ -20,11 +20,11 @@ public interface PortfolioService {
 
     Portfolio getPortfolioByName(String name) throws PortfolioNotFoundException;
 
-    void addShare(Share share, String portfolioName) throws PortfolioNotFoundException;
+    void addShare(StockShare stockShare, String portfolioName) throws PortfolioNotFoundException;
 
-    void removeShare(Share share, String portfolioName) throws PortfolioNotFoundException;
+    void removeShare(StockShare stockShare, String portfolioName) throws PortfolioNotFoundException;
 
-    Share getShareById(long id, String portfolionName) throws PortfolioNotFoundException, ShareNotFoundException;
+    StockShare getShareById(long id, String portfolionName) throws PortfolioNotFoundException, ShareNotFoundException;
 
     void removeShareById(long id, String portfolioName) throws PortfolioNotFoundException, ShareNotFoundException;
 

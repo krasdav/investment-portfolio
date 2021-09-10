@@ -5,15 +5,19 @@ import org.apache.commons.codec.digest.Crypt;
 import org.dav.equitylookup.helper.FinancialAnalysis;
 import org.dav.equitylookup.model.CryptoShare;
 import org.dav.equitylookup.model.Portfolio;
+import org.dav.equitylookup.model.StockShare;
 import org.dav.equitylookup.model.User;
 import org.dav.equitylookup.model.cache.Crypto;
 import org.dav.equitylookup.model.dto.CryptoShareDTO;
+import org.dav.equitylookup.model.dto.GroupedCryptoSharesDTO;
+import org.dav.equitylookup.model.dto.GroupedStockSharesDTO;
 import org.dav.equitylookup.service.CryptoApiService;
 import org.dav.equitylookup.service.CryptoService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -42,34 +46,38 @@ public class CryptoServiceImpl implements CryptoService {
     }
 
     @Override
-    public List<CryptoShareDTO> groupAndAnalyze(Portfolio portfolio) {
-        List<CryptoShareDTO> cryptoShareDTOS = modelMapper.map(portfolio.getCryptocurrencies(), new TypeToken<List<CryptoShareDTO>>() {
-        }.getType());
-        List<CryptoShareDTO> objectsToRemove = new ArrayList<>();
+    public List<GroupedCryptoSharesDTO> obtainGroupedAnalyzedDTO(Portfolio portfolio) {
+        List<GroupedCryptoSharesDTO> groupedCryptoSharesDTOS = new ArrayList<>();
+        List<String> coinsGrouped = new ArrayList<>();
 
-        for (int i = 0; i < cryptoShareDTOS.size(); i++) {
-            for (int j = i + 1; j < cryptoShareDTOS.size(); j++) {
-                if( cryptoShareDTOS.get(i).getSymbol().equals(cryptoShareDTOS.get(j).getSymbol())){
-                    cryptoShareDTOS.get(i).addBoughtPrice(cryptoShareDTOS.get(j).getBoughtPrice());
-                    cryptoShareDTOS.get(i).addAmount(cryptoShareDTOS.get(j).getAmount());
-                    objectsToRemove.add(cryptoShareDTOS.get(j));
+        //iterate over all shares and group them in the list by ticker
+        for( CryptoShare cryptoShare : portfolio.getCryptoShares()){
+            if( !coinsGrouped.contains(cryptoShare.getSymbol())){
+                groupedCryptoSharesDTOS.add(new GroupedCryptoSharesDTO(cryptoShare));
+                coinsGrouped.add(cryptoShare.getSymbol());
+            }
+            for ( GroupedCryptoSharesDTO groupedCryptoSharesDTO : groupedCryptoSharesDTOS){
+                if ( groupedCryptoSharesDTO.getSymbol().equals(cryptoShare.getSymbol())){
+                    groupedCryptoSharesDTO.addToPurchasePrice(new BigDecimal(cryptoShare.getBoughtPrice()));
+                    groupedCryptoSharesDTO.addToAmount(cryptoShare.getFraction());
                 }
             }
+
         }
-        cryptoShareDTOS.removeAll(objectsToRemove);
-        analyze(cryptoShareDTOS);
-        return cryptoShareDTOS;
+
+        analyze(groupedCryptoSharesDTOS);
+        return groupedCryptoSharesDTOS;
     }
 
     @Override
-    public void analyze(List<CryptoShareDTO> shares) {
-        for (CryptoShareDTO cryptoShareDTO : shares) {
-            String currentCryptoPrice = cachedCryptoApiService.getCrypto(cryptoShareDTO.getSymbol()).getCurrentPrice();
-            String holdings = String.valueOf(Double.parseDouble(currentCryptoPrice) * cryptoShareDTO.getAmount());
-            cryptoShareDTO.setCurrentPrice(currentCryptoPrice);
-            cryptoShareDTO.setHoldings(holdings);
-            cryptoShareDTO.setValueChange(FinancialAnalysis.getValueChange(cryptoShareDTO.getBoughtPrice(), holdings));
-            cryptoShareDTO.setPercentageChange(FinancialAnalysis.getPercentageChange(cryptoShareDTO.getBoughtPrice(), holdings));
+    public void analyze(List<GroupedCryptoSharesDTO> shares) {
+        for (GroupedCryptoSharesDTO groupedCryptoSharesDTO : shares) {
+            String currentCryptoPrice = cachedCryptoApiService.getCrypto(groupedCryptoSharesDTO.getSymbol()).getCurrentPrice();
+            BigDecimal holdings = BigDecimal.valueOf(Double.parseDouble(currentCryptoPrice) * groupedCryptoSharesDTO.getAmount());
+            groupedCryptoSharesDTO.setCurrentPrice(new BigDecimal(currentCryptoPrice));
+            groupedCryptoSharesDTO.setHoldings(holdings);
+            groupedCryptoSharesDTO.setValueChange(FinancialAnalysis.getValueChange(groupedCryptoSharesDTO.getTotalPurchasePrice(), holdings));
+            groupedCryptoSharesDTO.setPercentageChange(FinancialAnalysis.getPercentageChange(groupedCryptoSharesDTO.getTotalPurchasePrice(), holdings));
         }
     }
 }

@@ -5,11 +5,9 @@ import org.dav.equitylookup.exceptions.PortfolioNotFoundException;
 import org.dav.equitylookup.exceptions.ShareNotFoundException;
 import org.dav.equitylookup.model.CryptoShare;
 import org.dav.equitylookup.model.Portfolio;
-import org.dav.equitylookup.model.Share;
+import org.dav.equitylookup.model.StockShare;
 import org.dav.equitylookup.model.User;
-import org.dav.equitylookup.model.dto.CryptoShareDTO;
-import org.dav.equitylookup.model.dto.PortfolioDTO;
-import org.dav.equitylookup.model.dto.ShareDTO;
+import org.dav.equitylookup.model.dto.*;
 import org.dav.equitylookup.model.form.CoinForm;
 import org.dav.equitylookup.model.form.ShareForm;
 import org.dav.equitylookup.service.CryptoService;
@@ -53,37 +51,37 @@ public class PortfolioController {
         Portfolio portfolio = user.getPortfolio();
         stockService.updateStockPrices(portfolio);
 
-        List<ShareDTO> shareDTOS = stockService.obtainAnalyzedDTO(portfolio);
+        List<GroupedStockSharesDTO> groupedStockSharesDTOS = stockService.obtainGroupedAnalyzedDTO(portfolio);
 
         PortfolioDTO portfolioDTO = modelMapper.map(user.getPortfolio(), PortfolioDTO.class);
         portfolioService.addAnalysisDetails(portfolioDTO);
 
-        List<CryptoShareDTO> cryptoShareDTOS = cryptoService.groupAndAnalyze(portfolio);
+        List<GroupedCryptoSharesDTO> cryptoShareDTOS = cryptoService.obtainGroupedAnalyzedDTO(portfolio);
 
         model.addAttribute("portfolio", portfolioDTO);
-        model.addAttribute("shares", shareDTOS);
-        model.addAttribute("coins", cryptoShareDTOS);
-        model.addAttribute("share", new ShareForm());
+        model.addAttribute("stockShares", groupedStockSharesDTOS);
+        model.addAttribute("cryptoShares", cryptoShareDTOS);
+        model.addAttribute("stockShare", new ShareForm());
         model.addAttribute("cryptoShare", new CoinForm());
         return "portfolio/show";
     }
 
-    @PostMapping("/portfolio/share/add")
-    public String addStock(@ModelAttribute("share") ShareForm shareForm, Model model, Principal loggedUser) throws IOException {
+    @PostMapping("/portfolio/stockshare/add")
+    public String addStock(@ModelAttribute("stockShare") ShareForm shareForm, Model model, Principal loggedUser) throws IOException {
         User user = userService.getUserByUsername(loggedUser.getName());
         String portfolio = user.getPortfolio().getName();
-        Share share = stockService.obtainShare(shareForm.getTicker(), user);
+        StockShare stockShare = stockService.obtainShare(shareForm.getTicker(), user);
         try {
-            portfolioService.addShare(share, portfolio);
+            portfolioService.addShare(stockShare, portfolio);
         } catch (PortfolioNotFoundException e) {
             e.printStackTrace();
         }
-        model.addAttribute("shareAdded", "Share added: " + share.getTicker());
+        model.addAttribute("shareAdded", "Share added: " + stockShare.getTicker());
         return "redirect:/portfolio/show";
     }
 
-    @PostMapping("/portfolio/crypto/add")
-    public String addCrypto(@ModelAttribute("coin") CoinForm coinForm, Model model, Principal loggedUser) {
+    @PostMapping("/portfolio/cryptoshare/add")
+    public String addCrypto(@ModelAttribute("cryptoShare") CoinForm coinForm, Model model, Principal loggedUser) {
         User user = userService.getUserByUsername(loggedUser.getName());
         String portfolio = user.getPortfolio().getName();
         CryptoShare cryptoShare = cryptoService.obtainCryptoShare(coinForm.getAmount(), coinForm.getSymbol(), user);
@@ -99,10 +97,10 @@ public class PortfolioController {
     @PostMapping("/portfolio/stockshare/details")
     public String showAllCompanyShares(@RequestParam String ticker,Model model, Principal loggedUser) throws IOException {
         Portfolio portfolio = userService.getUserByUsername(loggedUser.getName()).getPortfolio();
-        List<Share> companyShares = portfolio.getStockSharesByCompany(ticker);
-        model.addAttribute("shares", modelMapper.map(companyShares, new TypeToken<List<ShareDTO>>() {
+        List<StockShare> companyStockShares = portfolio.getStockSharesByCompany(ticker);
+        model.addAttribute("stockShares", modelMapper.map(companyStockShares, new TypeToken<List<StockShareDTO>>() {
         }.getType()));
-        model.addAttribute("company", companyShares.get(0).getCompany());
+        model.addAttribute("company", companyStockShares.get(0).getCompany());
         model.addAttribute("currentPrice", stockService.getStock(ticker).getCurrentPrice());
         return "shares/company-shares";
     }
@@ -111,7 +109,7 @@ public class PortfolioController {
     public String showAllCryptoShares(@RequestParam String symbol,Model model, Principal loggedUser) throws IOException {
         Portfolio portfolio = userService.getUserByUsername(loggedUser.getName()).getPortfolio();
         List<CryptoShare> cryptoShares = portfolio.getCryptoSharesBySymbol(symbol);
-        model.addAttribute("crypto", modelMapper.map(cryptoShares, new TypeToken<List<CryptoShareDTO>>() {
+        model.addAttribute("cryptoShares", modelMapper.map(cryptoShares, new TypeToken<List<CryptoShareDTO>>() {
         }.getType()));
         model.addAttribute("company", cryptoShares.get(0).getSymbol());
         model.addAttribute("currentPrice", cryptoService.getCoinPrice(symbol));

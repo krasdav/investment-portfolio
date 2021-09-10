@@ -20,7 +20,8 @@ public class CryptoShare {
     @ManyToOne(fetch = FetchType.LAZY)
     private Portfolio portfolio;
     private String boughtPrice;
-    private double amount;
+    private double fraction;
+
 
     public CryptoShare() {
     }
@@ -30,6 +31,6 @@ public class CryptoShare {
         this.symbol = crypto.getSymbol();
         this.portfolio = user.getPortfolio();
         this.boughtPrice = String.valueOf(Double.parseDouble(crypto.getCurrentPrice()) * amount);
-        this.amount = amount;
+        this.fraction = amount;
     }
 }

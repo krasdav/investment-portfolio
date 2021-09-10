@@ -1,10 +1,11 @@
 package org.dav.equitylookup.service;
 
 import org.dav.equitylookup.model.Portfolio;
-import org.dav.equitylookup.model.Share;
+import org.dav.equitylookup.model.StockShare;
 import org.dav.equitylookup.model.User;
 import org.dav.equitylookup.model.cache.Stock;
-import org.dav.equitylookup.model.dto.ShareDTO;
+import org.dav.equitylookup.model.dto.GroupedStockSharesDTO;
+import org.dav.equitylookup.model.dto.StockShareDTO;
 
 import java.io.IOException;
 import java.util.List;
@@ -12,9 +13,9 @@ import java.util.List;
 public interface StockService {
     List<Stock> updateStockPrices(Portfolio portfolio) throws IOException;
 
-    List<Stock> updateStockPrices(List<Share> shares) throws IOException;
+    List<Stock> updateStockPrices(List<StockShare> stockShares) throws IOException;
 
-    Share obtainShare(String ticker, User user) throws IOException;
+    StockShare obtainShare(String ticker, User user) throws IOException;
 
     void cacheStocks(Stock... stocks);
 
@@ -22,7 +23,7 @@ public interface StockService {
 
     Stock getStock(String ticker) throws IOException;
 
-    List<ShareDTO> obtainAnalyzedDTO(Portfolio portfolio) throws IOException;
+    List<GroupedStockSharesDTO> obtainGroupedAnalyzedDTO(Portfolio portfolio) throws IOException;
 
-    void analyze(List<ShareDTO> shareDTOS) throws IOException;
+    void analyze(List<GroupedStockSharesDTO> stockShareDTOS) throws IOException;
 }

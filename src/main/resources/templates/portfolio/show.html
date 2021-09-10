@@ -16,7 +16,7 @@
     <span th:text="'Total value of portfolio : ' + ${portfolio.portfolioValue}"></span>
 </p>
 <h1> Stocks </h1>
-<form action="#" th:action="@{/portfolio/share/add}" th:object="${share}" method="post">
+<form action="#" th:action="@{/portfolio/stockshare/add}" th:object="${stockShare}" method="post">
     <p>Ticker: <input type="text" th:field="*{ticker}"/></p>
     <p><input type="submit" value="Submit"/> <input type="reset" value="Reset"/></p>
     <p th:if="${shareAdded}">
@@ -34,17 +34,17 @@
             <th>Percentage Change</th>
             <th>Value Change</th>
         </tr>
-        <tr th:each="share, Shares: ${shares}">
-            <td th:text="${share.company}"></td>
-            <td th:text="${share.ticker}"></td>
-            <td th:text="${#numbers.formatCurrency(share.currentPrice)}"></td>
-            <td th:text="${share.count}"></td>
-            <td th:text="${#numbers.formatCurrency(share.holdings)}"></td>
-            <td th:style="|${share.percentageChange < 0 ? 'color: red;' : 'color: green;'}|" th:text="${share.percentageChange} + '%'"></td>
-            <td th:style="|${share.valueChange < 0 ? 'color: red;' : 'color: green;'}|" th:text="${share.valueChange}"></td>
+        <tr th:each="stockShare, Shares: ${stockShares}">
+            <td th:text="${stockShare.company}"></td>
+            <td th:text="${stockShare.ticker}"></td>
+            <td th:text="${#numbers.formatCurrency(stockShare.currentPrice)}"></td>
+            <td th:text="${stockShare.amount}"></td>
+            <td th:text="${#numbers.formatCurrency(stockShare.holdings)}"></td>
+            <td th:style="|${stockShare.percentageChange < 0 ? 'color: red;' : 'color: green;'}|" th:text="${stockShare.percentageChange} + '%'"></td>
+            <td th:style="|${stockShare.valueChange < 0 ? 'color: red;' : 'color: green;'}|" th:text="${stockShare.valueChange}"></td>
             <td>
                 <form action="#" th:action="@{/portfolio/stockshare/details/}" method="post">
-                    <input type="hidden" name="ticker" th:value="${share.ticker}"/>
+                    <input type="hidden" name="ticker" th:value="${stockShare.ticker}"/>
                     <input type="submit" value="Details" class="btn btn-info"/>
                 </form>
             </td>
@@ -53,7 +53,7 @@
 </div>
 
 <h1> Crypto Currencies </h1>
-<form action="#" th:action="@{/portfolio/crypto/add}" th:object="${cryptoShare}" method="post">
+<form action="#" th:action="@{/portfolio/cryptoshare/add}" th:object="${cryptoShare}" method="post">
     <p>Symbol: <input type="text" th:field="*{symbol}"/></p>
     <p>Amount: <input type="text" th:field="*{amount}"/></p>
     <p><input type="submit" value="Submit"/> <input type="reset" value="Reset"/></p>
@@ -71,7 +71,7 @@
             <th>Percentage Change</th>
             <th>Value Change</th>
         </tr>
-        <tr th:each="cryptoShare, Coins: ${coins}">
+        <tr th:each="cryptoShare, Coins: ${cryptoShares}">
             <td th:text="${cryptoShare.symbol}"></td>
             <td th:text="${#numbers.formatCurrency(cryptoShare.currentPrice)}"></td>
             <td th:text="${cryptoShare.amount}"></td>

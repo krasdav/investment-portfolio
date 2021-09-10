@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.dav.equitylookup.config.BeanConfig;
 import org.dav.equitylookup.model.CryptoShare;
 import org.dav.equitylookup.model.Portfolio;
-import org.dav.equitylookup.model.Share;
+import org.dav.equitylookup.model.StockShare;
 import org.dav.equitylookup.model.User;
 import org.dav.equitylookup.model.cache.Stock;
 import org.dav.equitylookup.service.CryptoService;
@@ -60,16 +60,16 @@ public class EquityLookUpApplication {
 
             michal.setPortfolio(portfolio);
 
-            Share shareGoogle = stockService.obtainShare(google.getTicker(), michal);
+            StockShare stockShareGoogle = stockService.obtainShare(google.getTicker(), michal);
 
-            Share shareIntel = stockService.obtainShare(intel.getTicker(), michal);
+            StockShare stockShareIntel = stockService.obtainShare(intel.getTicker(), michal);
 
             CryptoShare cryptoShareBTC = cryptoService.obtainCryptoShare(1,"BTC", michal);
             CryptoShare cryptoShareETH = cryptoService.obtainCryptoShare(2.32,"ETH", michal);
 
 
-            portfolioService.addShare(shareGoogle, portfolio.getName());
-            portfolioService.addShare(shareIntel, portfolio.getName());
+            portfolioService.addShare(stockShareGoogle, portfolio.getName());
+            portfolioService.addShare(stockShareIntel, portfolio.getName());
             portfolioService.addCryptoShare(cryptoShareBTC, portfolio.getName());
             portfolioService.addCryptoShare(cryptoShareETH, portfolio.getName());
 

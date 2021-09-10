@@ -1,17 +1,14 @@
 package org.dav.equitylookup.model.cache;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
+import java.util.Objects;
+
+@Data
 public class Crypto {
 
-    private String symbol;
-    private String currentPrice;
-
-    public Crypto(String symbol, String currentPrice) {
-        this.symbol = symbol;
-        this.currentPrice = currentPrice;
-    }
+    private final String symbol;
+    private final String currentPrice;
 }

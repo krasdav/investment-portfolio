@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-public class Share {
+public class StockShare {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -23,10 +23,10 @@ public class Share {
     private Portfolio portfolio;
     private BigDecimal boughtPrice;
 
-    public Share() {
+    public StockShare() {
     }
 
-    public Share(BigDecimal boughtPrice, Stock stock, User user) {
+    public StockShare(BigDecimal boughtPrice, Stock stock, User user) {
         this.ticker = stock.getTicker();
         this.company = stock.getCompany();
         this.timeBought = LocalDateTime.now();

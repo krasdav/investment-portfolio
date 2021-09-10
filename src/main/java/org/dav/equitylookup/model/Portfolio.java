@@ -26,7 +26,7 @@ public class Portfolio {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private List<Share> shares = new ArrayList<>();
+    private List<StockShare> stockShares = new ArrayList<>();
 
     @OneToMany(
             mappedBy = "portfolio",
@@ -44,24 +44,24 @@ public class Portfolio {
         this.user = user;
     }
 
-    public List<Share> getShares() {
-        return shares;
+    public List<StockShare> getStockShares() {
+        return stockShares;
     }
 
     public List<String> getStockTickers() {
-        return shares.stream().map(Share::getTicker).collect(Collectors.toList());
+        return stockShares.stream().map(StockShare::getTicker).collect(Collectors.toList());
     }
 
-    public void removeShare(Share share) {
-        shares.remove(share);
+    public void removeShare(StockShare stockShare) {
+        stockShares.remove(stockShare);
     }
 
-    public void addShare(Share share)    {
-        shares.add(share);
+    public void addShare(StockShare stockShare)    {
+        stockShares.add(stockShare);
     }
 
-    public List<Share> getStockSharesByCompany(String ticker){
-        return shares.stream().filter( s -> s.getTicker().equals(ticker)).collect(Collectors.toList());
+    public List<StockShare> getStockSharesByCompany(String ticker){
+        return stockShares.stream().filter(s -> s.getTicker().equals(ticker)).collect(Collectors.toList());
     }
 
     public List<CryptoShare> getCryptoSharesBySymbol(String symbol){

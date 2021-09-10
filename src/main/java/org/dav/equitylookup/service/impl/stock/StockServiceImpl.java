@@ -4,11 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.dav.equitylookup.datacache.CacheStore;
 import org.dav.equitylookup.helper.FinancialAnalysis;
 import org.dav.equitylookup.model.Portfolio;
-import org.dav.equitylookup.model.Share;
+import org.dav.equitylookup.model.StockShare;
 import org.dav.equitylookup.model.User;
 import org.dav.equitylookup.model.cache.Stock;
-import org.dav.equitylookup.model.dto.CryptoShareDTO;
-import org.dav.equitylookup.model.dto.ShareDTO;
+import org.dav.equitylookup.model.dto.GroupedStockSharesDTO;
+import org.dav.equitylookup.model.dto.StockShareDTO;
 import org.dav.equitylookup.service.StockApiService;
 import org.dav.equitylookup.service.StockService;
 import org.modelmapper.ModelMapper;
@@ -32,23 +32,23 @@ public class StockServiceImpl implements StockService {
 
     @Override
     public List<Stock> updateStockPrices(Portfolio portfolio) throws IOException {
-        return updateStockPrices(portfolio.getShares());
+        return updateStockPrices(portfolio.getStockShares());
     }
 
     @Override
-    public List<Stock> updateStockPrices(List<Share> shares) throws IOException {
+    public List<Stock> updateStockPrices(List<StockShare> stockShares) throws IOException {
         List<Stock> stocksUpdated = new ArrayList<>();
-        for (Share share : shares) {
-            Stock stock = cachedStockApiService.findStock(share.getTicker());
+        for (StockShare stockShare : stockShares) {
+            Stock stock = cachedStockApiService.findStock(stockShare.getTicker());
             stocksUpdated.add(stock);
         }
         return stocksUpdated;
     }
 
     @Override
-    public Share obtainShare(String ticker, User user) throws IOException {
+    public StockShare obtainShare(String ticker, User user) throws IOException {
         Stock stock = cachedStockApiService.findStock(ticker);
-        return new Share(stock.getCurrentPrice(), stock, user);
+        return new StockShare(stock.getCurrentPrice(), stock, user);
     }
 
     @Override
@@ -79,36 +79,38 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
-    public List<ShareDTO> obtainAnalyzedDTO(Portfolio portfolio) throws IOException {
-        List<ShareDTO> shareDTOS = modelMapper.map(portfolio.getShares(), new TypeToken<List<ShareDTO>>() {
-        }.getType());
+    public List<GroupedStockSharesDTO> obtainGroupedAnalyzedDTO(Portfolio portfolio) throws IOException {
+        List<GroupedStockSharesDTO> groupedStockSharesDTOS = new ArrayList<>();
+        List<String> stocksGrouped = new ArrayList<>();
 
-        List<ShareDTO> objectsToRemove = new ArrayList<>();
-
-        for (int i = 0; i < shareDTOS.size(); i++) {
-            for (int j = i + 1; j < shareDTOS.size(); j++) {
-                if( shareDTOS.get(i).getTicker().equals(shareDTOS.get(j).getTicker())){
-                    shareDTOS.get(i).addBoughtPrice(shareDTOS.get(j).getBoughtPrice());
-                    shareDTOS.get(i).incrementCount();
-                    objectsToRemove.add(shareDTOS.get(j));
+        //iterate over all shares and group them in the list by ticker
+        for( StockShare stockShare : portfolio.getStockShares()){
+            if( !stocksGrouped.contains(stockShare.getTicker())){
+                groupedStockSharesDTOS.add(new GroupedStockSharesDTO(stockShare));
+                stocksGrouped.add(stockShare.getTicker());
+            }
+            for ( GroupedStockSharesDTO groupedStockSharesDTO : groupedStockSharesDTOS){
+                if ( groupedStockSharesDTO.getTicker().equals(stockShare.getTicker())){
+                    groupedStockSharesDTO.addToPurchasePrice(stockShare.getBoughtPrice());
+                    groupedStockSharesDTO.incrementAmount();
                 }
             }
+
         }
-        shareDTOS.removeAll(objectsToRemove);
-        analyze(shareDTOS);
-        return shareDTOS;
+
+        analyze(groupedStockSharesDTOS);
+        return groupedStockSharesDTOS;
     }
 
     @Override
-    public void analyze(List<ShareDTO> shareDTOS) throws IOException {
-        for (ShareDTO shareDTO : shareDTOS) {
-            BigDecimal currentPrice = cachedStockApiService.findPrice(shareDTO.getTicker());
-            BigDecimal holdings = currentPrice.multiply(new BigDecimal(shareDTO.getCount()));
-            shareDTO.setCurrentPrice(currentPrice);
-            shareDTO.setHoldings(holdings);
-            shareDTO.setPercentageChange(FinancialAnalysis.getPercentageChange(shareDTO.getBoughtPrice(), holdings));
-            shareDTO.setValueChange(FinancialAnalysis.getValueChange(shareDTO.getBoughtPrice(), holdings));
+    public void analyze(List<GroupedStockSharesDTO> groupedStockShareDTOS) throws IOException {
+        for (GroupedStockSharesDTO groupedStockSharesDTO : groupedStockShareDTOS) {
+            BigDecimal currentPrice = cachedStockApiService.findPrice(groupedStockSharesDTO.getTicker());
+            BigDecimal holdings = currentPrice.multiply(new BigDecimal(groupedStockSharesDTO.getAmount()));
+            groupedStockSharesDTO.setCurrentPrice(currentPrice);
+            groupedStockSharesDTO.setHoldings(holdings);
+            groupedStockSharesDTO.setPercentageChange(FinancialAnalysis.getPercentageChange(groupedStockSharesDTO.getTotalPurchasePrice(), holdings));
+            groupedStockSharesDTO.setValueChange(FinancialAnalysis.getValueChange(groupedStockSharesDTO.getTotalPurchasePrice(), holdings));
         }
     }
-
 }

@@ -5,6 +5,7 @@ import org.dav.equitylookup.model.Portfolio;
 import org.dav.equitylookup.model.User;
 import org.dav.equitylookup.model.cache.Crypto;
 import org.dav.equitylookup.model.dto.CryptoShareDTO;
+import org.dav.equitylookup.model.dto.GroupedCryptoSharesDTO;
 
 import java.util.List;
 
@@ -16,8 +17,8 @@ public interface CryptoService {
 
     CryptoShare obtainCryptoShare(double fraction, String symbol, User user);
 
-    List<CryptoShareDTO> groupAndAnalyze(Portfolio portfolio);
+    List<GroupedCryptoSharesDTO> obtainGroupedAnalyzedDTO(Portfolio portfolio);
 
-    void analyze(List<CryptoShareDTO> shares);
+    void analyze(List<GroupedCryptoSharesDTO> shares) ;
 
 }

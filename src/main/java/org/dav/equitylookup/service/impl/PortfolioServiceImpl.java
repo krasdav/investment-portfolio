@@ -5,7 +5,7 @@ import org.dav.equitylookup.exceptions.PortfolioNotFoundException;
 import org.dav.equitylookup.exceptions.ShareNotFoundException;
 import org.dav.equitylookup.model.CryptoShare;
 import org.dav.equitylookup.model.Portfolio;
-import org.dav.equitylookup.model.Share;
+import org.dav.equitylookup.model.StockShare;
 import org.dav.equitylookup.model.dto.PortfolioDTO;
 import org.dav.equitylookup.repository.PortfolioRepository;
 import org.dav.equitylookup.service.CryptoApiService;
@@ -56,8 +56,8 @@ public class PortfolioServiceImpl implements PortfolioService {
     }
 
     @Override
-    public Share getShareById(long id, String portfolionName) throws PortfolioNotFoundException, ShareNotFoundException {
-        Optional<Share> share = getPortfolioByName(portfolionName).getShares()
+    public StockShare getShareById(long id, String portfolionName) throws PortfolioNotFoundException, ShareNotFoundException {
+        Optional<StockShare> share = getPortfolioByName(portfolionName).getStockShares()
                 .stream()
                 .filter(s -> s.getId() == id)
                 .findFirst();
@@ -84,8 +84,8 @@ public class PortfolioServiceImpl implements PortfolioService {
     @Override
     public void addAnalysisDetails(PortfolioDTO portfolioDTO) throws IOException {
         BigDecimal portfolioValue = new BigDecimal("0");
-        for (Share share : portfolioDTO.getShares()) {
-            BigDecimal currentPrice = cachedStockApiService.findPrice(share.getTicker());
+        for (StockShare stockShare : portfolioDTO.getStockShares()) {
+            BigDecimal currentPrice = cachedStockApiService.findPrice(stockShare.getTicker());
             portfolioValue = portfolioValue.add(currentPrice);
         }
 
@@ -98,20 +98,20 @@ public class PortfolioServiceImpl implements PortfolioService {
     }
 
     @Transactional
-    public void addShare(Share share, String portfolioName) throws PortfolioNotFoundException {
+    public void addShare(StockShare stockShare, String portfolioName) throws PortfolioNotFoundException {
         Portfolio portfolio = getPortfolioByName(portfolioName);
-        portfolio.addShare(share);
+        portfolio.addShare(stockShare);
     }
 
     @Transactional
-    public void removeShare(Share share, String portfolioName) throws PortfolioNotFoundException {
-        getPortfolioByName(portfolioName).removeShare(share);
+    public void removeShare(StockShare stockShare, String portfolioName) throws PortfolioNotFoundException {
+        getPortfolioByName(portfolioName).removeShare(stockShare);
     }
 
     @Transactional
     public void removeShareById(long id, String portfolioName) throws PortfolioNotFoundException, ShareNotFoundException {
-        Share shareToRemove = getShareById(id, portfolioName);
-        removeShare(shareToRemove, portfolioName);
+        StockShare stockShareToRemove = getShareById(id, portfolioName);
+        removeShare(stockShareToRemove, portfolioName);
     }
 
     @Transactional

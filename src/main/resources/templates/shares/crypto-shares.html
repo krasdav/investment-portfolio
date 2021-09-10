@@ -14,10 +14,10 @@
       <th>Paid</th>
       <th>Amount</th>
     </tr>
-    <tr th:each="crypto, Cryptos: ${crypto}">
-      <td th:text="${#temporals.format(crypto.timeBought,'dd-MM-yyyy')}"></td>
-      <td th:text="${crypto.boughtPrice}"></td>
-      <td th:text="${crypto.amount}"></td>
+    <tr th:each="cryptoShare, Cryptos: ${cryptoShares}">
+      <td th:text="${#temporals.format(cryptoShare.timeBought,'dd-MM-yyyy')}"></td>
+      <td th:text="${cryptoShare.boughtPrice}"></td>
+      <td th:text="${cryptoShare.fraction}"></td>
     </tr>
   </table>
 </div>

@@ -2,7 +2,7 @@ package org.dav.equitylookup.service.impl;
 
 import org.dav.equitylookup.datacache.CacheStore;
 import org.dav.equitylookup.model.Portfolio;
-import org.dav.equitylookup.model.Share;
+import org.dav.equitylookup.model.StockShare;
 import org.dav.equitylookup.model.cache.Stock;
 import org.dav.equitylookup.model.User;
 import org.dav.equitylookup.service.StockApiService;
@@ -43,9 +43,9 @@ class StockServiceImplTest {
         stockService = new StockServiceImpl(stockApiService, stockCache,modelMapper);
         User user = new User("user1");
         portfolio = new Portfolio("Test_Portfolio", user);
-        Share apple = new Share(new BigDecimal("100"), new Stock("AAPL", "Apple"), user);
-        Share google = new Share(new BigDecimal("150"), new Stock("GOOG", "Google"), user);
-        Share intel = new Share(new BigDecimal("200"), new Stock("INTC", "Intel"), user);
+        StockShare apple = new StockShare(new BigDecimal("100"), new Stock("AAPL", "Apple"), user);
+        StockShare google = new StockShare(new BigDecimal("150"), new Stock("GOOG", "Google"), user);
+        StockShare intel = new StockShare(new BigDecimal("200"), new Stock("INTC", "Intel"), user);
         portfolio.addShare(apple);
         portfolio.addShare(google);
         portfolio.addShare(intel);
@@ -72,7 +72,7 @@ class StockServiceImplTest {
                 new Stock("GOOG", "Google", new BigDecimal("200")),
                 new Stock("INTC", "Intel", new BigDecimal("200")));
 
-        List<Stock> stocks = stockService.updateStockPrices(portfolio.getShares());
+        List<Stock> stocks = stockService.updateStockPrices(portfolio.getStockShares());
         Assertions.assertEquals(3, stocks.size());
         Assertions.assertEquals(new BigDecimal(100), stocks.get(0).getCurrentPrice());
         Assertions.assertEquals(new BigDecimal(200), stocks.get(1).getCurrentPrice());

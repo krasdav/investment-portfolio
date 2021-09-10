@@ -3,7 +3,6 @@ package org.dav.equitylookup.controller;
 import lombok.RequiredArgsConstructor;
 import org.dav.equitylookup.model.Portfolio;
 import org.dav.equitylookup.model.User;
-import org.dav.equitylookup.model.dto.StockDTO;
 import org.dav.equitylookup.model.form.CoinForm;
 import org.dav.equitylookup.model.form.StockForm;
 import org.dav.equitylookup.model.form.UserRegistrationForm;
@@ -12,7 +11,6 @@ import org.dav.equitylookup.service.PortfolioService;
 import org.dav.equitylookup.service.StockService;
 import org.dav.equitylookup.service.UserService;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,7 +25,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
-import java.util.List;
 
 @RequiredArgsConstructor
 @Controller
