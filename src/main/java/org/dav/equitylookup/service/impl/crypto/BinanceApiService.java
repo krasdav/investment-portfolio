@@ -7,6 +7,8 @@ import org.dav.equitylookup.model.cache.Crypto;
 import org.dav.equitylookup.service.CryptoApiService;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 @Service("binanceApiService")
 public class BinanceApiService implements CryptoApiService {
 
@@ -20,6 +22,6 @@ public class BinanceApiService implements CryptoApiService {
     @Override
     public Crypto getCrypto(String symbol) {
         TickerPrice coin = client.getPrice(symbol + "USDT");
-        return new Crypto(symbol, coin.getPrice());
+        return new Crypto(symbol, new BigDecimal(coin.getPrice()));
     }
 }

@@ -1,33 +1,26 @@
 package org.dav.equitylookup.service.impl.crypto;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.codec.digest.Crypt;
 import org.dav.equitylookup.helper.FinancialAnalysis;
 import org.dav.equitylookup.model.CryptoShare;
 import org.dav.equitylookup.model.Portfolio;
-import org.dav.equitylookup.model.StockShare;
 import org.dav.equitylookup.model.User;
 import org.dav.equitylookup.model.cache.Crypto;
-import org.dav.equitylookup.model.dto.CryptoShareDTO;
 import org.dav.equitylookup.model.dto.GroupedCryptoSharesDTO;
-import org.dav.equitylookup.model.dto.GroupedStockSharesDTO;
 import org.dav.equitylookup.service.CryptoApiService;
 import org.dav.equitylookup.service.CryptoService;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class CryptoServiceImpl implements CryptoService {
 
     private final CryptoApiService cachedCryptoApiService;
-    private final ModelMapper modelMapper;
 
     @Override
     public Crypto getCoinInfo(String symbol) {
@@ -35,7 +28,7 @@ public class CryptoServiceImpl implements CryptoService {
     }
 
     @Override
-    public String getCoinPrice(String symbol) {
+    public BigDecimal getCoinPrice(String symbol) {
         return getCoinInfo(symbol).getCurrentPrice();
     }
 
@@ -55,10 +48,11 @@ public class CryptoServiceImpl implements CryptoService {
             if( !coinsGrouped.contains(cryptoShare.getSymbol())){
                 groupedCryptoSharesDTOS.add(new GroupedCryptoSharesDTO(cryptoShare));
                 coinsGrouped.add(cryptoShare.getSymbol());
+                continue;
             }
             for ( GroupedCryptoSharesDTO groupedCryptoSharesDTO : groupedCryptoSharesDTOS){
                 if ( groupedCryptoSharesDTO.getSymbol().equals(cryptoShare.getSymbol())){
-                    groupedCryptoSharesDTO.addToPurchasePrice(new BigDecimal(cryptoShare.getBoughtPrice()));
+                    groupedCryptoSharesDTO.addToPurchasePrice(cryptoShare.getBoughtPrice());
                     groupedCryptoSharesDTO.addToAmount(cryptoShare.getFraction());
                 }
             }
@@ -72,9 +66,9 @@ public class CryptoServiceImpl implements CryptoService {
     @Override
     public void analyze(List<GroupedCryptoSharesDTO> shares) {
         for (GroupedCryptoSharesDTO groupedCryptoSharesDTO : shares) {
-            String currentCryptoPrice = cachedCryptoApiService.getCrypto(groupedCryptoSharesDTO.getSymbol()).getCurrentPrice();
-            BigDecimal holdings = BigDecimal.valueOf(Double.parseDouble(currentCryptoPrice) * groupedCryptoSharesDTO.getAmount());
-            groupedCryptoSharesDTO.setCurrentPrice(new BigDecimal(currentCryptoPrice));
+            BigDecimal currentCryptoPrice = cachedCryptoApiService.getCrypto(groupedCryptoSharesDTO.getSymbol()).getCurrentPrice();
+            BigDecimal holdings = currentCryptoPrice.multiply(BigDecimal.valueOf(groupedCryptoSharesDTO.getAmount()));
+            groupedCryptoSharesDTO.setCurrentPrice(currentCryptoPrice);
             groupedCryptoSharesDTO.setHoldings(holdings);
             groupedCryptoSharesDTO.setValueChange(FinancialAnalysis.getValueChange(groupedCryptoSharesDTO.getTotalPurchasePrice(), holdings));
             groupedCryptoSharesDTO.setPercentageChange(FinancialAnalysis.getPercentageChange(groupedCryptoSharesDTO.getTotalPurchasePrice(), holdings));

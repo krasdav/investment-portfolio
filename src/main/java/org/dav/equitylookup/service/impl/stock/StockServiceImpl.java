@@ -88,6 +88,7 @@ public class StockServiceImpl implements StockService {
             if( !stocksGrouped.contains(stockShare.getTicker())){
                 groupedStockSharesDTOS.add(new GroupedStockSharesDTO(stockShare));
                 stocksGrouped.add(stockShare.getTicker());
+                continue;
             }
             for ( GroupedStockSharesDTO groupedStockSharesDTO : groupedStockSharesDTOS){
                 if ( groupedStockSharesDTO.getTicker().equals(stockShare.getTicker())){

@@ -90,8 +90,8 @@ public class PortfolioServiceImpl implements PortfolioService {
         }
 
         for (CryptoShare cryptoShare : portfolioDTO.getCryptocurrencies()) {
-            String currentPrice = cachedCryptoApiService.getCrypto(cryptoShare.getSymbol()).getCurrentPrice();
-            portfolioValue = portfolioValue.add(new BigDecimal(currentPrice));
+            BigDecimal currentPrice = cachedCryptoApiService.getCrypto(cryptoShare.getSymbol()).getCurrentPrice();
+            portfolioValue = portfolioValue.add(currentPrice);
         }
 
         portfolioDTO.setPortfolioValue(portfolioValue.setScale(2, RoundingMode.HALF_EVEN));

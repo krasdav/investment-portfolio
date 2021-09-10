@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.dav.equitylookup.model.cache.Crypto;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Getter
@@ -19,7 +20,7 @@ public class CryptoShare {
     private String symbol;
     @ManyToOne(fetch = FetchType.LAZY)
     private Portfolio portfolio;
-    private String boughtPrice;
+    private BigDecimal boughtPrice;
     private double fraction;
 
 
@@ -30,7 +31,7 @@ public class CryptoShare {
         this.timeBought = LocalDateTime.now();
         this.symbol = crypto.getSymbol();
         this.portfolio = user.getPortfolio();
-        this.boughtPrice = String.valueOf(Double.parseDouble(crypto.getCurrentPrice()) * amount);
+        this.boughtPrice = crypto.getCurrentPrice().multiply(BigDecimal.valueOf(amount));
         this.fraction = amount;
     }
 }

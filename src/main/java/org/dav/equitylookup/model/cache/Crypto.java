@@ -1,14 +1,13 @@
 package org.dav.equitylookup.model.cache;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
-import java.util.Objects;
+import java.math.BigDecimal;
 
 @Data
 public class Crypto {
 
     private final String symbol;
-    private final String currentPrice;
+    private final BigDecimal currentPrice;
+
 }

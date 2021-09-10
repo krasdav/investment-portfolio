@@ -3,6 +3,7 @@ package org.dav.equitylookup.model.dto;
 import lombok.Data;
 import org.dav.equitylookup.model.Portfolio;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
@@ -12,9 +13,9 @@ public class CryptoShareDTO {
     private LocalDateTime timeBought;
     private String symbol;
     private Portfolio portfolio;
-    private String boughtPrice;
-    private String currentPrice;
-    private String percentageChange;
-    private String valueChange;
+    private BigDecimal boughtPrice;
+    private BigDecimal currentPrice;
+    private BigDecimal percentageChange;
+    private BigDecimal valueChange;
     private double fraction;
 }
