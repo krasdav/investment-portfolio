@@ -55,6 +55,8 @@
         Amount: <input type="number" th:field="*{amount}"/>
         <input type="submit" value="Submit"/>
     </p>
+    <span style="color:red;" th:if="${NotFoundError}">Cryptocurrency not found</span>
+    <span style="color:red;" th:if="${InvalidAmount}">Invalid amount</span>
 </form>
 <div>
     <table>

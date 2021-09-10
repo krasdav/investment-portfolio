@@ -1,5 +1,6 @@
 package org.dav.equitylookup.controller;
 
+import com.binance.api.client.exception.BinanceApiException;
 import lombok.RequiredArgsConstructor;
 import org.dav.equitylookup.exceptions.PortfolioNotFoundException;
 import org.dav.equitylookup.exceptions.ShareNotFoundException;
@@ -20,10 +21,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.security.Principal;
@@ -66,7 +69,7 @@ public class PortfolioController {
     public String addStock(@ModelAttribute("stockShare") ShareForm shareForm, Model model, Principal loggedUser) throws IOException {
         User user = userService.getUserByUsername(loggedUser.getName());
         String portfolio = user.getPortfolio().getName();
-        for( int i = 0 ; i< shareForm.getAmount();i++){
+        for (int i = 0; i < shareForm.getAmount(); i++) {
             StockShare stockShare = stockService.obtainShare(shareForm.getTicker(), user);
             try {
                 portfolioService.addShare(stockShare, portfolio);
@@ -78,20 +81,28 @@ public class PortfolioController {
     }
 
     @PostMapping("/portfolio/cryptoshare/add")
-    public String addCrypto(@ModelAttribute("cryptoShare") CoinForm coinForm, Model model, Principal loggedUser) {
+    public String addCrypto(@ModelAttribute("cryptoShare") CoinForm coinForm,RedirectAttributes redirectAttributes, Principal loggedUser) {
         User user = userService.getUserByUsername(loggedUser.getName());
         String portfolio = user.getPortfolio().getName();
-        CryptoShare cryptoShare = cryptoService.obtainCryptoShare(coinForm.getAmount(), coinForm.getSymbol(), user);
+        if ( coinForm.getAmount() <= 0.0){
+            redirectAttributes.addFlashAttribute("InvalidAmount", "Invalid amount: " + coinForm.getAmount());
+            return "redirect:/portfolio/show";
+        }
         try {
+            CryptoShare cryptoShare = cryptoService.obtainCryptoShare(coinForm.getAmount(), coinForm.getSymbol(), user);
             portfolioService.addCryptoShare(cryptoShare, portfolio);
+        } catch (BinanceApiException bae) {
+            redirectAttributes.addFlashAttribute("NotFoundError", "Cryptocurrency not found");
+            return "redirect:/portfolio/show";
         } catch (PortfolioNotFoundException e) {
             e.printStackTrace();
         }
+
         return "redirect:/portfolio/show";
     }
 
     @PostMapping("/portfolio/stockshare/details")
-    public String showAllCompanyShares(@RequestParam String ticker,Model model, Principal loggedUser) throws IOException {
+    public String showAllCompanyShares(@RequestParam String ticker, Model model, Principal loggedUser) throws IOException {
         Portfolio portfolio = userService.getUserByUsername(loggedUser.getName()).getPortfolio();
         List<StockShare> companyStockShares = portfolio.getStockSharesByCompany(ticker);
         model.addAttribute("stockShares", modelMapper.map(companyStockShares, new TypeToken<List<StockShareDTO>>() {
@@ -102,7 +113,7 @@ public class PortfolioController {
     }
 
     @PostMapping("/portfolio/cryptoshare/details")
-    public String showAllCryptoShares(@RequestParam String symbol,Model model, Principal loggedUser) throws IOException {
+    public String showAllCryptoShares(@RequestParam String symbol, Model model, Principal loggedUser) throws IOException {
         Portfolio portfolio = userService.getUserByUsername(loggedUser.getName()).getPortfolio();
         List<CryptoShare> cryptoShares = portfolio.getCryptoSharesBySymbol(symbol);
         model.addAttribute("cryptoShares", modelMapper.map(cryptoShares, new TypeToken<List<CryptoShareDTO>>() {
