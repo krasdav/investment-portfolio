@@ -70,7 +70,7 @@ public class PortfolioController {
         User user = userService.getUserByUsername(loggedUser.getName());
         String portfolio = user.getPortfolio().getName();
         for (int i = 0; i < shareForm.getAmount(); i++) {
-            StockShare stockShare = stockService.obtainShare(shareForm.getTicker(), user);
+            StockShare stockShare = stockService.obtainShare(shareForm.getTicker(), shareForm.getPrice(), user);
             try {
                 portfolioService.addShare(stockShare, portfolio);
             } catch (PortfolioNotFoundException e) {
@@ -81,7 +81,7 @@ public class PortfolioController {
     }
 
     @PostMapping("/portfolio/cryptoshare/add")
-    public String addCrypto(@ModelAttribute("cryptoShare") CoinForm coinForm,RedirectAttributes redirectAttributes, Principal loggedUser) {
+    public String addCrypto(@ModelAttribute("cryptoShare") CoinForm coinForm, RedirectAttributes redirectAttributes, Principal loggedUser) {
         User user = userService.getUserByUsername(loggedUser.getName());
         String portfolio = user.getPortfolio().getName();
         if ( coinForm.getAmount() <= 0.0){
@@ -89,7 +89,7 @@ public class PortfolioController {
             return "redirect:/portfolio/show";
         }
         try {
-            CryptoShare cryptoShare = cryptoService.obtainCryptoShare(coinForm.getAmount(), coinForm.getSymbol(), user);
+            CryptoShare cryptoShare = cryptoService.obtainCryptoShare(coinForm.getAmount(), coinForm.getSymbol(), coinForm.getPrice(), user);
             portfolioService.addCryptoShare(cryptoShare, portfolio);
         } catch (BinanceApiException bae) {
             redirectAttributes.addFlashAttribute("NotFoundError", "Cryptocurrency not found");

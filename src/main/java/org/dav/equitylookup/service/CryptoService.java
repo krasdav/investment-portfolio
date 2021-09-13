@@ -15,7 +15,7 @@ public interface CryptoService {
 
     BigDecimal getCoinPrice(String symbol);
 
-    CryptoShare obtainCryptoShare(double fraction, String symbol, User user);
+    CryptoShare obtainCryptoShare(double fraction, String symbol, BigDecimal price, User user);
 
     List<GroupedCryptoSharesDTO> obtainGroupedAnalyzedDTO(Portfolio portfolio);
 

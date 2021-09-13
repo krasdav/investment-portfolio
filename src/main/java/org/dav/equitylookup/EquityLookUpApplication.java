@@ -19,6 +19,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 
+import java.math.BigDecimal;
+
 @RequiredArgsConstructor
 @SpringBootApplication
 @Controller
@@ -60,12 +62,12 @@ public class EquityLookUpApplication {
 
             michal.setPortfolio(portfolio);
 
-            StockShare stockShareGoogle = stockService.obtainShare(google.getTicker(), michal);
+            StockShare stockShareGoogle = stockService.obtainShare(google.getTicker(), new BigDecimal("1599.12"), michal);
 
-            StockShare stockShareIntel = stockService.obtainShare(intel.getTicker(), michal);
+            StockShare stockShareIntel = stockService.obtainShare(intel.getTicker(), new BigDecimal("59.22"), michal);
 
-            CryptoShare cryptoShareBTC = cryptoService.obtainCryptoShare(1,"BTC", michal);
-            CryptoShare cryptoShareETH = cryptoService.obtainCryptoShare(2.32,"ETH", michal);
+            CryptoShare cryptoShareBTC = cryptoService.obtainCryptoShare(1,"BTC",new BigDecimal("43000"), michal);
+            CryptoShare cryptoShareETH = cryptoService.obtainCryptoShare(2.32,"ETH",new BigDecimal("2500"), michal);
 
 
             portfolioService.addShare(stockShareGoogle, portfolio.getName());

@@ -8,11 +8,12 @@ import org.dav.equitylookup.model.dto.GroupedStockSharesDTO;
 import org.dav.equitylookup.model.dto.StockShareDTO;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface StockService {
 
-    StockShare obtainShare(String ticker, User user) throws IOException;
+    StockShare obtainShare(String ticker, BigDecimal price, User user) throws IOException;
 
     void cacheStocks(Stock... stocks);
 

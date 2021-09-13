@@ -27,11 +27,11 @@ public class CryptoShare {
     public CryptoShare() {
     }
 
-    public CryptoShare(double amount, Crypto crypto, User user) {
+    public CryptoShare(double amount,BigDecimal boughtPrice, Crypto crypto, User user) {
         this.timeBought = LocalDateTime.now();
         this.symbol = crypto.getSymbol();
         this.portfolio = user.getPortfolio();
-        this.boughtPrice = crypto.getCurrentPrice().multiply(BigDecimal.valueOf(amount));
+        this.boughtPrice = boughtPrice.multiply(BigDecimal.valueOf(amount));
         this.fraction = amount;
     }
 }

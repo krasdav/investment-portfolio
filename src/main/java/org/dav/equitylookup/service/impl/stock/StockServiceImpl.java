@@ -28,12 +28,10 @@ public class StockServiceImpl implements StockService {
 
     private final CacheStore<Stock> stockCache;
 
-    private final ModelMapper modelMapper;
-
     @Override
-    public StockShare obtainShare(String ticker, User user) throws IOException {
+    public StockShare obtainShare(String ticker, BigDecimal price, User user) throws IOException {
         Stock stock = cachedStockApiService.findStock(ticker);
-        return new StockShare(stock.getCurrentPrice(), stock, user);
+        return new StockShare(price, stock, user);
     }
 
     @Override

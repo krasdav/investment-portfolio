@@ -15,9 +15,10 @@
 <h3 style="text-align:center;"> Stocks </h3>
 <form action="#" th:action="@{/portfolio/stockshare/add}" th:object="${stockShare}" method="post">
     <p style="text-align:center;">
-        Ticker:<input type="text" th:field="*{ticker}"/>
-        Amount:<input type="number" th:field="*{amount}"/>
-        <input type="submit" value="Submit"/>
+        Ticker: <input type="text" th:field="*{ticker}"/>
+        Amount: <input type="number" th:field="*{amount}"/>
+        Price:  <input type="number" th:field="*{price}"/>
+        <input type="submit" value="Add"/>
     </p>
 </form>
 <div>
@@ -53,8 +54,9 @@
 <form style="text-align:center" action="#" th:action="@{/portfolio/cryptoshare/add}" th:object="${cryptoShare}" method="post">
     <p style="text-align:center">
         Symbol: <input type="text" th:field="*{symbol}"/>
-        Amount: <input type="number" th:field="*{amount}"/>
-        <input type="submit" value="Submit"/>
+        Amount: <input type="number" step="any" th:field="*{amount}"/>
+        Price:  <input type="number" step="any" th:field="*{price}"/>
+        <input type="submit" value="Add"/>
     </p>
     <span style="color:red; text-align:center;" th:if="${NotFoundError}">Cryptocurrency not found</span>
     <span style="color:red; text-align:center;" th:if="${InvalidAmount}">Invalid amount</span>

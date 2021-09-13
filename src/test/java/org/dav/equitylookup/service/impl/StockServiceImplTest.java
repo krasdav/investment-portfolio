@@ -40,7 +40,7 @@ class StockServiceImplTest {
 
     @BeforeEach
     void setup() {
-        stockService = new StockServiceImpl(stockApiService, stockCache,modelMapper);
+        stockService = new StockServiceImpl(stockApiService, stockCache);
         User user = new User("user1");
         portfolio = new Portfolio("Test_Portfolio", user);
         StockShare apple = new StockShare(new BigDecimal("100"), new Stock("AAPL", "Apple"), user);

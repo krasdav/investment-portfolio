@@ -33,9 +33,9 @@ public class CryptoServiceImpl implements CryptoService {
     }
 
     @Override
-    public CryptoShare obtainCryptoShare(double fraction, String symbol, User user) {
+    public CryptoShare obtainCryptoShare(double fraction, String symbol, BigDecimal price, User user) {
         Crypto crypto = cachedCryptoApiService.getCrypto(symbol);
-        return new CryptoShare(fraction, crypto, user);
+        return new CryptoShare(fraction, price, crypto, user);
     }
 
     @Override
