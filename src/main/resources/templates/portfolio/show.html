@@ -6,21 +6,22 @@
     <link rel="stylesheet" href="../../navbar.css">
     <link rel="stylesheet" href="../../background.css">
     <link rel="stylesheet" href="../../index_table.css">
+    <link rel="stylesheet" href="../../show.css">
 </head>
 <body>
 <div th:insert="navigation/navbar :: navbar"></div>
 <h1  style="text-align:center" th:text="${portfolio.name}"></h1>
-<h2  style="text-align:center" th:text="'Portfolio value : ' + ${#numbers.formatCurrency(portfolio.portfolioValue)}"></h2>
-<h3> Stocks </h3>
+<h2  style="text-align:center;" th:text="'Portfolio value : ' + ${#numbers.formatCurrency(portfolio.portfolioValue)}"></h2>
+<h3 style="text-align:center;"> Stocks </h3>
 <form action="#" th:action="@{/portfolio/stockshare/add}" th:object="${stockShare}" method="post">
-    <p>
+    <p style="text-align:center;">
         Ticker:<input type="text" th:field="*{ticker}"/>
         Amount:<input type="number" th:field="*{amount}"/>
         <input type="submit" value="Submit"/>
     </p>
 </form>
 <div>
-    <table>
+    <table class="center">
         <tr>
             <th>Company</th>
             <th>Ticker</th>
@@ -48,18 +49,18 @@
     </table>
 </div>
 
-<h3> Crypto Currencies </h3>
-<form action="#" th:action="@{/portfolio/cryptoshare/add}" th:object="${cryptoShare}" method="post">
-    <p>
+<h3 style="text-align:center"> Crypto Currencies </h3>
+<form style="text-align:center" action="#" th:action="@{/portfolio/cryptoshare/add}" th:object="${cryptoShare}" method="post">
+    <p style="text-align:center">
         Symbol: <input type="text" th:field="*{symbol}"/>
         Amount: <input type="number" th:field="*{amount}"/>
         <input type="submit" value="Submit"/>
     </p>
-    <span style="color:red;" th:if="${NotFoundError}">Cryptocurrency not found</span>
-    <span style="color:red;" th:if="${InvalidAmount}">Invalid amount</span>
+    <span style="color:red; text-align:center;" th:if="${NotFoundError}">Cryptocurrency not found</span>
+    <span style="color:red; text-align:center;" th:if="${InvalidAmount}">Invalid amount</span>
 </form>
 <div>
-    <table>
+    <table class="center">
         <tr>
             <th>Symbol</th>
             <th>Price</th>

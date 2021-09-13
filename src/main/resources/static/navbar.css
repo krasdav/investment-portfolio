@@ -3,12 +3,11 @@ ul {
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background-color: #333;
+    background-color: #FFFFFF;
 }
 
 li {
   float: left;
-  border-right: 1px solid #bbb;
 }
 
 li:last-child {
@@ -16,13 +15,23 @@ li:last-child {
 }
 
 li a {
+  border-radius: 5px;
   display: block;
   color: white;
   text-align: center;
-  padding: 14px 16px;
+  padding: 10px 40px;
   text-decoration: none;
+  background: #206BA4;
+  border-radius: 10px;
+  width: 80px;
+  height: 15px;
+  margin: 10px 0;
 }
 
-li a:hover {
-  background-color: #111;
+#rcorners1 {
+  border-radius: 10px;
+  background: #0047AB;
+  padding: 10px;
+  width: 50px;
+  height: 50px;
 }
