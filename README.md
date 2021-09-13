@@ -6,12 +6,12 @@ An application used to keep track of personal investments in stocks and crypto.
 Work in Progress
 
 ## Project Screen Shot(s)
-![Alt text](/src/main/resources/static/images/front-page.png?raw=true "Portfolio Page")
+![Alt text](/src/main/resources/static/images/portfolio-page.png?raw=true "Portfolio Page")
+
+![Alt text](/src/main/resources/static/images/portfolio-stock-details.png?raw=true "Portfolio Stock details")
 ## Installation and Setup Instructions
 
 Clone down this repository.
-
-You will need `jdk11`
 
 Start the application:
 
