@@ -15,7 +15,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.sound.sampled.Port;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -95,7 +94,7 @@ public class PortfolioServiceImpl implements PortfolioService {
         }
 
         for (CryptoShare cryptoShare : portfolioDTO.getCryptocurrencies()) {
-            BigDecimal currentPrice = cachedCryptoApiService.getCrypto(cryptoShare.getSymbol()).getCurrentPrice();
+            BigDecimal currentPrice = cachedCryptoApiService.getCrypto(cryptoShare.getSymbol()).getCurrentPrice().multiply(BigDecimal.valueOf(cryptoShare.getFraction()));
             portfolioValue = portfolioValue.add(currentPrice);
         }
 
