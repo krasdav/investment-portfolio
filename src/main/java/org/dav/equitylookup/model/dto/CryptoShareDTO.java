@@ -13,7 +13,9 @@ public class CryptoShareDTO {
     private LocalDateTime timeBought;
     private String symbol;
     private Portfolio portfolio;
-    private BigDecimal boughtPrice;
+    private BigDecimal holdings;
+    private BigDecimal purchasePrice;
+    private BigDecimal pricePerShare;
     private BigDecimal currentPrice;
     private BigDecimal percentageChange;
     private BigDecimal valueChange;

@@ -21,7 +21,7 @@ public class GroupedCryptoSharesDTO {
     public GroupedCryptoSharesDTO(CryptoShare cryptoShare) {
         this.symbol = cryptoShare.getSymbol();
         this.portfolio = cryptoShare.getPortfolio();
-        this.totalPurchasePrice = cryptoShare.getBoughtPrice();
+        this.totalPurchasePrice = cryptoShare.getPurchasePrice();
         this.amount = cryptoShare.getFraction();
     }
 

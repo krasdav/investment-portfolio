@@ -20,7 +20,7 @@ public class GroupedStockSharesDTO {
     private int amount = 1;
 
     public GroupedStockSharesDTO(StockShare stockShare){
-        this.totalPurchasePrice = stockShare.getBoughtPrice();
+        this.totalPurchasePrice = stockShare.getPurchasePrice();
         this.ticker = stockShare.getTicker();
         this.company = stockShare.getCompany();
         this.portfolio = stockShare.getPortfolio();

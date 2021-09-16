@@ -19,7 +19,7 @@
     </tr>
     <tr th:each="cryptoShare, Cryptos: ${cryptoShares}">
       <td th:text="${#temporals.format(cryptoShare.timeBought,'dd-MM-yyyy')}"></td>
-      <td th:text="${cryptoShare.boughtPrice}"></td>
+      <td th:text="${cryptoShare.purchasePrice}"></td>
       <td th:text="${cryptoShare.fraction}"></td>
     </tr>
   </table>

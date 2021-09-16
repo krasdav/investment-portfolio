@@ -11,7 +11,7 @@ public class StockShareDTO {
 
     private Long id;
     private LocalDateTime timeBought;
-    private BigDecimal boughtPrice;
+    private BigDecimal purchasePrice;
     private BigDecimal currentPrice;
     private BigDecimal percentageChange;
     private BigDecimal valueChange;

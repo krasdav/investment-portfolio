@@ -75,7 +75,7 @@ public class StockServiceImpl implements StockService {
             }
             for ( GroupedStockSharesDTO groupedStockSharesDTO : groupedStockSharesDTOS){
                 if ( groupedStockSharesDTO.getTicker().equals(stockShare.getTicker())){
-                    groupedStockSharesDTO.addToPurchasePrice(stockShare.getBoughtPrice());
+                    groupedStockSharesDTO.addToPurchasePrice(stockShare.getPurchasePrice());
                     groupedStockSharesDTO.incrementAmount();
                 }
             }

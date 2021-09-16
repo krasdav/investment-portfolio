@@ -4,6 +4,7 @@ import org.dav.equitylookup.model.CryptoShare;
 import org.dav.equitylookup.model.Portfolio;
 import org.dav.equitylookup.model.User;
 import org.dav.equitylookup.model.cache.Crypto;
+import org.dav.equitylookup.model.dto.CryptoShareDTO;
 import org.dav.equitylookup.model.dto.GroupedCryptoSharesDTO;
 
 import java.math.BigDecimal;
@@ -19,6 +20,9 @@ public interface CryptoService {
 
     List<GroupedCryptoSharesDTO> obtainGroupedAnalyzedDTO(Portfolio portfolio);
 
-    void analyze(List<GroupedCryptoSharesDTO> shares) ;
+    List<CryptoShareDTO> obtainAnalyzedDTO(List<CryptoShare> shares);
 
+    void analyzeGroupedShares(List<GroupedCryptoSharesDTO> shares);
+
+    void analyzeShares(List<CryptoShareDTO> shares);
 }

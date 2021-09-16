@@ -6,6 +6,7 @@ import org.dav.equitylookup.model.cache.Crypto;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 
 @Getter
@@ -20,18 +21,20 @@ public class CryptoShare {
     private String symbol;
     @ManyToOne(fetch = FetchType.LAZY)
     private Portfolio portfolio;
-    private BigDecimal boughtPrice;
+    private BigDecimal purchasePrice;
+    private BigDecimal pricePerShare;
     private double fraction;
 
 
     public CryptoShare() {
     }
 
-    public CryptoShare(double amount,BigDecimal boughtPrice, Crypto crypto, User user) {
+    public CryptoShare(double amount, BigDecimal boughtPrice, Crypto crypto, User user) {
         this.timeBought = LocalDateTime.now();
         this.symbol = crypto.getSymbol();
         this.portfolio = user.getPortfolio();
-        this.boughtPrice = boughtPrice.multiply(BigDecimal.valueOf(amount));
+        this.purchasePrice = boughtPrice;
+        this.pricePerShare = boughtPrice.divide(BigDecimal.valueOf(amount),2, RoundingMode.HALF_EVEN);
         this.fraction = amount;
     }
 }

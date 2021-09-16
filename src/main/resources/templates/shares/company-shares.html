@@ -18,7 +18,7 @@
     </tr>
     <tr th:each="stockShare, Shares: ${stockShares}">
       <td th:text="${#temporals.format(stockShare.timeBought,'dd-MM-yyyy')}"></td>
-      <td th:text="${stockShare.boughtPrice}"></td>
+      <td th:text="${stockShare.purchasePrice}"></td>
     </tr>
   </table>
 </div>
