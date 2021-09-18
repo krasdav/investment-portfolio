@@ -2,11 +2,11 @@ package org.dav.equitylookup;
 
 import lombok.RequiredArgsConstructor;
 import org.dav.equitylookup.config.BeanConfig;
-import org.dav.equitylookup.model.CryptoShare;
 import org.dav.equitylookup.model.Portfolio;
-import org.dav.equitylookup.model.StockShare;
+import org.dav.equitylookup.model.TransactionRecord;
 import org.dav.equitylookup.model.User;
-import org.dav.equitylookup.model.cache.Stock;
+import org.dav.equitylookup.model.cache.StockCached;
+import org.dav.equitylookup.model.enums.Operation;
 import org.dav.equitylookup.service.CryptoService;
 import org.dav.equitylookup.service.PortfolioService;
 import org.dav.equitylookup.service.StockService;
@@ -20,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @RequiredArgsConstructor
 @SpringBootApplication
@@ -46,35 +47,51 @@ public class EquityLookUpApplication {
     @Bean
     InitializingBean sendDatabase() {
         return () -> {
+            System.out.println(org.hibernate.Version.getVersionString());
             User michal = new User("Michal");
             michal.setRole("ROLE_USER");
             michal.setPassword(passwordEncoder.encode("pw"));
             userService.saveUser(michal);
 
-            Stock google = stockService.getStock("GOOG");
+            StockCached google = stockService.getStock("GOOG");
 
-            Stock apple = stockService.getStock("APPL");
+            StockCached apple = stockService.getStock("APPL");
 
-            Stock intel = stockService.getStock("INTC");
+            StockCached intel = stockService.getStock("INTC");
 
             Portfolio portfolio = new Portfolio("Michal's Portfolio", michal);
             portfolioService.savePortfolio(portfolio);
 
             michal.setPortfolio(portfolio);
 
-            StockShare stockShareGoogle = stockService.obtainShare(google.getTicker(), new BigDecimal("1599.12"), michal);
+            TransactionRecord transactionRecord = new TransactionRecord.TransactionRecordBuilder()
+                    .timeOfPurchase(LocalDate.now())
+                    .asset(intel.getTicker())
+                    .operation(Operation.BUY)
+                    .quantity(1)
+                    .value(new BigDecimal("59.22"))
+                    .build();
+            portfolioService.addStock(transactionRecord, portfolio.getName());
 
-            StockShare stockShareIntel = stockService.obtainShare(intel.getTicker(), new BigDecimal("59.22"), michal);
+            transactionRecord = new TransactionRecord.TransactionRecordBuilder()
+                    .timeOfPurchase(LocalDate.now())
+                    .asset(google.getTicker())
+                    .operation(Operation.BUY)
+                    .quantity(1)
+                    .value(new BigDecimal("1599.12"))
+                    .build();
 
-            CryptoShare cryptoShareBTC = cryptoService.obtainCryptoShare(1,"BTC",new BigDecimal("43000"), michal);
-            CryptoShare cryptoShareETH = cryptoService.obtainCryptoShare(2.32,"ETH",new BigDecimal("2500"), michal);
+            portfolioService.addStock(transactionRecord, portfolio.getName());
 
+            transactionRecord = new TransactionRecord.TransactionRecordBuilder()
+                    .timeOfPurchase(LocalDate.now())
+                    .asset("BTC")
+                    .operation(Operation.BUY)
+                    .quantity(1)
+                    .value(new BigDecimal("43000"))
+                    .build();
 
-            portfolioService.addShare(stockShareGoogle, portfolio.getName());
-            portfolioService.addShare(stockShareIntel, portfolio.getName());
-            portfolioService.addCryptoShare(cryptoShareBTC, portfolio.getName());
-            portfolioService.addCryptoShare(cryptoShareETH, portfolio.getName());
-
+            portfolioService.addCrypto(transactionRecord, portfolio.getName());
         };
     }
 

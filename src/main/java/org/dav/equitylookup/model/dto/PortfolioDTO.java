@@ -1,8 +1,8 @@
 package org.dav.equitylookup.model.dto;
 
 import lombok.Data;
-import org.dav.equitylookup.model.CryptoShare;
-import org.dav.equitylookup.model.StockShare;
+import org.dav.equitylookup.model.Cryptocurrency;
+import org.dav.equitylookup.model.Stock;
 import org.dav.equitylookup.model.User;
 
 import java.math.BigDecimal;
@@ -16,6 +16,6 @@ public class PortfolioDTO {
     private BigDecimal portfolioValue;
     private LocalDateTime creationTime;
     private User user;
-    private List<StockShare> stockShares;
-    private List<CryptoShare> cryptocurrencies;
+    private List<Cryptocurrency> cryptocurrencies;
+    private List<Stock> stocks;
 }

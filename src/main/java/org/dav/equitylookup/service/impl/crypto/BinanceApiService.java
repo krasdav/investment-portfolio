@@ -3,7 +3,7 @@ package org.dav.equitylookup.service.impl.crypto;
 import com.binance.api.client.BinanceApiClientFactory;
 import com.binance.api.client.BinanceApiRestClient;
 import com.binance.api.client.domain.market.TickerPrice;
-import org.dav.equitylookup.model.cache.Crypto;
+import org.dav.equitylookup.model.cache.CryptoCached;
 import org.dav.equitylookup.service.CryptoApiService;
 import org.springframework.stereotype.Service;
 
@@ -20,8 +20,8 @@ public class BinanceApiService implements CryptoApiService {
     }
 
     @Override
-    public Crypto getCrypto(String symbol) {
+    public CryptoCached getCrypto(String symbol) {
         TickerPrice coin = client.getPrice(symbol + "USDT");
-        return new Crypto(symbol, new BigDecimal(coin.getPrice()));
+        return new CryptoCached(symbol, new BigDecimal(coin.getPrice()));
     }
 }

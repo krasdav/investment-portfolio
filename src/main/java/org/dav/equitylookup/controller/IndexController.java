@@ -3,8 +3,8 @@ package org.dav.equitylookup.controller;
 import lombok.RequiredArgsConstructor;
 import org.dav.equitylookup.model.Portfolio;
 import org.dav.equitylookup.model.User;
-import org.dav.equitylookup.model.form.CoinForm;
-import org.dav.equitylookup.model.form.StockForm;
+import org.dav.equitylookup.model.form.CryptoForm;
+import org.dav.equitylookup.model.form.StockFindForm;
 import org.dav.equitylookup.model.form.UserRegistrationForm;
 import org.dav.equitylookup.service.CryptoService;
 import org.dav.equitylookup.service.PortfolioService;
@@ -47,22 +47,22 @@ public class IndexController {
 
     @GetMapping("/index")
     public String frontPage(Model model) throws IOException {
-        model.addAttribute("coin", new CoinForm());
-        model.addAttribute("stock", new StockForm());
+        model.addAttribute("coin", new CryptoForm());
+        model.addAttribute("stock", new StockFindForm());
         return "index";
     }
 
     @PostMapping("/crypto")
-    public String getCryptoPrice(@ModelAttribute("coin") CoinForm coinForm, RedirectAttributes redirectAttrs) {
-        redirectAttrs.addFlashAttribute("coinPrice", cryptoService.getCoinPrice(coinForm.getSymbol()));
-        redirectAttrs.addFlashAttribute("coinSymbol", coinForm.getSymbol());
+    public String getCryptoPrice(@ModelAttribute("coin") CryptoForm cryptoForm, RedirectAttributes redirectAttrs) {
+        redirectAttrs.addFlashAttribute("coinPrice", cryptoService.getCoinPrice(cryptoForm.getSymbol()));
+        redirectAttrs.addFlashAttribute("coinSymbol", cryptoForm.getSymbol());
         return "redirect:/index";
     }
 
     @PostMapping("/stock")
-    public String getStockPrice(@ModelAttribute("stock") StockForm stockForm, RedirectAttributes redirectAttrs) throws IOException {
-        redirectAttrs.addFlashAttribute("stockPrice", stockService.getStock(stockForm.getTicker()).getCurrentPrice());
-        redirectAttrs.addFlashAttribute("stockTicker", stockForm.getTicker());
+    public String getStockPrice(@ModelAttribute("stock") StockFindForm stockFindForm, RedirectAttributes redirectAttrs) throws IOException {
+        redirectAttrs.addFlashAttribute("stockPrice", stockService.getStock(stockFindForm.getTicker()).getCurrentPrice());
+        redirectAttrs.addFlashAttribute("stockTicker", stockFindForm.getTicker());
         return "redirect:/index";
     }
 

@@ -1,27 +1,19 @@
 package org.dav.equitylookup.service;
 
 import org.dav.equitylookup.model.Portfolio;
-import org.dav.equitylookup.model.StockShare;
-import org.dav.equitylookup.model.User;
-import org.dav.equitylookup.model.cache.Stock;
-import org.dav.equitylookup.model.dto.GroupedStockSharesDTO;
-import org.dav.equitylookup.model.dto.StockShareDTO;
+import org.dav.equitylookup.model.cache.StockCached;
+import org.dav.equitylookup.model.dto.StockDTO;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.List;
 
 public interface StockService {
 
-    StockShare obtainShare(String ticker, BigDecimal price, User user) throws IOException;
+    StockCached getStock(String ticker) throws IOException;
 
-    void cacheStocks(Stock... stocks);
+    List<StockDTO> getAnalyzedStockDTOS(Portfolio portfolio) throws IOException;
 
-    List<Stock> getTopStocks() throws IOException;
+    void setDynamicData(List<StockDTO> stockDTOS) throws IOException;
 
-    Stock getStock(String ticker) throws IOException;
-
-    List<GroupedStockSharesDTO> obtainGroupedAnalyzedDTO(Portfolio portfolio) throws IOException;
-
-    void analyze(List<GroupedStockSharesDTO> stockShareDTOS) throws IOException;
+    List<StockDTO> getAndRemoveSoldOutStocks(List<StockDTO> stockDTOS);
 }

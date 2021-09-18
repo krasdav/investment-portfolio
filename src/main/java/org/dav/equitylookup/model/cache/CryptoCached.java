@@ -5,7 +5,7 @@ import lombok.Data;
 import java.math.BigDecimal;
 
 @Data
-public class Crypto {
+public class CryptoCached {
 
     private final String symbol;
     private final BigDecimal currentPrice;

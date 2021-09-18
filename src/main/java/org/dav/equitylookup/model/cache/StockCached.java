@@ -5,19 +5,19 @@ import lombok.Data;
 import java.math.BigDecimal;
 
 @Data
-public class Stock {
+public class StockCached {
 
     private final String ticker;
     private final String company;
     private final BigDecimal currentPrice;
 
-    public Stock(String ticker, String company){
+    public StockCached(String ticker, String company) {
         this.ticker = ticker;
         this.company = company;
         this.currentPrice = new BigDecimal(100);
     }
 
-    public Stock(String ticker, String company, BigDecimal currentPrice) {
+    public StockCached(String ticker, String company, BigDecimal currentPrice) {
         this.ticker = ticker;
         this.company = company;
         this.currentPrice = currentPrice;

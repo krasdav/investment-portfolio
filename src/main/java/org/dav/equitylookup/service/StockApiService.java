@@ -1,14 +1,14 @@
 package org.dav.equitylookup.service;
 
-import org.dav.equitylookup.model.cache.Stock;
+import org.dav.equitylookup.model.cache.StockCached;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 
 public interface StockApiService {
-    Stock findStock(String ticker) throws IOException;
+    StockCached findStock(String ticker) throws IOException;
 
-    BigDecimal findPrice(Stock stock) throws IOException;
+    BigDecimal findPrice(StockCached stockCached) throws IOException;
 
     BigDecimal findPrice(String ticker) throws IOException;
 

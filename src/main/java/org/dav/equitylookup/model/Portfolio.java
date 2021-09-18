@@ -1,15 +1,16 @@
 package org.dav.equitylookup.model;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Entity
 @Getter
+@Setter
 public class Portfolio {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -26,14 +27,14 @@ public class Portfolio {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private List<StockShare> stockShares = new ArrayList<>();
+    private List<Stock> stocks = new ArrayList<>();
 
     @OneToMany(
             mappedBy = "portfolio",
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private List<CryptoShare> cryptoShares = new ArrayList<>();
+    private List<Cryptocurrency> cryptocurrencies = new ArrayList<>();
 
     public Portfolio() {
     }
@@ -44,40 +45,38 @@ public class Portfolio {
         this.user = user;
     }
 
-    public List<StockShare> getStockShares() {
-        return stockShares;
+    public void addStock(Stock stock) {
+        stocks.add(stock);
     }
 
-    public List<String> getStockTickers() {
-        return stockShares.stream().map(StockShare::getTicker).collect(Collectors.toList());
+    public void removeStock(Stock stock) {
+        stocks.remove(stock);
     }
 
-    public void removeShare(StockShare stockShare) {
-        stockShares.remove(stockShare);
+    public Stock getStockByTicker(String ticker) {
+        for (Stock s : stocks) {
+            if (s.getTicker().equals(ticker)) {
+                return s;
+            }
+        }
+        return null;
     }
 
-    public void addShare(StockShare stockShare)    {
-        stockShares.add(stockShare);
+    public Cryptocurrency getCryptoCurrencyBySymbol(String symbol) {
+        for (Cryptocurrency crypto : cryptocurrencies) {
+            if (crypto.getSymbol().equals(symbol)) {
+                return crypto;
+            }
+        }
+        return null;
     }
 
-    public List<StockShare> getStockSharesByCompany(String ticker){
-        return stockShares.stream().filter(s -> s.getTicker().equals(ticker)).collect(Collectors.toList());
+    public void addCryptocurrency(Cryptocurrency cryptocurrency) {
+        cryptocurrencies.add(cryptocurrency);
     }
 
-    public List<CryptoShare> getCryptoSharesBySymbol(String symbol){
-        return cryptoShares.stream().filter( c -> c.getSymbol().equals(symbol)).collect(Collectors.toList());
-    }
-
-    public List<CryptoShare> getCryptocurrencies() {
-        return cryptoShares;
-    }
-
-    public void removeCoin(CryptoShare cryptoShare) {
-        cryptoShares.remove(cryptoShare);
-    }
-
-    public void addCoin(CryptoShare cryptoShare) {
-        cryptoShares.add(cryptoShare);
+    public void removeCryptocurrency(Cryptocurrency cryptocurrency) {
+        cryptocurrencies.remove(cryptocurrency);
     }
 
 }

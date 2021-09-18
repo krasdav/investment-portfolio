@@ -1,28 +1,22 @@
 package org.dav.equitylookup.service;
 
-import org.dav.equitylookup.model.CryptoShare;
 import org.dav.equitylookup.model.Portfolio;
-import org.dav.equitylookup.model.User;
-import org.dav.equitylookup.model.cache.Crypto;
-import org.dav.equitylookup.model.dto.CryptoShareDTO;
-import org.dav.equitylookup.model.dto.GroupedCryptoSharesDTO;
+import org.dav.equitylookup.model.cache.CryptoCached;
+import org.dav.equitylookup.model.dto.CryptoDTO;
+import org.dav.equitylookup.model.dto.StockDTO;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 public interface CryptoService {
 
-    Crypto getCoinInfo(String symbol);
+    CryptoCached getCoinInfo(String symbol);
 
     BigDecimal getCoinPrice(String symbol);
 
-    CryptoShare obtainCryptoShare(double fraction, String symbol, BigDecimal price, User user);
+    List<CryptoDTO> getAnalyzedCryptoDTOS(Portfolio portfolio);
 
-    List<GroupedCryptoSharesDTO> obtainGroupedAnalyzedDTO(Portfolio portfolio);
+    void setDynamicData(List<CryptoDTO> cryptoDTOS);
 
-    List<CryptoShareDTO> obtainAnalyzedDTO(List<CryptoShare> shares);
-
-    void analyzeGroupedShares(List<GroupedCryptoSharesDTO> shares);
-
-    void analyzeShares(List<CryptoShareDTO> shares);
+    List<CryptoDTO> getAndRemoveSoldOutCryptos(List<CryptoDTO> cryptoDTOS);
 }

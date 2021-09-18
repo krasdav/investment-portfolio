@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Company Shares</title>
+    <link rel="stylesheet" href="../../../index_table.css">
+    <link rel="stylesheet" href="../../../navbar.css">
+</head>
+<body>
+<div th:insert="navigation/navbar :: navbar"></div>
+<h1 style="text-align:center;text-decoration: underline;" th:text="${asset}"></h1>
+<div>
+    <table class="center">
+        <tr>
+            <th>Date</th>
+            <th>Action</th>
+            <th>Quantity</th>
+            <th>Value</th>
+        </tr>
+        <tr th:each="record, Shares: ${records}">
+            <td th:text="${#temporals.format(record.timeBought,'dd-MM-yyyy')}"></td>
+            <td th:text="${record.operation}"></td>
+            <td th:text="${record.quantity}"></td>
+            <td th:text="${#numbers.formatCurrency(record.value)}"></td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

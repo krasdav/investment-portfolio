@@ -1,7 +1,7 @@
 package org.dav.equitylookup.service.impl.crypto;
 
 import org.dav.equitylookup.datacache.CacheStore;
-import org.dav.equitylookup.model.cache.Crypto;
+import org.dav.equitylookup.model.cache.CryptoCached;
 import org.dav.equitylookup.service.CryptoApiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -11,21 +11,21 @@ import org.springframework.stereotype.Service;
 public class CachedCryptoApiService implements CryptoApiService {
 
     private final CryptoApiService cryptoApiService;
-    private final CacheStore<Crypto> coinCache;
+    private final CacheStore<CryptoCached> coinCache;
 
     @Autowired
-    public CachedCryptoApiService(@Qualifier("binanceApiService") CryptoApiService cryptoApiService, CacheStore<Crypto> coinCache) {
+    public CachedCryptoApiService(@Qualifier("binanceApiService") CryptoApiService cryptoApiService, CacheStore<CryptoCached> coinCache) {
         this.cryptoApiService = cryptoApiService;
         this.coinCache = coinCache;
     }
 
     @Override
-    public Crypto getCrypto(String symbol) {
-        Crypto crypto = coinCache.get(symbol);
-        if (crypto == null) {
-            crypto = cryptoApiService.getCrypto(symbol);
-            coinCache.add(symbol, crypto);
+    public CryptoCached getCrypto(String symbol) {
+        CryptoCached cryptoCached = coinCache.get(symbol);
+        if (cryptoCached == null) {
+            cryptoCached = cryptoApiService.getCrypto(symbol);
+            coinCache.add(symbol, cryptoCached);
         }
-        return crypto;
+        return cryptoCached;
     }
 }

@@ -1,11 +1,13 @@
 package org.dav.equitylookup.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.dav.equitylookup.exceptions.CryptoNotFoundException;
 import org.dav.equitylookup.exceptions.PortfolioNotFoundException;
-import org.dav.equitylookup.exceptions.ShareNotFoundException;
-import org.dav.equitylookup.model.CryptoShare;
+import org.dav.equitylookup.exceptions.StockNotFoundException;
+import org.dav.equitylookup.model.Cryptocurrency;
 import org.dav.equitylookup.model.Portfolio;
-import org.dav.equitylookup.model.StockShare;
+import org.dav.equitylookup.model.Stock;
+import org.dav.equitylookup.model.TransactionRecord;
 import org.dav.equitylookup.model.dto.PortfolioDTO;
 import org.dav.equitylookup.repository.PortfolioRepository;
 import org.dav.equitylookup.service.CryptoApiService;
@@ -58,81 +60,65 @@ public class PortfolioServiceImpl implements PortfolioService {
         }
     }
 
-    @Override
-    public StockShare getShareById(long id, String portfolionName) throws PortfolioNotFoundException, ShareNotFoundException {
-        Optional<StockShare> share = getPortfolioByName(portfolionName).getStockShares()
-                .stream()
-                .filter(s -> s.getId() == id)
-                .findFirst();
-        if (share.isPresent()) {
-            return share.get();
-        } else {
-            throw new ShareNotFoundException("Share Not Found");
+    @Transactional
+    public void addStock(TransactionRecord transactionRecord, String portfolioName) throws PortfolioNotFoundException, IOException {
+        Portfolio portfolio = getPortfolioByName(portfolioName);
+        String ticker = transactionRecord.getAssetSymbol();
+        Stock stock = portfolio.getStockByTicker(ticker);
+        if (stock == null) {
+            stock = new Stock(transactionRecord.getAssetSymbol(), cachedStockApiService.findStock(ticker).getCompany(), portfolio);
         }
+        stock.addTransaction(transactionRecord);
+        portfolio.addStock(stock);
     }
 
-    @Override
-    public CryptoShare getCryptoShareById(long id, String portfolionName) throws PortfolioNotFoundException, ShareNotFoundException {
-        Optional<CryptoShare> coin = getPortfolioByName(portfolionName).getCryptocurrencies()
-                .stream()
-                .filter(s -> s.getId() == id)
-                .findFirst();
-        if (coin.isPresent()) {
-            return coin.get();
-        } else {
-            throw new ShareNotFoundException("Coin Not Found");
+    @Transactional
+    public void removeStock(TransactionRecord transactionRecord, String portfolioName) throws PortfolioNotFoundException, StockNotFoundException {
+        Portfolio portfolio = getPortfolioByName(portfolioName);
+        String ticker = transactionRecord.getAssetSymbol();
+        Stock stock = portfolio.getStockByTicker(ticker);
+        if (stock == null) {
+            throw new StockNotFoundException("Stock not found in portfolio.");
         }
+        stock.addTransaction(transactionRecord);
+    }
+
+    @Transactional
+    public void addCrypto(TransactionRecord transactionRecord, String portfolioName) throws PortfolioNotFoundException {
+        Portfolio portfolio = getPortfolioByName(portfolioName);
+        Cryptocurrency crypto = portfolio.getCryptoCurrencyBySymbol(transactionRecord.getAssetSymbol());
+        if (crypto == null) {
+            crypto = new Cryptocurrency(transactionRecord.getAssetSymbol(), portfolio);
+        }
+        crypto.addTransaction(transactionRecord);
+        portfolio.addCryptocurrency(crypto);
+    }
+
+    @Transactional
+    public void removeCrypto(TransactionRecord transactionRecord, String portfolioName) throws PortfolioNotFoundException, CryptoNotFoundException {
+        Portfolio portfolio = getPortfolioByName(portfolioName);
+        Cryptocurrency crypto = portfolio.getCryptoCurrencyBySymbol(transactionRecord.getAssetSymbol());
+        if (crypto == null) {
+            throw new CryptoNotFoundException("Cryptocurrency not found in portfolio");
+        }
+        crypto.addTransaction(transactionRecord);
     }
 
     @Override
     public PortfolioDTO obtainAnalyzedDTO(Portfolio portfolio) throws IOException {
         PortfolioDTO portfolioDTO = modelMapper.map(portfolio, PortfolioDTO.class);
         BigDecimal portfolioValue = new BigDecimal("0");
-        for (StockShare stockShare : portfolioDTO.getStockShares()) {
-            BigDecimal currentPrice = cachedStockApiService.findPrice(stockShare.getTicker());
+        for (Stock stock : portfolioDTO.getStocks()) {
+            BigDecimal currentPrice = cachedStockApiService.findPrice(stock.getTicker());
             portfolioValue = portfolioValue.add(currentPrice);
         }
 
-        for (CryptoShare cryptoShare : portfolioDTO.getCryptocurrencies()) {
-            BigDecimal currentPrice = cachedCryptoApiService.getCrypto(cryptoShare.getSymbol()).getCurrentPrice().multiply(BigDecimal.valueOf(cryptoShare.getFraction()));
+        for (Cryptocurrency crypto : portfolioDTO.getCryptocurrencies()) {
+            BigDecimal currentPrice = cachedCryptoApiService.getCrypto(crypto.getSymbol()).getCurrentPrice().multiply(BigDecimal.valueOf(crypto.getFraction()));
             portfolioValue = portfolioValue.add(currentPrice);
         }
 
         portfolioDTO.setPortfolioValue(portfolioValue.setScale(2, RoundingMode.HALF_EVEN));
         return portfolioDTO;
-    }
-
-    @Transactional
-    public void addShare(StockShare stockShare, String portfolioName) throws PortfolioNotFoundException {
-        Portfolio portfolio = getPortfolioByName(portfolioName);
-        portfolio.addShare(stockShare);
-    }
-
-    @Transactional
-    public void removeShare(StockShare stockShare, String portfolioName) throws PortfolioNotFoundException {
-        getPortfolioByName(portfolioName).removeShare(stockShare);
-    }
-
-    @Transactional
-    public void removeShareById(long id, String portfolioName) throws PortfolioNotFoundException, ShareNotFoundException {
-        StockShare stockShareToRemove = getShareById(id, portfolioName);
-        removeShare(stockShareToRemove, portfolioName);
-    }
-
-    @Transactional
-    public void addCryptoShare(CryptoShare cryptoShare, String portfolioName) throws PortfolioNotFoundException {
-        Portfolio portfolio = getPortfolioByName(portfolioName);
-        portfolio.addCoin(cryptoShare);
-    }
-
-    @Transactional
-    public void removeCryptoShare(CryptoShare cryptoShare, String portfolioName) throws PortfolioNotFoundException {
-        getPortfolioByName(portfolioName).removeCoin(cryptoShare);
-    }
-
-    @Transactional
-    public void removeCryptoShareById(long id, String portfolioName) throws PortfolioNotFoundException, ShareNotFoundException {
-        CryptoShare cryptoShareToRemove = getCryptoShareById(id, portfolioName);
-        removeCryptoShare(cryptoShareToRemove, portfolioName);
     }
 }
