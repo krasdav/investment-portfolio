@@ -55,8 +55,6 @@ public class EquityLookUpApplication {
 
             StockCached google = stockService.getStock("GOOG");
 
-            StockCached apple = stockService.getStock("APPL");
-
             StockCached intel = stockService.getStock("INTC");
 
             Portfolio portfolio = new Portfolio("Michal's Portfolio", michal);

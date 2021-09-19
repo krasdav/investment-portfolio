@@ -6,22 +6,30 @@
     <link rel="stylesheet" href="../navbar.css">
     <link rel="stylesheet" href="../index_form.css">
     <link rel="stylesheet" href="../background.css">
+    <style>
+
+    </style>
 </head>
 <body>
 <div th:insert="navigation/navbar :: navbar"></div>
-<form action="#" th:action="@{/crypto}" th:object="${coin}" method="post">
-    <p><input type="text" th:field="*{symbol}" placeholder="Cryptocurrency symbol"/><input type="submit" value="Go"/></p>
-    <p th:if="${coinPrice}"> 
-        <span th:text="${coinSymbol} + ' : ' + ${coinPrice}"></span>
-    </p>
+<div class="search">
+<form action="#" th:action="@{/crypto}" th:object="${cryptoForm}" method="post">
+    <div style="text-align:center;color:red" th:if="${#fields.hasErrors('symbol')}" th:errors="*{symbol}">error</div>
+    <label for="crypto">Cryptocurrency</label>
+    <input type="text" th:field="*{symbol}" id="crypto" placeholder="Symbol..."/><input type="submit" value="Go"/>
 </form>
+</div>
 
-<form action="#" th:action="@{/stock}" th:object="${stock}" method="post">
-    <p><input type="text" th:field="*{ticker}" placeholder="Stock ticker"/> <input type="submit" value="Go"/></p>
-    <p th:if="${stockPrice}">
-        <span th:text="${stockTicker} + ' : ' + ${stockPrice}"></span>
-    </p>
+<div class="search">
+<form action="#" th:action="@{/stock}" th:object="${stockForm}" method="post">
+    <div style="text-align:center;color:red" th:if="${#fields.hasErrors('ticker')}" th:errors="*{ticker}">error</div>
+    <label for="stock">Stock</label>
+    <input type="text" id="stock" th:field="*{ticker}" placeholder="Ticker..."/> <input type="submit" value="Go"/>
 </form>
+</div>
+<div class="search" th:if="${price}" style="text-align:center; font:20px;">
+    <span th:text="${asset} + ' : ' + ${#numbers.formatCurrency(price)}"></span>
+</div>
 </body>
 
 </html>

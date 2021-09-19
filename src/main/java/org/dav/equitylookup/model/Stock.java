@@ -53,7 +53,7 @@ public class Stock {
         } else if (transactionRecord.getOperation() == Operation.SELL) {
             totalProceedsPrice = totalProceedsPrice.add(transactionRecord.getValue());
             quantity = quantity - (int) transactionRecord.getQuantity();
-            if( quantity < 0){
+            if (quantity < 0) {
                 quantity = 0;
             }
         }

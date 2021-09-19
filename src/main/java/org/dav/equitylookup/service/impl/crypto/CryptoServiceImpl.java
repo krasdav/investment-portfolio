@@ -1,11 +1,11 @@
 package org.dav.equitylookup.service.impl.crypto;
 
 import lombok.RequiredArgsConstructor;
+import org.dav.equitylookup.exceptions.CryptoNotFoundException;
 import org.dav.equitylookup.helper.FinancialAnalysis;
 import org.dav.equitylookup.model.Portfolio;
 import org.dav.equitylookup.model.cache.CryptoCached;
 import org.dav.equitylookup.model.dto.CryptoDTO;
-import org.dav.equitylookup.model.dto.StockDTO;
 import org.dav.equitylookup.service.CryptoApiService;
 import org.dav.equitylookup.service.CryptoService;
 import org.modelmapper.ModelMapper;
@@ -25,17 +25,17 @@ public class CryptoServiceImpl implements CryptoService {
     private final ModelMapper modelMapper;
 
     @Override
-    public CryptoCached getCoinInfo(String symbol) {
+    public CryptoCached getCoinInfo(String symbol) throws CryptoNotFoundException {
         return cachedCryptoApiService.getCrypto(symbol);
     }
 
     @Override
-    public BigDecimal getCoinPrice(String symbol) {
+    public BigDecimal getCoinPrice(String symbol) throws CryptoNotFoundException {
         return getCoinInfo(symbol).getCurrentPrice();
     }
 
     @Override
-    public List<CryptoDTO> getAnalyzedCryptoDTOS(Portfolio portfolio) {
+    public List<CryptoDTO> getAnalyzedCryptoDTOS(Portfolio portfolio) throws CryptoNotFoundException {
         List<CryptoDTO> cryptoDTOS = modelMapper.map(portfolio.getCryptocurrencies(), new TypeToken<List<CryptoDTO>>() {
         }.getType());
         setDynamicData(cryptoDTOS);
@@ -43,7 +43,7 @@ public class CryptoServiceImpl implements CryptoService {
     }
 
     @Override
-    public void setDynamicData(List<CryptoDTO> cryptoDTOS) {
+    public void setDynamicData(List<CryptoDTO> cryptoDTOS) throws CryptoNotFoundException {
         for (CryptoDTO cryptoDTO : cryptoDTOS) {
             BigDecimal currentPrice = cachedCryptoApiService.getCrypto(cryptoDTO.getSymbol()).getCurrentPrice();
             BigDecimal holdingsMarketValue = currentPrice.multiply(BigDecimal.valueOf(cryptoDTO.getFraction()));
@@ -64,8 +64,8 @@ public class CryptoServiceImpl implements CryptoService {
     @Override
     public List<CryptoDTO> getAndRemoveSoldOutCryptos(List<CryptoDTO> cryptoDTOS) {
         List<CryptoDTO> soldOutCrypto = new ArrayList<>();
-        for(CryptoDTO cryptoDTO : cryptoDTOS){
-            if( cryptoDTO.getFraction() == 0){
+        for (CryptoDTO cryptoDTO : cryptoDTOS) {
+            if (cryptoDTO.getFraction() == 0) {
                 soldOutCrypto.add(cryptoDTO);
             }
         }

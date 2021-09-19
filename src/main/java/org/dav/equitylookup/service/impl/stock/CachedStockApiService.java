@@ -1,6 +1,7 @@
 package org.dav.equitylookup.service.impl.stock;
 
 import org.dav.equitylookup.datacache.CacheStore;
+import org.dav.equitylookup.exceptions.StockNotFoundException;
 import org.dav.equitylookup.model.cache.StockCached;
 import org.dav.equitylookup.service.StockApiService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ public class CachedStockApiService implements StockApiService {
     }
 
     @Override
-    public StockCached findStock(String ticker) throws IOException {
+    public StockCached findStock(String ticker) throws IOException, StockNotFoundException {
         StockCached stockCached = stockCache.get(ticker);
         if (stockCached == null) {
             stockCached = stockApiService.findStock(ticker);
@@ -33,17 +34,17 @@ public class CachedStockApiService implements StockApiService {
     }
 
     @Override
-    public BigDecimal findPrice(StockCached stockCached) throws IOException {
+    public BigDecimal findPrice(StockCached stockCached) throws IOException, StockNotFoundException {
         return getPrice(stockCached.getTicker());
     }
 
     @Override
-    public BigDecimal findPrice(String ticker) throws IOException {
+    public BigDecimal findPrice(String ticker) throws IOException, StockNotFoundException {
         return getPrice(ticker);
     }
 
     @Override
-    public BigDecimal getPrice(String ticker) throws IOException {
+    public BigDecimal getPrice(String ticker) throws IOException, StockNotFoundException {
         return findStock(ticker).getCurrentPrice();
     }
 }

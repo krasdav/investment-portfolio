@@ -20,13 +20,13 @@ public interface PortfolioService {
 
     Portfolio getPortfolioByName(String name) throws PortfolioNotFoundException;
 
-    PortfolioDTO obtainAnalyzedDTO(Portfolio portfolio) throws IOException;
+    PortfolioDTO obtainAnalyzedDTO(Portfolio portfolio) throws IOException, StockNotFoundException, CryptoNotFoundException;
 
-    void addStock(TransactionRecord transactionRecord, String portfolioName) throws PortfolioNotFoundException, IOException;
+    void addStock(TransactionRecord transactionRecord, String portfolioName) throws PortfolioNotFoundException, IOException, StockNotFoundException;
 
     void removeStock(TransactionRecord transactionRecord, String portfolioName) throws PortfolioNotFoundException, StockNotFoundException;
 
-    void addCrypto(TransactionRecord transactionRecord, String portfolioName) throws PortfolioNotFoundException;
+    void addCrypto(TransactionRecord transactionRecord, String portfolioName) throws PortfolioNotFoundException, CryptoNotFoundException;
 
     void removeCrypto(TransactionRecord transactionRecord, String portfolioName) throws PortfolioNotFoundException, CryptoNotFoundException;
 

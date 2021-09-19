@@ -14,7 +14,11 @@
 <h2 style="text-align:center;"
     th:text="'Portfolio value : ' + ${#numbers.formatCurrency(portfolio.portfolioValue)}"></h2>
 <h3 style="text-align:center;"> Stocks </h3>
-<form action="#" th:action="@{/portfolio/stockshare/add}" th:object="${stockShare}" method="post">
+<form action="#" th:action="@{/portfolio/stockshare/add}" th:object="${stockForm}" method="post">
+    <div style="text-align:center;color:red" th:if="${#fields.hasErrors('ticker')}" th:errors="*{ticker}">error</div>
+    <div style="text-align:center;color:red" th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}">error</div>
+    <div style="text-align:center;color:red" th:if="${#fields.hasErrors('price')}" th:errors="*{price}">error</div>
+    <div style="text-align:center;color:red" th:if="${#fields.hasErrors('date')}" th:errors="*{date}">error</div>
     <p style="text-align:center;">
         Ticker: <input type="text" th:field="*{ticker}"/>
         Amount: <input type="number" th:field="*{amount}"/>
@@ -82,8 +86,12 @@
 </div>
 
 <h3 style="text-align:center"> Crypto Currencies </h3>
-<form style="text-align:center" action="#" th:action="@{/portfolio/cryptoshare/add}" th:object="${cryptoShare}"
+<form style="text-align:center" action="#" th:action="@{/portfolio/cryptoshare/add}" th:object="${cryptoForm}"
       method="post">
+    <div style="text-align:center;color:red" th:if="${#fields.hasErrors('symbol')}" th:errors="*{symbol}">error</div>
+    <div style="text-align:center;color:red" th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}">error</div>
+    <div style="text-align:center;color:red" th:if="${#fields.hasErrors('price')}" th:errors="*{price}">error</div>
+    <div style="text-align:center;color:red" th:if="${#fields.hasErrors('date')}" th:errors="*{date}">error</div>
     <p style="text-align:center">
         Symbol: <input type="text" th:field="*{symbol}"/>
         Amount: <input type="number" step="any" th:field="*{amount}"/>
@@ -92,8 +100,6 @@
         <button type="submit" name="action" value="save">Add</button>
         <button type="submit" name="action" value="cancel" th:formaction="@{/portfolio/crypto/remove}">Remove</button>
     </p>
-    <span style="color:red; text-align:center;" th:if="${NotFoundError}">Cryptocurrency not found</span>
-    <span style="color:red; text-align:center;" th:if="${InvalidAmount}">Invalid amount</span>
 </form>
 <div>
     <table class="center">

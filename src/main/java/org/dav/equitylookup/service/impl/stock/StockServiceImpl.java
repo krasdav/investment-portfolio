@@ -1,7 +1,7 @@
 package org.dav.equitylookup.service.impl.stock;
 
 import lombok.RequiredArgsConstructor;
-import org.dav.equitylookup.datacache.CacheStore;
+import org.dav.equitylookup.exceptions.StockNotFoundException;
 import org.dav.equitylookup.helper.FinancialAnalysis;
 import org.dav.equitylookup.model.Portfolio;
 import org.dav.equitylookup.model.cache.StockCached;
@@ -26,12 +26,12 @@ public class StockServiceImpl implements StockService {
     private final ModelMapper modelMapper;
 
     @Override
-    public StockCached getStock(String ticker) throws IOException {
+    public StockCached getStock(String ticker) throws IOException, StockNotFoundException {
         return cachedStockApiService.findStock(ticker);
     }
 
     @Override
-    public List<StockDTO> getAnalyzedStockDTOS(Portfolio portfolio) throws IOException {
+    public List<StockDTO> getAnalyzedStockDTOS(Portfolio portfolio) throws IOException, StockNotFoundException {
         List<StockDTO> stockDTOS = modelMapper.map(portfolio.getStocks(), new TypeToken<List<StockDTO>>() {
         }.getType());
         setDynamicData(stockDTOS);
@@ -39,7 +39,7 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
-    public void setDynamicData(List<StockDTO> stockDTOS) throws IOException {
+    public void setDynamicData(List<StockDTO> stockDTOS) throws IOException, StockNotFoundException {
         for (StockDTO stockDTO : stockDTOS) {
             BigDecimal currentPrice = cachedStockApiService.findPrice(stockDTO.getTicker());
             BigDecimal holdingsMarketValue = currentPrice.multiply(new BigDecimal(stockDTO.getQuantity()));
@@ -60,8 +60,8 @@ public class StockServiceImpl implements StockService {
     @Override
     public List<StockDTO> getAndRemoveSoldOutStocks(List<StockDTO> stockDTOS) {
         List<StockDTO> soldOutStocks = new ArrayList<>();
-        for(StockDTO stockDTO : stockDTOS){
-            if( stockDTO.getQuantity() == 0){
+        for (StockDTO stockDTO : stockDTOS) {
+            if (stockDTO.getQuantity() == 0) {
                 soldOutStocks.add(stockDTO);
             }
         }

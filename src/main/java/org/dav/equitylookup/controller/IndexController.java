@@ -1,68 +1,98 @@
 package org.dav.equitylookup.controller;
 
+import com.binance.api.client.exception.BinanceApiException;
 import lombok.RequiredArgsConstructor;
+import org.dav.equitylookup.exceptions.CryptoNotFoundException;
+import org.dav.equitylookup.exceptions.PortfolioNotFoundException;
+import org.dav.equitylookup.exceptions.StockNotFoundException;
 import org.dav.equitylookup.model.Portfolio;
 import org.dav.equitylookup.model.User;
-import org.dav.equitylookup.model.form.CryptoForm;
-import org.dav.equitylookup.model.form.StockFindForm;
-import org.dav.equitylookup.model.form.UserRegistrationForm;
+import org.dav.equitylookup.model.form.*;
 import org.dav.equitylookup.service.CryptoService;
 import org.dav.equitylookup.service.PortfolioService;
 import org.dav.equitylookup.service.StockService;
 import org.dav.equitylookup.service.UserService;
-import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.security.Principal;
 
 @RequiredArgsConstructor
 @Controller
+@SessionAttributes({"stockForm", "cryptoForm"})
 public class IndexController {
 
     private final UserService userService;
-
-    private final ModelMapper modelMapper;
-
     private final PortfolioService portfolioService;
-
     private final StockService stockService;
-
     private final PasswordEncoder passwordEncoder;
-
     private final CryptoService cryptoService;
 
+    @ModelAttribute("stockForm")
+    public StockFindForm getStockForm() {
+        return new StockFindForm();
+    }
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    @ModelAttribute("cryptoForm")
+    public CryptoFindForm getCryptoForm() {
+        return new CryptoFindForm();
+    }
 
     @GetMapping("/index")
-    public String frontPage(Model model) throws IOException {
-        model.addAttribute("coin", new CryptoForm());
+    public String frontPage(Model model) {
+        model.addAttribute("coin", new CryptoFindForm());
         model.addAttribute("stock", new StockFindForm());
         return "index";
     }
 
     @PostMapping("/crypto")
-    public String getCryptoPrice(@ModelAttribute("coin") CryptoForm cryptoForm, RedirectAttributes redirectAttrs) {
-        redirectAttrs.addFlashAttribute("coinPrice", cryptoService.getCoinPrice(cryptoForm.getSymbol()));
-        redirectAttrs.addFlashAttribute("coinSymbol", cryptoForm.getSymbol());
+    public String getCryptoPrice(@Validated @ModelAttribute("cryptoForm") CryptoFindForm cryptoForm, BindingResult bindingResult, SessionStatus sessionStatus, RedirectAttributes redirectAttrs){
+        if(bindingResult.hasErrors()){
+            redirectAttrs.addFlashAttribute("org.springframework.validation.BindingResult.cryptoForm", bindingResult);
+            return "redirect:/index";
+        }
+        BigDecimal price;
+        try {
+            price = cryptoService.getCoinPrice(cryptoForm.getSymbol());
+        } catch (CryptoNotFoundException | BinanceApiException e) {
+            bindingResult.rejectValue("symbol", "error.cryptoForm", "Cryptocurrency not found");
+            redirectAttrs.addFlashAttribute("org.springframework.validation.BindingResult.cryptoForm", bindingResult);
+            return "redirect:/index";
+        }
+
+        sessionStatus.setComplete();
+        redirectAttrs.addFlashAttribute("price", price);
+        redirectAttrs.addFlashAttribute("asset", cryptoForm.getSymbol());
         return "redirect:/index";
     }
 
     @PostMapping("/stock")
-    public String getStockPrice(@ModelAttribute("stock") StockFindForm stockFindForm, RedirectAttributes redirectAttrs) throws IOException {
-        redirectAttrs.addFlashAttribute("stockPrice", stockService.getStock(stockFindForm.getTicker()).getCurrentPrice());
-        redirectAttrs.addFlashAttribute("stockTicker", stockFindForm.getTicker());
+    public String getStockPrice(@Validated @ModelAttribute("stockForm") StockFindForm stockFindForm, BindingResult bindingResult, SessionStatus sessionStatus, RedirectAttributes redirectAttrs) throws IOException{
+        if(bindingResult.hasErrors()){
+            redirectAttrs.addFlashAttribute("org.springframework.validation.BindingResult.stockForm", bindingResult);
+            return "redirect:/index";
+        }
+        BigDecimal price = new BigDecimal("0");
+        try {
+            price = stockService.getStock(stockFindForm.getTicker()).getCurrentPrice();
+        } catch (StockNotFoundException e) {
+            bindingResult.rejectValue("ticker", "error.stockForm", "Stock not found");
+            redirectAttrs.addFlashAttribute("org.springframework.validation.BindingResult.stockForm", bindingResult);
+            return "redirect:/index";
+        }
+        sessionStatus.setComplete();
+        redirectAttrs.addFlashAttribute("price", price );
+        redirectAttrs.addFlashAttribute("asset", stockFindForm.getTicker());
         return "redirect:/index";
     }
 
@@ -99,5 +129,10 @@ public class IndexController {
     public String welcomePage(Model model, Principal user) {
         model.addAttribute("username", user.getName());
         return "user-welcome";
+    }
+
+    @GetMapping("/rest")
+    public Portfolio getMap() throws PortfolioNotFoundException {
+        return portfolioService.getPortfolioByName("Michal's Portfolio");
     }
 }

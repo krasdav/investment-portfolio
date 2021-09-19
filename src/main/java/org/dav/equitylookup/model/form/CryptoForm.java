@@ -15,11 +15,10 @@ public class CryptoForm {
 
     @NotEmpty(message = "Symbol cannot be empty")
     private String symbol;
-    @DecimalMin(value = "0.01", message = "Input invalid")
+    @DecimalMin(value = "0.01", message = "Amount must be more then 0")
     private double amount;
-    @DecimalMin(value = "0.01", message = "Input invalid")
+    @DecimalMin(value = "0.01", message = "Price must be more then 0")
     private BigDecimal price;
-    @NotEmpty(message = "Symbol cannot be empty")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate date;
 }

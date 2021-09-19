@@ -23,16 +23,17 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 
+@SessionAttributes({"stockForm", "cryptoForm"})
 @RequiredArgsConstructor
 @Controller
 public class PortfolioController {
@@ -47,8 +48,18 @@ public class PortfolioController {
 
     private final PortfolioService portfolioService;
 
+    @ModelAttribute("stockForm")
+    public StockForm getStockForm() {
+        return new StockForm();
+    }
+
+    @ModelAttribute("cryptoForm")
+    public CryptoForm getCryptoForm() {
+        return new CryptoForm();
+    }
+
     @GetMapping("/portfolio/show")
-    public String listStocksForm(Model model, Principal loggedUser) throws IOException {
+    public String listStocksForm(Model model, Principal loggedUser) throws IOException, StockNotFoundException, CryptoNotFoundException {
         User user = userService.getUserByUsername(loggedUser.getName());
         Portfolio portfolio = user.getPortfolio();
 
@@ -69,7 +80,12 @@ public class PortfolioController {
     }
 
     @PostMapping("/portfolio/stockshare/add")
-    public String addStock(@ModelAttribute("stockShare") StockForm stockForm, Principal loggedUser) throws IOException {
+    public String addStock(@Validated @ModelAttribute("stockForm") StockForm stockForm, BindingResult bindingResult, RedirectAttributes redirectAttributes, Principal loggedUser, SessionStatus sessionStatus) throws IOException {
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.stockForm", bindingResult);
+            return "redirect:/portfolio/show";
+        }
+
         User user = userService.getUserByUsername(loggedUser.getName());
         String portfolio = user.getPortfolio().getName();
         TransactionRecord transactionRecord = new TransactionRecord.TransactionRecordBuilder()
@@ -83,18 +99,24 @@ public class PortfolioController {
             portfolioService.addStock(transactionRecord, portfolio);
         } catch (PortfolioNotFoundException e) {
             e.printStackTrace();
+        } catch (StockNotFoundException snfe) {
+            bindingResult.rejectValue("ticker", "error.stockForm", "Stock not found");
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.stockForm", bindingResult);
+            return "redirect:/portfolio/show";
         }
+        sessionStatus.setComplete();
         return "redirect:/portfolio/show";
     }
 
     @PostMapping("/portfolio/cryptoshare/add")
-    public String addCrypto(@ModelAttribute("cryptoShare") CryptoForm cryptoForm, RedirectAttributes redirectAttributes, Principal loggedUser) {
-        User user = userService.getUserByUsername(loggedUser.getName());
-        String portfolio = user.getPortfolio().getName();
-        if (cryptoForm.getAmount() <= 0.0) {
-            redirectAttributes.addFlashAttribute("InvalidAmount", "Invalid amount: " + cryptoForm.getAmount());
+    public String addCrypto(@Validated @ModelAttribute("cryptoForm") CryptoForm cryptoForm, BindingResult bindingResult, RedirectAttributes redirectAttributes, Principal loggedUser, SessionStatus sessionStatus) {
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.cryptoForm", bindingResult);
             return "redirect:/portfolio/show";
         }
+        User user = userService.getUserByUsername(loggedUser.getName());
+        String portfolio = user.getPortfolio().getName();
+
         TransactionRecord transactionRecord = new TransactionRecord.TransactionRecordBuilder()
                 .timeOfPurchase(cryptoForm.getDate())
                 .asset(cryptoForm.getSymbol())
@@ -104,13 +126,14 @@ public class PortfolioController {
                 .build();
         try {
             portfolioService.addCrypto(transactionRecord, portfolio);
-        } catch (BinanceApiException bae) {
-            redirectAttributes.addFlashAttribute("NotFoundError", "Cryptocurrency not found");
-            return "redirect:/portfolio/show";
         } catch (PortfolioNotFoundException e) {
             e.printStackTrace();
+        } catch (BinanceApiException | CryptoNotFoundException bae) {
+            bindingResult.rejectValue("symbol", "error.cryptoForm", "Cryptocurrency not found");
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.cryptoForm", bindingResult);
+            return "redirect:/portfolio/show";
         }
-
+        sessionStatus.setComplete();
         return "redirect:/portfolio/show";
     }
 
@@ -125,7 +148,7 @@ public class PortfolioController {
     }
 
     @PostMapping("/portfolio/cryptoshare/details")
-    public String showAllCryptoShares(@RequestParam String symbol, Model model, Principal loggedUser) throws IOException {
+    public String showAllCryptoShares(@RequestParam String symbol, Model model, Principal loggedUser) {
         Portfolio portfolio = userService.getUserByUsername(loggedUser.getName()).getPortfolio();
         List<TransactionRecordDTO> recordDTOS = modelMapper.map(portfolio.getCryptoCurrencyBySymbol(symbol).getTransactionRecords(), new TypeToken<List<TransactionRecordDTO>>() {
         }.getType());
@@ -135,7 +158,11 @@ public class PortfolioController {
     }
 
     @PostMapping("/portfolio/crypto/remove")
-    public String removeCrypto(@ModelAttribute("cryptoShare") CryptoForm cryptoForm, RedirectAttributes redirectAttributes, Principal loggedUser) {
+    public String removeCrypto(@Validated @ModelAttribute("cryptoForm") CryptoForm cryptoForm, BindingResult bindingResult, RedirectAttributes redirectAttributes, Principal loggedUser, SessionStatus sessionStatus) {
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.cryptoForm", bindingResult);
+            return "redirect:/portfolio/show";
+        }
         Portfolio portfolio = userService.getUserByUsername(loggedUser.getName()).getPortfolio();
         TransactionRecord transactionRecord = new TransactionRecord.TransactionRecordBuilder()
                 .timeOfPurchase(cryptoForm.getDate())
@@ -146,18 +173,23 @@ public class PortfolioController {
                 .build();
         try {
             portfolioService.removeCrypto(transactionRecord, portfolio.getName());
-        } catch (BinanceApiException | CryptoNotFoundException bae) {
-            redirectAttributes.addFlashAttribute("NotFoundError", "Cryptocurrency not found");
+        } catch (CryptoNotFoundException bae) {
+            bindingResult.rejectValue("symbol", "error.cryptoForm", "Cryptocurrency not found");
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.cryptoForm", bindingResult);
             return "redirect:/portfolio/show";
         } catch (PortfolioNotFoundException e) {
             e.printStackTrace();
         }
-
+        sessionStatus.setComplete();
         return "redirect:/portfolio/show";
     }
 
     @PostMapping("/portfolio/stock/remove")
-    public String removeStock(@ModelAttribute("stockShare") StockForm stockForm,RedirectAttributes redirectAttributes, Principal loggedUser) throws IOException {
+    public String removeStock(@Validated @ModelAttribute("stockForm") StockForm stockForm, BindingResult bindingResult, RedirectAttributes redirectAttributes, Principal loggedUser, SessionStatus sessionStatus) {
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.stockForm", bindingResult);
+            return "redirect:/portfolio/show";
+        }
         User user = userService.getUserByUsername(loggedUser.getName());
         String portfolio = user.getPortfolio().getName();
         TransactionRecord transactionRecord = new TransactionRecord.TransactionRecordBuilder()
@@ -171,11 +203,12 @@ public class PortfolioController {
             portfolioService.removeStock(transactionRecord, portfolio);
         } catch (PortfolioNotFoundException e) {
             e.printStackTrace();
-        } catch (StockNotFoundException e) {
-            redirectAttributes.addFlashAttribute("NotFoundError", "Stock not found");
+        } catch (StockNotFoundException snfe) {
+            bindingResult.rejectValue("ticker", "error.stockForm", "Stock not found");
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.stockForm", bindingResult);
+            return "redirect:/portfolio/show";
         }
+        sessionStatus.setComplete();
         return "redirect:/portfolio/show";
     }
-
-
 }

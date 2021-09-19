@@ -61,7 +61,7 @@ public class PortfolioServiceImpl implements PortfolioService {
     }
 
     @Transactional
-    public void addStock(TransactionRecord transactionRecord, String portfolioName) throws PortfolioNotFoundException, IOException {
+    public void addStock(TransactionRecord transactionRecord, String portfolioName) throws PortfolioNotFoundException, IOException, StockNotFoundException {
         Portfolio portfolio = getPortfolioByName(portfolioName);
         String ticker = transactionRecord.getAssetSymbol();
         Stock stock = portfolio.getStockByTicker(ticker);
@@ -84,7 +84,8 @@ public class PortfolioServiceImpl implements PortfolioService {
     }
 
     @Transactional
-    public void addCrypto(TransactionRecord transactionRecord, String portfolioName) throws PortfolioNotFoundException {
+    public void addCrypto(TransactionRecord transactionRecord, String portfolioName) throws PortfolioNotFoundException, CryptoNotFoundException {
+        cachedCryptoApiService.getCrypto(transactionRecord.getAssetSymbol());
         Portfolio portfolio = getPortfolioByName(portfolioName);
         Cryptocurrency crypto = portfolio.getCryptoCurrencyBySymbol(transactionRecord.getAssetSymbol());
         if (crypto == null) {
@@ -105,7 +106,7 @@ public class PortfolioServiceImpl implements PortfolioService {
     }
 
     @Override
-    public PortfolioDTO obtainAnalyzedDTO(Portfolio portfolio) throws IOException {
+    public PortfolioDTO obtainAnalyzedDTO(Portfolio portfolio) throws IOException, StockNotFoundException, CryptoNotFoundException {
         PortfolioDTO portfolioDTO = modelMapper.map(portfolio, PortfolioDTO.class);
         BigDecimal portfolioValue = new BigDecimal("0");
         for (Stock stock : portfolioDTO.getStocks()) {

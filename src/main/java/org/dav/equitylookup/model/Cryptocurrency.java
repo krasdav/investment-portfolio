@@ -47,7 +47,7 @@ public class Cryptocurrency {
             totalCostPrice = totalCostPrice.add(transactionRecord.getValue());
         } else if (transactionRecord.getOperation() == Operation.SELL) {
             fraction = fraction - transactionRecord.getQuantity();
-            if( fraction < 0.0){
+            if (fraction < 0.0) {
                 fraction = 0.0;
             }
             totalProceedsPrice = totalProceedsPrice.add(transactionRecord.getValue());

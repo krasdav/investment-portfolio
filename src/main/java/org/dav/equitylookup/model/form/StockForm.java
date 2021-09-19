@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -14,11 +15,10 @@ public class StockForm {
 
     @NotEmpty(message = "Ticker cant be empty")
     private String ticker;
-    @NotEmpty(message = "Amount cannot be empty")
+    @Min(value = 1, message = "Amount must be more then 0")
     private int amount;
-    @NotEmpty(message = "Price cannot be empty")
+    @Min(value = 1, message = "Price must be more then 0")
     private BigDecimal price;
-    @NotEmpty(message = "Date cannot be empty")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate date;
 }
