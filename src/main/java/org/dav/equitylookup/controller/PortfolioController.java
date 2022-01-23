@@ -74,8 +74,8 @@ public class PortfolioController {
         model.addAttribute("soldOutStocks", soldOUTStockDTOS.isEmpty() ? null : soldOUTStockDTOS);
         model.addAttribute("soldOutCrypto", soldOutCryptoDTOS.isEmpty() ? null : soldOutCryptoDTOS);
         model.addAttribute("cryptos", cryptoDTOS);
-        model.addAttribute("stockShare", new StockForm());
-        model.addAttribute("cryptoShare", new CryptoForm());
+        model.addAttribute("stockForm", new StockForm());
+        model.addAttribute("cryptoForm", new CryptoForm());
         return "portfolio/show";
     }
 
