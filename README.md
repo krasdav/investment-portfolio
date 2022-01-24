@@ -1,6 +1,6 @@
-## Investment Portfolio app
+## Portfolio Tracker
 
-An application used to keep track of personal investments in stockCacheds and cryptoCached.
+An application used to keep track of personal investments in stocks and cryptocurrencies.
 
 ## Project Status
 Work in Progress
@@ -8,7 +8,7 @@ Work in Progress
 ## Project Screen Shot(s)
 ![Alt text](/src/main/resources/static/images/portfolio-page.png?raw=true "Portfolio Page")
 
-![Alt text](/src/main/resources/static/images/portfolio-stockCached-details.png?raw=true "Portfolio Stock details")
+![Alt text](/src/main/resources/static/images/portfolio-stock-details.png?raw=true "Portfolio Stock details")
 ## Installation and Setup Instructions
 
 Clone down this repository.
