@@ -12,7 +12,7 @@
 
 	<groupId>org.dav</groupId>
 	<artifactId>portfoliotracker</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>portfoliotracker</name>
 	<description>An application used to keep track of personal investments in stocks and cryptocurrencies.</description>
 
@@ -114,6 +114,7 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+                <version>2.5.3</version>
 				<configuration>
 					<excludes>
 						<exclude>
@@ -121,6 +122,10 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
+                    <includes>
+                        <source>11</source>
+                        <target>11</target>
+                    </includes>
 				</configuration>
 			</plugin>
 		</plugins>
