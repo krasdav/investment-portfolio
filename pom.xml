@@ -122,10 +122,6 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
-                    <includes>
-                        <source>11</source>
-                        <target>11</target>
-                    </includes>
 				</configuration>
 			</plugin>
 		</plugins>
