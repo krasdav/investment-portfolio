@@ -9,14 +9,7 @@ Work in Progress
 ![Alt text](/src/main/resources/static/images/portfolio-page.png?raw=true "Portfolio Page")
 
 ![Alt text](/src/main/resources/static/images/portfolio-stock-details.png?raw=true "Portfolio Stock details")
-## Installation and Setup Instructions
-
-Clone down this repository.
-
-Start the application:
-
-`mvnw spring-boot:run` 
 
 To Visit App:
 
-`localhost:8080/index`
+https://invest-portfolio-tracker.herokuapp.com/index
