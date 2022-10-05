@@ -3,7 +3,7 @@
 An application used to keep track of personal investments in stocks and cryptocurrencies.
 
 ## Project Status
-Work in Progress
+Abandoned
 
 ## Project Screen Shot(s)
 ![Alt text](/src/main/resources/static/images/portfolio-page.png?raw=true "Portfolio Page")
